@@ -8,7 +8,7 @@ import ast.Node;
 public class Test {
     public static void main(String[] args) throws Exception {
       
-        /*String fileName = "prova.fool";
+        String fileName = "prova.fool";
       
         CharStream chars = CharStreams.fromFileName(fileName);
         FOOLLexer lexer = new FOOLLexer(chars);
@@ -45,21 +45,6 @@ public class Test {
 
         System.out.println("Starting Virtual Machine...");
         ExecuteVM vm = new ExecuteVM(parserASM.code);
-        vm.cpu();*/
-    	
-    	String fileName = "prova.fool";
-        
-        CharStream chars = CharStreams.fromFileName(fileName);
-        FOOLLexer lexer = new FOOLLexer(chars);
-        CommonTokenStream tokens = new CommonTokenStream(lexer);
-        FOOLParser parser = new FOOLParser(tokens);
-        
-        Node ast = parser.prog().ast;
-        
-        System.out.println("You had: "+lexer.lexicalErrors+" lexical errors and "+parser.getNumberOfSyntaxErrors()+" syntax errors.");
-
-        System.out.println("Visualizing AST...");
-        System.out.print(ast.toPrint(""));
-        
+        vm.cpu();        
     }
 }

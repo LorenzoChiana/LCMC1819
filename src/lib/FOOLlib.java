@@ -9,7 +9,7 @@ public class FOOLlib {
 				( (a instanceof BoolTypeNode) && (b instanceof IntTypeNode) );  
 	}
 
-	private static int labCount=0; 
+	private static int labCount=0; //nome etichette (univoche)
 	private static int funlabCount=0; 
 
 	private static String funCode="" ; 

@@ -62,29 +62,29 @@ assembly:
  * LEXER RULES
  *------------------------------------------------------------------*/
 
-PUSH	 : 'push' ; 	
-POP	 : 'pop' ; 	
-ADD	 : 'add' ;  	
-SUB	 : 'sub' ;	
-MULT	 : 'mult' ;  	
-DIV	 : 'div' ;	
-STOREW	 : 'sw' ; 	
-LOADW	 : 'lw' ;	
-BRANCH	 : 'b' ;	
-BRANCHEQ : 'beq' ;	
-BRANCHLESSEQ:'bleq' ;	
-JS	 : 'js' ;	
-LOADRA	 : 'lra' ;	
-STORERA  : 'sra' ;	 
-LOADRV	 : 'lrv' ;	
-STORERV  : 'srv' ;	
-LOADFP	 : 'lfp' ;	
-STOREFP	 : 'sfp' ;	
-COPYFP   : 'cfp' ;      
-LOADHP	 : 'lhp' ;	
-STOREHP	 : 'shp' ;	
-PRINT	 : 'print' ;	
-HALT	 : 'halt' ;	
+PUSH    : 'push' ;  // pushes constant in the stack
+POP  : 'pop' ;  // pops from stack
+ADD  : 'add' ;   // add two values from the stack
+SUB  : 'sub' ;     // add two values from the stack
+MULT  : 'mult' ;   // add two values from the stack
+DIV  : 'div' ; // add two values from the stack
+STOREW  : 'sw' ;  // store in the memory cell pointed by top the value next
+LOADW  : 'lw' ; // load a value from the memory cell pointed by top
+BRANCH  : 'b' ; // jump to label
+BRANCHEQ : 'beq' ; // jump to label if top == next
+BRANCHLESSEQ:'bleq' ; // jump to label if top <= next
+JS  : 'js' ; // jump to instruction pointed by top of stack and store next instruction in ra
+LOADRA  : 'lra' ; // load from ra
+STORERA  : 'sra' ; // store top into ra  (return address)
+LOADRV  : 'lrv' ; // load from rv (return value) 
+STORERV  : 'srv' ; // store top into rv  
+LOADFP  : 'lfp' ; // load frame pointer in the stack
+STOREFP  : 'sfp' ; // store top into frame pointer
+COPYFP   : 'cfp' ;      // copy stack pointer into frame pointer
+LOADHP  : 'lhp' ; // load heap pointer in the stack
+STOREHP  : 'shp' ; // store top into heap pointer
+PRINT  : 'print' ; // print top of stack
+HALT  : 'halt' ; // stop execution
  
 COL	 : ':' ;
 LABEL	 : ('a'..'z'|'A'..'Z')('a'..'z' | 'A'..'Z' | '0'..'9')* ;
