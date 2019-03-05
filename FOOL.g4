@@ -141,10 +141,19 @@ factor	returns [Node ast]:
  	;	 	
    	
   	
-value	: INTEGER 
-	    | TRUE      
-	    | FALSE       
-	    | NULL	    
+value returns [Node ast]: 
+	n=INTEGER {
+		$ast= new IntNode(Integer.parseInt($n.text));
+	} 
+	| TRUE {
+		$ast= new BoolNode(true);
+	}   
+	| FALSE {
+		$ast= new BoolNode(false);
+	} 
+	| NULL {
+		$ast= new EmptyNode();
+	}  
 	    | NEW ID LPAR (exp (COMMA exp)* )? RPAR         
 	    | IF exp THEN CLPAR exp CRPAR ELSE CLPAR exp CRPAR     
 	    | NOT LPAR exp RPAR 
