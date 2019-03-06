@@ -1,6 +1,6 @@
 package ast;
 import lib.FOOLlib;
-public class LessEqualNode {
+public class LessEqualNode implements Node {
 	private Node left;
 	private Node right;
 
