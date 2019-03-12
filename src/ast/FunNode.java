@@ -3,10 +3,11 @@ import java.util.ArrayList;
 
 import lib.FOOLlib;
 
-public class FunNode implements Node {
+public class FunNode implements Node, DecNode {
 
 	private String id;
-	private Node type; 
+	private Node type; 		//tipo di ritorno della funzione
+	private Node symType;
 	private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist" che è lista di Node
 	private ArrayList<Node> declist = new ArrayList<Node>(); 
 	private Node exp;
@@ -84,6 +85,11 @@ public class FunNode implements Node {
 		);
 
 		return "push " + funl + "\n";
+	}
+
+	@Override
+	public Node getSymType() {
+		return this.type;
 	}
 
 }  

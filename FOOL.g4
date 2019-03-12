@@ -54,10 +54,16 @@ declist returns [ArrayList<Node> astlist]: {
             	VarNode v = new VarNode($i.text,$ht.ast,$e.ast);  
              	$astlist.add(v);                                 
              	HashMap<String,STentry> hm = symTable.get(nestingLevel);
-             	if (hm.put($i.text, new STentry(nestingLevel, $ht.ast,offset--)) != null  ) {
+             	if (hm.put($i.text, new STentry(nestingLevel, $ht.ast,offset)) != null  ) {
              		System.out.println("Var id "+$i.text+" at line "+$i.line+" already declared");
               		System.exit(0);
-              	}  
+              	} else {
+              		if(v.getSymType() instanceof ArrowTypeNode){
+              			offset -= 2;
+              		} else{
+              			offset--;
+              		}
+              	}
             }
             | FUN i=ID COLON t=type {//inserimento di ID nella symtable
 	               FunNode f = new FunNode($i.text,$t.ast);      
@@ -80,18 +86,32 @@ declist returns [ArrayList<Node> astlist]: {
                 	parTypes.add($fht.ast);
                   ParNode fpar = new ParNode($fid.text,$fht.ast); //creo nodo ParNode
                   f.addPar(fpar);                                 //lo attacco al FunNode con addPar
-                  if ( hmn.put($fid.text,new STentry(nestingLevel,$fht.ast,paroffset++)) != null  ) //aggiungo dich a hmn
-                  {System.out.println("Parameter id "+$fid.text+" at line "+$fid.line+" already declared");
-                   System.exit(0);}
+                  if ( hmn.put($fid.text,new STentry(nestingLevel,$fht.ast,paroffset)) != null  ){ //aggiungo dich a hmn
+                  	System.out.println("Parameter id "+$fid.text+" at line "+$fid.line+" already declared");
+                   	System.exit(0);
+                  } else{
+                  	if(fpar.getSymType() instanceof ArrowTypeNode){
+              			paroffset += 2;
+              		} else{
+              			offset++;
+              		}
+                  }
                 } (COMMA id=ID COLON hty=hotype
                 	{
                     parTypes.add($hty.ast);
                     ParNode par = new ParNode($id.text,$hty.ast);
                     f.addPar(par);
-                    if ( hmn.put($id.text,new STentry(nestingLevel,$hty.ast,paroffset++)) != null  )
-                    {System.out.println("Parameter id "+$id.text+" at line "+$id.line+" already declared");
-                     System.exit(0);}
-                    }
+                    if ( hmn.put($id.text,new STentry(nestingLevel,$hty.ast,paroffset)) != null){
+                    	System.out.println("Parameter id "+$id.text+" at line "+$id.line+" already declared");
+                     	System.exit(0);
+                    }else {
+                  		if(fpar.getSymType() instanceof ArrowTypeNode){
+              				paroffset += 2;
+	              		} else{
+	              			offset++;
+	              		}
+                    } 
+                  }
                 )* )? RPAR {entry.addType(new ArrowTypeNode(parTypes,$t.ast));}
                   (LET d=declist IN{f.addDec($d.astlist);})? e=exp 
                   {f.addBody($e.ast);
