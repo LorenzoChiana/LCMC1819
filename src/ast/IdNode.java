@@ -18,10 +18,10 @@ public class IdNode implements Node {
   }
 
   public Node typeCheck() {
-	if (entry.getType() instanceof ArrowTypeNode) {
+	/*if (entry.getType() instanceof ArrowTypeNode) {
 	  System.out.println("Wrong usage of function identifier");
 	  System.exit(0);
-	} 
+	} */
 	return entry.getType();
   }
   

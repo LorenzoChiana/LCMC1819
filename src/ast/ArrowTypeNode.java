@@ -18,7 +18,10 @@ public class ArrowTypeNode implements Node {
 	public ArrayList<Node> getParList () { 
 		return parlist;
 	}
-
+	
+	public int getParListLength() {
+		return parlist.size();
+	}
 	public String toPrint(String s) {
 		String parlstr="";
 		for (Node par:parlist){parlstr+=par.toPrint(s+"  ");};
