@@ -1,5 +1,5 @@
 package ast;
-public class ParNode implements Node, DecNode {
+public class ParNode implements DecNode {
 
 	private String id;
 	private Node type;

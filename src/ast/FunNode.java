@@ -3,11 +3,11 @@ import java.util.ArrayList;
 
 import lib.FOOLlib;
 
-public class FunNode implements Node, DecNode {
+public class FunNode implements DecNode {
 
 	private String id;
 	private Node type; 		//tipo di ritorno della funzione
-	private Node symType;
+	private ArrowTypeNode symType;
 	private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist" che è lista di Node
 	private ArrayList<Node> declist = new ArrayList<Node>(); 
 	private Node exp;
@@ -25,7 +25,7 @@ public class FunNode implements Node, DecNode {
 		exp=b;
 	}  
 
-	public void addPar (Node p) { //metodo "addPar" che aggiunge un nodo a campo "parlist"
+	public void addPar (ParNode p) { //metodo "addPar" che aggiunge un nodo a campo "parlist"
 		parlist.add(p);  
 	}  
 
@@ -55,41 +55,51 @@ public class FunNode implements Node, DecNode {
 		for (Node dec:declist) {
 			declCode += dec.codeGeneration();
 		}
-		
+
 		String popDecl="";
 		for (Node dec:declist) {
-			popDecl += "pop\n";
+			if(((DecNode)dec).getSymType() instanceof ArrowTypeNode) {
+				popDecl += "pop\n";
+				popDecl += "pop\n";
+			} else {
+				popDecl += "pop\n";
+			}
 		}
-		
+
 		String popParl = "";
 		for (Node par:parlist) {
-			popParl += "pop\n";
+			if(((DecNode)par).getSymType() instanceof ArrowTypeNode) {
+				popParl += "pop\n";
+				popParl += "pop\n";
+			} else {
+				popParl += "pop\n";
+			}
 		}
-		
+
 		String funl = FOOLlib.freshFunLabel();
 
 		FOOLlib.putCode(
 				funl + ":\n" + 
-				"cfp\n" + //setta $fp a $sp (fp = frame pointer; sp = stack pointer) 
-				"lra\n" + //inserisce return address
-				declCode + // inserisce le dichiarazioni locali
-				exp.codeGeneration() + 
-				"srv\n" + //pop del return value
-				popDecl + //pop delle dichiarazioni
-				"sra\n" + //pop del return address
-				"pop\n" + //pop di AL
-				popParl + //pop dei parametri
-				"sfp\n" + //setto $fp al valore del CL
-				"lrv\n" + //risultato della funione sullo stack
-				"lra\n" + "js\n" //salta a $ra
-		);
+						"cfp\n" + //setta $fp a $sp (fp = frame pointer; sp = stack pointer) 
+						"lra\n" + //inserisce return address
+						declCode + // inserisce le dichiarazioni locali
+						exp.codeGeneration() + 
+						"srv\n" + //pop del return value
+						popDecl + //pop delle dichiarazioni
+						"sra\n" + //pop del return address
+						"pop\n" + //pop di AL
+						popParl + //pop dei parametri
+						"sfp\n" + //setto $fp al valore del CL
+						"lrv\n" + //risultato della funione sullo stack
+						"lra\n" + "js\n" //salta a $ra
+				);
 
 		return "push " + funl + "\n";
 	}
 
 	@Override
 	public Node getSymType() {
-		return this.type;
+		return this.symType;
 	}
 
 }  

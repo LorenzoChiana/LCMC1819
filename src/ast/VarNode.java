@@ -2,7 +2,7 @@ package ast;
 
 import lib.FOOLlib;
 
-public class VarNode implements Node, DecNode {
+public class VarNode implements DecNode {
 
 	private String id;
 	private Node type;

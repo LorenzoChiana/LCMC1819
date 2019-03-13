@@ -59,13 +59,13 @@ public class CallNode implements Node {
 			getAR+="lw\n";      
 		return "lfp\n"+ //Contro Link
 		parCode+ //allocazione valori parametri	
-		
+
 		/*
 		 * nel caso di higher order 
 		 * nella prima parte dell'offset c'è la dichiarazione della funzione 
 		 * e nella seconda c'è l'indirizzo
 		 * */
-		
+
 		"push "+entry.getOffset()+"\n"+			 
 		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
 		//in cui è dichiarata la funzione (Access Link)					 

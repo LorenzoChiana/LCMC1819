@@ -1,6 +1,6 @@
 package ast;
 
-public interface DecNode {
+public interface DecNode extends Node {
 	
 	public Node getSymType();
 

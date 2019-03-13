@@ -15,7 +15,7 @@ public class IdNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"ASSSASASS\nId:" + id + " at nestinglevel "+ nestingLevel + "\n" + 
+		return s+"Id:" + id + " at nestinglevel "+ nestingLevel + "\n" + 
 				entry.toPrint(s+"  ") ;  
 	}
 

@@ -1,4 +1,16 @@
 let
+	fun x:bool (n:int, m:int)
+	let 
+      var j:int = m;
+  	in j == n ;
+	fun f:bool(x:(int, int)->bool)
+	let
+		var h:bool = true;
+	in
+		h;
+in
+	f(x(1,1));
+/*let
 	
 	var y:int = 5;
 	fun f:bool (n:int, m:int)
@@ -10,7 +22,7 @@ in
     if f(y,3) 
       then { 1 }
       else { 0 }
-  );
+  );*/
 /*let
 	
 	var y:int = 5;
