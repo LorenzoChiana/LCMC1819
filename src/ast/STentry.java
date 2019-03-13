@@ -1,7 +1,7 @@
 package ast;
 public class STentry {
    
-  private int nl;
+  private int nl; //nesting level
   private Node type;
   private int offset;
   

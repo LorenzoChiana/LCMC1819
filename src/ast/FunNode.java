@@ -70,7 +70,7 @@ public class FunNode implements Node, DecNode {
 
 		FOOLlib.putCode(
 				funl + ":\n" + 
-				"cfp\n" + //setta $fp a $sp
+				"cfp\n" + //setta $fp a $sp (fp = frame pointer; sp = stack pointer) 
 				"lra\n" + //inserisce return address
 				declCode + // inserisce le dichiarazioni locali
 				exp.codeGeneration() + 

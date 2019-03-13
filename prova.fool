@@ -1,4 +1,16 @@
-
+let
+	
+	var y:int = 5;
+	fun f:bool (n:int, m:int)
+    let 
+      var x:int = m;
+  	in x == y ;
+in  
+  print ( 
+    if f(y,3) 
+      then { 1 }
+      else { 0 }
+  );
 /*let
 	
 	var y:int = 5;
@@ -13,7 +25,7 @@ in
       else { 0 }
   );*/
 
-let
+/*let
   var y:int = 6 - 2;
   fun f:bool (n:int, m:bool)
     let 
@@ -24,7 +36,7 @@ in
     if f(y,false) 
       then { true }
       else { false }
-  ); 
+  );*/
 /* SERBATOIO ESEMPI
 let 
   var x:int = 1;
