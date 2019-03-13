@@ -58,10 +58,21 @@ public class CallNode implements Node {
 		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++)
 			getAR+="lw\n";      
 		return "lfp\n"+ //Contro Link
-		parCode+ //allocazione valori parametri			          
-		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
-		//in cui è dichiarata la funzione (Access Link)			 
+		parCode+ //allocazione valori parametri	
+		
+		/*
+		 * nel caso di higher order 
+		 * nella prima parte dell'offset c'è la dichiarazione della funzione 
+		 * e nella seconda c'è l'indirizzo
+		 * */
+		
 		"push "+entry.getOffset()+"\n"+			 
+		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
+		//in cui è dichiarata la funzione (Access Link)					 
+		"add\n"+
+		"lw\n"+ //carica sullo stack l'indirizzo della funzione
+
+		"push "+(entry.getOffset()-1)+"\n"+			 
 		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
 		//in cui è dichiarata la funzione (Access Link)					 
 		"add\n"+
