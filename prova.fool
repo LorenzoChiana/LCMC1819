@@ -1,15 +1,20 @@
 let
-	fun x:bool (n:int, m:int)
-	let 
-      var j:int = m;
-  	in j == n ;
-	fun f:bool(x:(int, int)->bool)
-	let
-		var h:bool = true;
-	in
-		h;
+  fun x:bool (n:int, m:int)
+  let 
+  	var j:int = m;
+  in n>=m;
+  fun f: bool ( x:(int, int) -> bool ) print(true);
 in
-	f(x(1,1));
+  print(f(x(1,2)));
+
+/*let
+  fun x:bool (n:int, m:int)
+  let 
+  	var j:int = m;
+  in n>=m;
+  var f: (int, int) -> bool = x;
+in
+  print(f(1,2));*/
 /*let
 	
 	var y:int = 5;

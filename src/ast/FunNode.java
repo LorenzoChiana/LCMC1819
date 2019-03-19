@@ -7,7 +7,7 @@ public class FunNode implements DecNode {
 
 	private String id;
 	private Node type; 		//tipo di ritorno della funzione
-	private ArrowTypeNode symType;
+	private Node symType;
 	private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist" che è lista di Node
 	private ArrayList<Node> declist = new ArrayList<Node>(); 
 	private Node exp;
@@ -94,12 +94,16 @@ public class FunNode implements DecNode {
 						"lra\n" + "js\n" //salta a $ra
 				);
 
-		return "push " + funl + "\n";
+		return "lfp\n push " + funl + "\n";
 	}
 
 	@Override
 	public Node getSymType() {
 		return this.symType;
+	}
+	
+	public void setSymType(Node symType) {
+		this.symType = symType;
 	}
 
 }  

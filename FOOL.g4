@@ -69,7 +69,8 @@ declist returns [ArrayList<Node> astlist]: {
 	               FunNode f = new FunNode($i.text,$t.ast);      
 	               $astlist.add(f);                              
 	               HashMap<String,STentry> hm = symTable.get(nestingLevel);
-	               STentry entry=new STentry(nestingLevel, offset--);
+	               STentry entry=new STentry(nestingLevel, offset);
+	               offset-=2;
 	               if ( hm.put($i.text,entry) != null  ) {
 	               	System.out.println("Fun id "+$i.text+" at line "+$i.line+" already declared");
 	                System.exit(0);
@@ -86,15 +87,16 @@ declist returns [ArrayList<Node> astlist]: {
                 	parTypes.add($fht.ast);
                   ParNode fpar = new ParNode($fid.text,$fht.ast); //creo nodo ParNode
                   f.addPar(fpar);                                 //lo attacco al FunNode con addPar
+                  
                   if ( hmn.put($fid.text,new STentry(nestingLevel,$fht.ast,paroffset)) != null  ){ //aggiungo dich a hmn
                   	System.out.println("Parameter id "+$fid.text+" at line "+$fid.line+" already declared");
                    	System.exit(0);
-                  } else{
+                  } else {
                   	if(fpar.getSymType() instanceof ArrowTypeNode){
               			paroffset += 2;
-              		} else{
-              			offset++;
-              		}
+              	  	} else{
+              			paroffset++;
+              	  	}
                   }
                 } (COMMA id=ID COLON hty=hotype
                 	{
@@ -104,19 +106,24 @@ declist returns [ArrayList<Node> astlist]: {
                     if ( hmn.put($id.text,new STentry(nestingLevel,$hty.ast,paroffset)) != null){
                     	System.out.println("Parameter id "+$id.text+" at line "+$id.line+" already declared");
                      	System.exit(0);
-                    }else {
-                  		if(fpar.getSymType() instanceof ArrowTypeNode){
+                    } else {
+                    	if(par.getSymType() instanceof ArrowTypeNode){
               				paroffset += 2;
 	              		} else{
-	              			offset++;
+	              			paroffset++;
 	              		}
-                    } 
+                    }
                   }
-                )* )? RPAR {entry.addType(new ArrowTypeNode(parTypes,$t.ast));}
+                )* )? RPAR {
+                	ArrowTypeNode atn = new ArrowTypeNode(parTypes, $t.ast);
+                	f.setSymType(atn);
+                	entry.addType(atn);
+                }
                   (LET d=declist IN{f.addDec($d.astlist);})? e=exp 
-                  {f.addBody($e.ast);
-	               //rimuovere la hashmap corrente poiché esco dallo scope               
-	               symTable.remove(nestingLevel--);    
+                  {
+                  	f.addBody($e.ast);
+	                //rimuovere la hashmap corrente poiché esco dallo scope               
+	                symTable.remove(nestingLevel--);    
 	              }
             ) SEMIC 
           )+
@@ -196,8 +203,10 @@ value returns [Node ast]:
            while (j>=0 && entry==null)
              entry=(symTable.get(j--)).get($i.text);
            if (entry==null)
-           {System.out.println("Id "+$i.text+" at line "+$i.line+" not declared");
-            System.exit(0);}               
+           {
+           	System.out.println("Id "+$i.text+" at line "+$i.line+" not declared");
+            System.exit(0);
+            }               
 	   $ast= new IdNode($i.text,entry,nestingLevel);} 
 	   ( LPAR {ArrayList<Node> arglist = new ArrayList<Node>();}
 	   	 (a=exp {arglist.add($a.ast);}
@@ -223,7 +232,7 @@ type returns [Node ast]:
         | BOOL {
         	$ast=new BoolTypeNode();
         }		      	
- 	    | ID                        
+ 	    | ID               
  	    ;  
  	  
 arrow returns [Node ast]: {
