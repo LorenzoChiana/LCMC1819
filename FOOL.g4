@@ -36,10 +36,51 @@ prog returns [Node ast]
 	  {symTable.remove(nestingLevel);}
       SEMIC ;
 
-cllist  returns [ArrayList<Node> classList]: ( CLASS classID=ID (EXTENDS ID)? LPAR (ID COLON type (COMMA ID COLON type)* )? RPAR    
+cllist  returns [ArrayList<Node> classList]: {
+						$classList = new ArrayList<Node>();
+					}( CLASS classID=ID {
+						ClassNode c = new ClassNode($classID.text);    
+	               		$classList.add(c);
+					}
+					(EXTENDS ID)? LPAR (i =ID COLON t = type {     
+		               ArrayList<Node> fieldList = new ArrayList<Node>();
+		               Node f = new FieldNode($i.text, $t.ast);
+		               fieldList.add(f);
+					}(COMMA i=ID COLON t=type {
+						Node field = new FieldNode($i.text, $t.ast);
+						fieldList.add(field);
+					})* {
+						c.addField(fieldList);
+					} )? RPAR    
               CLPAR
-                 ( FUN ID COLON type LPAR (ID COLON hotype (COMMA ID COLON hotype)* )? RPAR
-	                     (LET (VAR ID COLON type ASS exp SEMIC)+ IN)? exp 
+                 ( FUN i=ID COLON t=type {
+                 	MethodNode method = new MethodNode($i.text, $t.ast);
+                 }
+                 LPAR {
+                 	ArrayList<Node> parType = new ArrayList<Node>(); //manca paroffset
+                 }(i=ID COLON ht=hotype { 
+                 	ParNode p = new ParNode($i.text, $ht.ast);
+                 	parType.add($ht.ast);
+                 	method.addPar(p);
+                 }
+                 	(COMMA i=ID COLON ht=hotype{
+                 	ParNode par = new ParNode($i.text, $ht.ast);
+                 	method.addPar(par);
+                 	parType.add($ht.ast);
+                 }		
+                 	)* )? RPAR {
+                 		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast);
+                 		method.setSymType(atn);					////forse ci va la entry.addType(atn);
+                 	}
+	                     (LET {
+	                     	ArrayList<Node> declist = new ArrayList<Node>();
+	                     }(VAR i=ID COLON t=type ASS e=exp SEMIC {
+	                     	Node v = new VarNode($i.text, $t.ast, $e.ast);
+	                     	declist.add(v);
+	                     })+ IN)? e = exp 
+	                     {
+	                     	method.addBody($e.ast);
+	                     }
         	       SEMIC
         	     )*                
               CRPAR
