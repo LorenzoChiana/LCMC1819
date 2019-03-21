@@ -1,9 +1,5 @@
 package ast;
 
-import java.util.ArrayList;
-
-import lib.FOOLlib;
-
 public class RefTypeNode implements Node {
 	String classId;
 
@@ -12,7 +8,7 @@ public class RefTypeNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return "";
+		return s + "RefType " + classId + "\n";
 	}
 
 	//non utilizzato

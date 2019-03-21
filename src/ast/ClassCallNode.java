@@ -1,52 +1,84 @@
 package ast;
 
+import java.util.ArrayList;
+
 import lib.FOOLlib;
 
 public class ClassCallNode implements Node {
-	private Node left;
-	private Node right;
+	
+	private String id;
+	private int nestingLevel;
+	private STentry entry;
+	private ArrayList<Node> parlist = new ArrayList<Node>(); 
 
-	public ClassCallNode (Node l, Node r) {
-		left=l;
-		right=r;
+	public ClassCallNode (String i, STentry st, ArrayList<Node> p, int nl) {
+		id=i;
+		nestingLevel=nl;
+		entry=st;
+		parlist=p;
 	}
+
 
 	public String toPrint(String s) {
-		return s+"And\n" + left.toPrint(s+"  ")   
-		+ right.toPrint(s+"  ") ; 
+		String parlstr="";
+		for (Node par:parlist){parlstr+=par.toPrint(s+"  ");};
+		return s+"Call:" + id + " at nestinglevel " + nestingLevel +"\n" +
+		entry.toPrint(s+"  ") +  
+		parlstr;
 	}
 
-	public Node typeCheck() {
-		Node l= left.typeCheck();  
-		Node r= right.typeCheck();  
-		if ( !(FOOLlib.isSubtype(l, r) || FOOLlib.isSubtype(r, l)) ) {
-			System.out.println("Incompatible types in and");
-			System.exit(0);	
-		}  
-		return new BoolTypeNode();
+	public Node typeCheck() {	 
+		ArrowTypeNode t=null;
+		if (entry.getType() instanceof ArrowTypeNode) {
+			t=(ArrowTypeNode) entry.getType(); 
+		} else {
+			System.out.println("Invocation of a non-function "+id);
+			System.exit(0);
+		}
+		ArrayList<Node> p = t.getParList();
+		if ( !(p.size() == parlist.size()) ) {
+			System.out.println("Wrong number of parameters in the invocation of "+id);
+			System.exit(0);
+		} 
+		//controlla che i parametri della chiamata siano sottotipo della funzione che chiami
+		for (int i=0; i<parlist.size(); i++) {
+			if ( !(FOOLlib.isSubtype( (parlist.get(i)).typeCheck(), p.get(i)) ) ) {
+				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
+				System.exit(0);
+			} 
+		}
+		return t.getRet();
 	}
 
 	public String codeGeneration() {
-		String l1= FOOLlib.freshLabel();
-		String l2= FOOLlib.freshLabel();
-		String l3= FOOLlib.freshLabel();
-		return 
-				left.codeGeneration() + 
-				"push 1\n"+ 
-				"beq "+l1+"\n"+
-				"push 0\n"+
-				"b "+l2+"\n"+
-				l1+": \n"+
-				
-				right.codeGeneration() +
-				"push 1\n"+ 
-				"beq "+l3+"\n"+
-				"push 0\n"+
-				"b "+l2+"\n"+
-				l3+": \n"+
-				"push 1\n"+
-				
-				l2+": \n";
-	}
+		String parCode="";
+		for (int i=parlist.size()-1; i>=0; i--) {
+			parCode+=parlist.get(i).codeGeneration();
+		}
+		String getAR="";
+		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++)
+			getAR+="lw\n";      
+		return "lfp\n"+ //Contro Link
+		parCode+ //allocazione valori parametri	
+
+		/*
+		 * nel caso di higher order 
+		 * nella prima parte dell'offset c'è la dichiarazione della funzione 
+		 * e nella seconda c'è l'indirizzo
+		 * */
+
+		"push "+entry.getOffset()+"\n"+			 
+		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
+		//in cui è dichiarata la funzione (Access Link)					 
+		"add\n"+
+		"lw\n"+ //carica sullo stack l'indirizzo della funzione
+
+		"push "+(entry.getOffset()-1)+"\n"+			 
+		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
+		//in cui è dichiarata la funzione (Access Link)					 
+		"add\n"+
+		"lw\n"+ //carica sullo stack l'indirizzo della funzione
+		"js\n"; //effettua il salto
+	}  
 
 }

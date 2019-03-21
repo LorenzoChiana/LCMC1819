@@ -7,6 +7,7 @@ import ast.*;
 }
 
 @parser::members{
+	private int classOffset = -2;
 	private int nestingLevel = 0;
 	private ArrayList<HashMap<String,STentry>> symTable = new ArrayList<>();
 	//livello ambiente con dichiarazioni piu' esterno è 0 (prima posizione ArrayList) invece che 1 (slides)
@@ -14,7 +15,7 @@ import ast.*;
 	
 	private HashMap<String, HashMap<String,STentry>> classTable = new HashMap<>();
 	
-
+	
 }
 
 @lexer::members {
@@ -39,16 +40,30 @@ prog returns [Node ast]
 cllist  returns [ArrayList<Node> classList]: {
 						$classList = new ArrayList<Node>();
 					}( CLASS classID=ID {
-						ClassNode c = new ClassNode($classID.text);    
+						ClassTypeNode classType = new ClassTypeNode();
+						HashMap<String,STentry> hm = symTable.get(nestingLevel);
+		             	if (hm.put($classID.text, new STentry(nestingLevel, classOffset)) != null  ) {
+		             		System.out.println("Class id "+$classID.text+" at line "+$classID.line+" already declared");
+		              		System.exit(0);
+		              	} else {
+		              		classOffset--;
+		              	}
+						HashMap<String,STentry> vt = new HashMap<String, STentry>();  //virtualTable
+		             	classTable.put($classID.text, vt);
+						ClassNode c = new ClassNode($classID.text);  
 	               		$classList.add(c);
+		               	nestingLevel++;
+		               	symTable.add(vt);
 					}
 					(EXTENDS ID)? LPAR (i =ID COLON t = type {     
 		               ArrayList<Node> fieldList = new ArrayList<Node>();
-		               Node f = new FieldNode($i.text, $t.ast);
+		               FieldNode f = new FieldNode($i.text, $t.ast);
+		               classType.addField(f.getSymType());
 		               fieldList.add(f);
 					}(COMMA i=ID COLON t=type {
-						Node field = new FieldNode($i.text, $t.ast);
+						FieldNode field = new FieldNode($i.text, $t.ast);
 						fieldList.add(field);
+						classType.addField(field.getSymType());
 					})* {
 						c.addField(fieldList);
 					} )? RPAR    
@@ -70,6 +85,7 @@ cllist  returns [ArrayList<Node> classList]: {
                  }		
                  	)* )? RPAR {
                  		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast);
+                 		classType.addMethod(atn);
                  		method.setSymType(atn);					////forse ci va la entry.addType(atn);
                  	}
 	                     (LET {
@@ -82,14 +98,19 @@ cllist  returns [ArrayList<Node> classList]: {
 	                     	method.addBody($e.ast);
 	                     }
         	       SEMIC
-        	     )*                
-              CRPAR
+        	     )* {
+              		hm.get($classID.text).addType(classType);
+              }               
+              CRPAR 
           )+
         ; 
 
 declist returns [ArrayList<Node> astlist]: {
 		$astlist= new ArrayList<Node>();
-		int offset=-2;
+		int offset = -2;
+		if(nestingLevel==0){
+			offset = classOffset;
+		}
 	} (
             ( VAR i=ID COLON ht=hotype ASS e=exp {
             	VarNode v = new VarNode($i.text,$ht.ast,$e.ast);  

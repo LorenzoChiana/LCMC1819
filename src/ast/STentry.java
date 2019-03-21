@@ -4,6 +4,7 @@ public class STentry {
   private int nl; //nesting level
   private Node type;
   private int offset;
+  private boolean isMethod;
   
   public STentry (int n, int os) {
 	  nl=n;
@@ -30,6 +31,14 @@ public class STentry {
   
   public int getNestinglevel() {
 	  return nl;
+  }
+  
+  public void setIsMethod(boolean m){
+	  isMethod = m;
+  }
+  
+  public boolean getIsMethod() {
+	  return isMethod;
   }
   
   public String toPrint(String s) {
