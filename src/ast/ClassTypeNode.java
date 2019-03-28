@@ -11,12 +11,12 @@ public class ClassTypeNode implements Node {
 		allMethods = new ArrayList<Node>();
 	}
 	
-	public void addField(Node field) {
-		allFields.add(field);
+	public void addField(int offset, Node field) {
+		allFields.add(offset, field);
 	}
 	
-	public void addMethod(Node method) {
-		allMethods.add(method);
+	public void addMethod(int offset, Node method) {
+		allMethods.add(offset, method);
 	}
 
 	public String toPrint(String s) {

@@ -14,6 +14,7 @@ import ast.*;
 	//il "fronte" della lista di tabelle è symTable.get(nestingLevel)
 	
 	private HashMap<String, HashMap<String,STentry>> classTable = new HashMap<>();
+	// vuole il nome della classe e la virtual table
 	
 	
 }
@@ -39,54 +40,99 @@ prog returns [Node ast]
 
 cllist  returns [ArrayList<Node> classList]: {
 						$classList = new ArrayList<Node>();
+						int offsetVT = -1; //perché i campi sono la prima cosa che vediamo
 					}( CLASS classID=ID {
 						ClassTypeNode classType = new ClassTypeNode();
 						HashMap<String,STentry> hm = symTable.get(nestingLevel);
-		             	if (hm.put($classID.text, new STentry(nestingLevel, classOffset)) != null  ) {
-		             		System.out.println("Class id "+$classID.text+" at line "+$classID.line+" already declared");
-		              		System.exit(0);
+						HashMap<String,STentry> vt = new HashMap<String, STentry>();  //virtualTable tiene sia le cose ha la nostra classe sia quello che eredita
+		             	if (hm.put($classID.text, new STentry(nestingLevel, classType, classOffset)) != null  ) {
+		             		System.out.println("Class id "+$i.text+" at line "+$i.line+" already declared");
+              				System.exit(0);
 		              	} else {
 		              		classOffset--;
 		              	}
-						HashMap<String,STentry> vt = new HashMap<String, STentry>();  //virtualTable
-		             	classTable.put($classID.text, vt);
-						ClassNode c = new ClassNode($classID.text);  
-	               		$classList.add(c);
+		              	symTable.add(vt);
+		              	if (classTable.put($classID.text, vt) != null) {
+		              		System.out.println("Class id "+$i.text+" at line "+$i.line+" already declared");
+              				System.exit(0);
+		              	}
+						ClassNode classNode = new ClassNode($classID.text);  
+	               		$classList.add(classNode);
 		               	nestingLevel++;
 		               	symTable.add(vt);
 					}
 					(EXTENDS ID)? LPAR (i =ID COLON t = type {     
 		               ArrayList<Node> fieldList = new ArrayList<Node>();
 		               FieldNode f = new FieldNode($i.text, $t.ast);
-		               classType.addField(f.getSymType());
+		               if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT)) != null  ) {
+		             		//Overriding
+		              		vt.replace($classID.text, new STentry(nestingLevel, $t.ast, offsetVT));
+		               }
+		               offsetVT--;
+		               classType.addField(offsetVT, f.getSymType());
 		               fieldList.add(f);
 					}(COMMA i=ID COLON t=type {
 						FieldNode field = new FieldNode($i.text, $t.ast);
 						fieldList.add(field);
-						classType.addField(field.getSymType());
+						/* da modificare con la versone con ereditarietà */
+						if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT)) != null  ) {
+		             		//Overriding
+		              		vt.replace($classID.text, new STentry(nestingLevel, $t.ast, offsetVT));
+		                }
+		                offsetVT--;
+						classType.addField(-offsetVT-1, field.getSymType());
 					})* {
-						c.addField(fieldList);
+						classNode.addField(fieldList);
 					} )? RPAR    
               CLPAR
                  ( FUN i=ID COLON t=type {
                  	MethodNode method = new MethodNode($i.text, $t.ast);
+                 	offsetVT = 0;
+                 	if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT, true)) != null  ) {
+		             	//Overriding
+		              	vt.replace($classID.text, new STentry(nestingLevel, $t.ast, offsetVT));
+		            }
+		            offsetVT++;
+	                nestingLevel++;
                  }
                  LPAR {
-                 	ArrayList<Node> parType = new ArrayList<Node>(); //manca paroffset
+                 	ArrayList<Node> parType = new ArrayList<Node>(); 
+                 	int paroffset = 1;
                  }(i=ID COLON ht=hotype { 
                  	ParNode p = new ParNode($i.text, $ht.ast);
                  	parType.add($ht.ast);
                  	method.addPar(p);
+                 	if ( vt.put($i.text,new STentry(nestingLevel,$ht.ast,paroffset)) != null  ){ //aggiungo dich a hmn
+	                  	System.out.println("Parameter id "+$i.text+" at line "+$i.line+" already declared");
+	                   	System.exit(0);
+	                } else {
+	                  	if(p.getSymType() instanceof ArrowTypeNode){
+	              			paroffset += 2;
+	              	  	} else{
+	              			paroffset++;
+	              	  	}
+	                }
                  }
                  	(COMMA i=ID COLON ht=hotype{
                  	ParNode par = new ParNode($i.text, $ht.ast);
                  	method.addPar(par);
                  	parType.add($ht.ast);
+                 	if ( vt.put($i.text,new STentry(nestingLevel,$ht.ast,paroffset)) != null  ){ //aggiungo dich a hmn
+	                  	System.out.println("Parameter id "+$i.text+" at line "+$i.line+" already declared");
+	                   	System.exit(0);
+	                } else {
+	                  	if(p.getSymType() instanceof ArrowTypeNode){
+	              			paroffset += 2;
+	              	  	} else{
+	              			paroffset++;
+	              	  	}
+	                }
                  }		
                  	)* )? RPAR {
-                 		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast);
-                 		classType.addMethod(atn);
+                 		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast); // A Giada non convince
+                 		classType.addMethod(offsetVT, atn);
                  		method.setSymType(atn);					////forse ci va la entry.addType(atn);
+                 		classNode.addMethod(method);
                  	}
 	                     (LET {
 	                     	ArrayList<Node> declist = new ArrayList<Node>();
@@ -99,7 +145,9 @@ cllist  returns [ArrayList<Node> classList]: {
 	                     }
         	       SEMIC
         	     )* {
-              		hm.get($classID.text).addType(classType);
+              		vt.get($classID.text).addType(classType);
+              		//rimuovere la hashmap corrente poiché esco dallo scope               
+	                symTable.remove(nestingLevel--);
               }               
               CRPAR 
           )+
@@ -252,29 +300,52 @@ value returns [Node ast]:
 		$ast= new BoolNode(false);
 	} 
 	| NULL {
-		
+		$ast= new EmptyNode();
 	}  
-	    | NEW ID LPAR (exp (COMMA exp)* )? RPAR         
+	    | NEW id=ID {
+	    	if(!classTable.containsKey($id.text)) {
+	    		System.out.println("Id "+$id.text+" at line "+$id.line+" is not a class");
+            	System.exit(0);
+	    	}
+	    } LPAR {
+	   		ArrayList<Node> arglist = new ArrayList<Node>();
+	   	}
+	   	 (a=exp {
+	   	 	arglist.add($a.ast);
+	   	 }
+	   	 (COMMA a=exp {
+	   	 	arglist.add($a.ast);
+	   	 }
+	   	 )* )? RPAR {
+	   	 	$ast = new NewNode();
+	   	 }        
 	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {$ast= new IfNode($x.ast,$y.ast,$z.ast);}    
 	    | NOT LPAR x=exp RPAR {$ast= new NotNode($x.ast);}
 	    | PRINT LPAR e=exp RPAR {$ast= new PrintNode($e.ast);}   
         | LPAR exp RPAR  
-	    | i=ID {//cercare la dichiarazione
+	    | id1=ID {//cercare la dichiarazione
            int j=nestingLevel;
            STentry entry=null; 
            while (j>=0 && entry==null)
-             entry=(symTable.get(j--)).get($i.text);
-           if (entry==null)
-           {
-           	System.out.println("Id "+$i.text+" at line "+$i.line+" not declared");
-            System.exit(0);
+             entry=(symTable.get(j--)).get($id1.text);
+           if (entry==null){
+           		System.out.println("Id "+$id1.text+" at line "+$id1.line+" not declared");
+            	System.exit(0);
             }               
-	   $ast= new IdNode($i.text,entry,nestingLevel);} 
-	   ( LPAR {ArrayList<Node> arglist = new ArrayList<Node>();}
-	   	 (a=exp {arglist.add($a.ast);}
-	   	 	(COMMA a=exp {arglist.add($a.ast);} )*
-	   	 )? RPAR {$ast= new CallNode($i.text,entry,arglist,nestingLevel);}
-	         | DOT ID LPAR (exp (COMMA exp)* )? RPAR 
+	   		$ast= new IdNode($id1.text,entry,nestingLevel);} 
+	   ( LPAR {
+	   		ArrayList<Node> arglist = new ArrayList<Node>();
+	   }
+	   	 (a=exp {
+	   	 	arglist.add($a.ast);
+	   	 }
+	   	 	(COMMA a=exp {
+	   	 		arglist.add($a.ast);
+	   	 	} )*
+	   	 )? RPAR {
+	   	 	$ast= new CallNode($id1.text,entry,arglist,nestingLevel);
+	   	 }
+	         | DOT id2=ID LPAR (exp (COMMA exp)* )? RPAR 
 	         )?	   
         ; 
                

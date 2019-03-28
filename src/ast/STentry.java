@@ -9,12 +9,21 @@ public class STentry {
   public STentry (int n, int os) {
 	  nl=n;
 	  offset=os;
+	  this.isMethod = false;
   } 
 
   public STentry (int n, Node t, int os) {
 	  nl=n;
 	  type=t;
 	  offset=os;
+	  this.isMethod = false;
+  }
+  
+  public STentry (int n, Node t, int os, boolean isMethod) {
+	  nl=n;
+	  type=t;
+	  offset=os;
+	  this.isMethod = isMethod;
   }
   
   public void addType(Node t) {
