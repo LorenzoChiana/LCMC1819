@@ -7,12 +7,12 @@ import lib.FOOLlib;
 public class NewNode implements Node {
 	private ArrayList<Node> arglist = new ArrayList<Node>();
 
-	public NewNode (ArrayList<Node> array) {
-		this.arglist = array;
+	public NewNode (ArrayList<Node> arglist) {
+		this.arglist = arglist;
 	}
 
 	public String toPrint(String s) {
-		return s+"And\n";/* + left.toPrint(s+"  ")   
+		return s+"New\n";/* + left.toPrint(s+"  ")   
 		+ right.toPrint(s+"  ") ; */
 	}
 

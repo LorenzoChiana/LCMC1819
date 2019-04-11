@@ -7,7 +7,7 @@ public class ClassNode implements DecNode {
 
 	private String id;
 	private Node symType;
-	private ArrayList<Node> field = new ArrayList<Node>(); // campo "parlist" che è lista di Node
+	private ArrayList<Node> field = new ArrayList<Node>(); 
 	private ArrayList<Node> method = new ArrayList<Node>(); 
 
 	public ClassNode (String i) {

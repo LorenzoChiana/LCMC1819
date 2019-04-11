@@ -10,8 +10,8 @@ import ast.*;
 	private int classOffset = -2;
 	private int nestingLevel = 0;
 	private ArrayList<HashMap<String,STentry>> symTable = new ArrayList<>();
-	//livello ambiente con dichiarazioni piu' esterno è 0 (prima posizione ArrayList) invece che 1 (slides)
-	//il "fronte" della lista di tabelle è symTable.get(nestingLevel)
+	//livello ambiente con dichiarazioni piu' esterno ï¿½ 0 (prima posizione ArrayList) invece che 1 (slides)
+	//il "fronte" della lista di tabelle ï¿½ symTable.get(nestingLevel)
 	
 	private HashMap<String, HashMap<String,STentry>> classTable = new HashMap<>();
 	// vuole il nome della classe e la virtual table
@@ -40,7 +40,7 @@ prog returns [Node ast]
 
 cllist  returns [ArrayList<Node> classList]: {
 						$classList = new ArrayList<Node>();
-						int offsetVT = -1; //perché i campi sono la prima cosa che vediamo
+						int offsetVT = -1; //perchï¿½ i campi sono la prima cosa che vediamo
 					}( CLASS classID=ID {
 						ClassTypeNode classType = new ClassTypeNode();
 						HashMap<String,STentry> hm = symTable.get(nestingLevel);
@@ -74,7 +74,7 @@ cllist  returns [ArrayList<Node> classList]: {
 					}(COMMA i=ID COLON t=type {
 						FieldNode field = new FieldNode($i.text, $t.ast);
 						fieldList.add(field);
-						/* da modificare con la versone con ereditarietà */
+						/* da modificare con la versone con ereditarietï¿½ */
 						if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT)) != null  ) {
 		             		//Overriding
 		              		vt.replace($classID.text, new STentry(nestingLevel, $t.ast, offsetVT));
@@ -146,7 +146,7 @@ cllist  returns [ArrayList<Node> classList]: {
         	       SEMIC
         	     )* {
               		vt.get($classID.text).addType(classType);
-              		//rimuovere la hashmap corrente poiché esco dallo scope               
+              		//rimuovere la hashmap corrente poichï¿½ esco dallo scope               
 	                symTable.remove(nestingLevel--);
               }               
               CRPAR 
@@ -232,7 +232,7 @@ declist returns [ArrayList<Node> astlist]: {
                   (LET d=declist IN{f.addDec($d.astlist);})? e=exp 
                   {
                   	f.addBody($e.ast);
-	                //rimuovere la hashmap corrente poiché esco dallo scope               
+	                //rimuovere la hashmap corrente poichï¿½ esco dallo scope               
 	                symTable.remove(nestingLevel--);    
 	              }
             ) SEMIC 
@@ -302,12 +302,12 @@ value returns [Node ast]:
 	| NULL {
 		$ast= new EmptyNode();
 	}  
-	    | NEW id=ID {
-	    	if(!classTable.containsKey($id.text)) {
-	    		System.out.println("Id "+$id.text+" at line "+$id.line+" is not a class");
-            	System.exit(0);
-	    	}
-	    } LPAR {
+	| NEW id=ID {
+		if(!classTable.containsKey($id.text)) {
+	    	System.out.println("Id "+$id.text+" at line "+$id.line+" is not a class");
+            System.exit(0);
+	    }
+		} LPAR {
 	   		ArrayList<Node> arglist = new ArrayList<Node>();
 	   	}
 	   	 (a=exp {
@@ -317,7 +317,7 @@ value returns [Node ast]:
 	   	 	arglist.add($a.ast);
 	   	 }
 	   	 )* )? RPAR {
-	   	 	$ast = new NewNode();
+	   	 	$ast = new NewNode(arglist);
 	   	 }        
 	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {$ast= new IfNode($x.ast,$y.ast,$z.ast);}    
 	    | NOT LPAR x=exp RPAR {$ast= new NotNode($x.ast);}
@@ -331,8 +331,10 @@ value returns [Node ast]:
            if (entry==null){
            		System.out.println("Id "+$id1.text+" at line "+$id1.line+" not declared");
             	System.exit(0);
-            }               
-	   		$ast= new IdNode($id1.text,entry,nestingLevel);} 
+            } 
+            Node node =  new IdNode($id1.text,entry,nestingLevel);            
+	   		$ast= node;
+	   		} 
 	   ( LPAR {
 	   		ArrayList<Node> arglist = new ArrayList<Node>();
 	   }
@@ -343,9 +345,33 @@ value returns [Node ast]:
 	   	 		arglist.add($a.ast);
 	   	 	} )*
 	   	 )? RPAR {
-	   	 	$ast= new CallNode($id1.text,entry,arglist,nestingLevel);
+	   	 	node =new CallNode($id1.text,entry,arglist,nestingLevel);
+	   	 	$ast= node;
 	   	 }
-	         | DOT id2=ID LPAR (exp (COMMA exp)* )? RPAR 
+	         | DOT id2=ID {
+	         	//Controllo che sia un classNode
+	         	if(!(node.typeCheck() instanceof ClassTypeNode)){
+	         		System.out.println("Id "+$id1.text+" at line "+$id1.line+" isn't a class");
+	         	}
+	         	//Cerco il metodo nella symbleTable e controllo che sia effettivamente un metodo
+	         	int i=nestingLevel;
+          		STentry methodEntry=null; 
+           		while (i>=0 && methodEntry==null)
+             		methodEntry=(symTable.get(j--)).get($id2.text);
+           		if (methodEntry==null){
+           			System.out.println("Method "+$id2.text+" at line "+$id1.line+" not declared");
+            		System.exit(0);
+            	} else if (!methodEntry.getIsMethod()) {
+            		System.out.println("Id "+$id2.text+" at line "+$id1.line+" isn't a method'");
+            		System.exit(0);
+            	}
+            	//Devo cercare il metodo nella virtual table della classe di id1
+            	//Come trovo la classe di id1?????
+            	//Quando ho la classe di id1 allora cerco la classe nella classTable dalla quale posso recuperare la virtual table
+            	//cos'Ã¨ RefTypeNode? serve questo per trovare la classe di id1
+	         }
+	         
+	         LPAR (exp (COMMA exp)* )? RPAR 
 	         )?	   
         ; 
                
