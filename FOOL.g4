@@ -313,8 +313,8 @@ value returns [Node ast]:
 	   	 (a=exp {
 	   	 	arglist.add($a.ast);
 	   	 }
-	   	 (COMMA a=exp {
-	   	 	arglist.add($a.ast);
+	   	 (COMMA a1=exp {
+	   	 	arglist.add($a1.ast);
 	   	 }
 	   	 )* )? RPAR {
 	   	 	$ast = new NewNode(arglist);
@@ -331,9 +331,8 @@ value returns [Node ast]:
            if (entry==null){
            		System.out.println("Id "+$id1.text+" at line "+$id1.line+" not declared");
             	System.exit(0);
-            } 
-            Node node =  new IdNode($id1.text,entry,nestingLevel);            
-	   		$ast= node;
+            }  
+	   		$ast=  new IdNode($id1.text,entry,nestingLevel);  ;
 	   		} 
 	   ( LPAR {
 	   		ArrayList<Node> arglist = new ArrayList<Node>();
@@ -345,34 +344,46 @@ value returns [Node ast]:
 	   	 		arglist.add($a.ast);
 	   	 	} )*
 	   	 )? RPAR {
-	   	 	node =new CallNode($id1.text,entry,arglist,nestingLevel);
-	   	 	$ast= node;
+	   	 	$ast= new CallNode($id1.text,entry,arglist,nestingLevel);
 	   	 }
 	         | DOT id2=ID {
 	         	//Controllo che sia un classNode
-	         	if(!(node.typeCheck() instanceof ClassTypeNode)){
+	         	if(!(entry.getType() instanceof RefTypeNode)){
 	         		System.out.println("Id "+$id1.text+" at line "+$id1.line+" isn't a class");
+	         		System.exit(0);
 	         	}
-	         	//Cerco il metodo nella symbleTable e controllo che sia effettivamente un metodo
-	         	int i=nestingLevel;
-          		STentry methodEntry=null; 
-           		while (i>=0 && methodEntry==null)
-             		methodEntry=(symTable.get(j--)).get($id2.text);
-           		if (methodEntry==null){
-           			System.out.println("Method "+$id2.text+" at line "+$id1.line+" not declared");
-            		System.exit(0);
-            	} else if (!methodEntry.getIsMethod()) {
-            		System.out.println("Id "+$id2.text+" at line "+$id1.line+" isn't a method'");
+	         	//Controllo che la classe è stata dichiarata cercandola nella classTable
+	         	if(!classTable.containsKey(((RefTypeNode)entry.getType()).getClassId())){
+	         		System.out.println("Class "+$id1.text+" at line "+$id1.line+" not declared");
+	         		System.exit(0);
+	         	}
+	         	//Recupero la virtual table della classe
+	         	HashMap<String,STentry> virtualTable = classTable.get(((RefTypeNode)entry.getType()).getClassId());
+	         	
+	         	if(!virtualTable.containsKey($id2.text)){
+	         		System.out.println("Method "+$id2.text+" at line "+$id2.line+" not declared");
+	         		System.exit(0);
+	         	}
+	         	
+	         	STentry methodEntry=virtualTable.get($id2.text); 
+	         	//Controllo che la entry sia davvero un metodo
+	         	if (!methodEntry.getIsMethod()) {
+            		System.out.println("Id "+$id2.text+" at line "+$id2.line+" isn't a method'");
             		System.exit(0);
             	}
-            	//Devo cercare il metodo nella virtual table della classe di id1
-            	//Come trovo la classe di id1?????
-            	//Quando ho la classe di id1 allora cerco la classe nella classTable dalla quale posso recuperare la virtual table
-            	//cos'è RefTypeNode? serve questo per trovare la classe di id1
 	         }
 	         
-	         LPAR (exp (COMMA exp)* )? RPAR 
-	         )?	   
+	         {
+	         	//Recupero gli argomenti del metodo, il controllo sui parametri si fa nel ClassCallNode
+	         	ArrayList<Node> arglistMethod = new ArrayList<Node>();
+	         }
+	         LPAR (a=exp {arglistMethod.add($a.ast);}
+	         (COMMA a1=exp{arglistMethod.add($a1.ast);})* )? RPAR {
+	         	//Creo il ClassCallNode
+	         	$ast= new ClassCallNode ($id1.text, methodEntry, arglistMethod, nestingLevel);
+	         }
+	         )?
+	         	   
         ; 
                
 hotype returns [Node ast]: 
@@ -391,7 +402,9 @@ type returns [Node ast]:
         | BOOL {
         	$ast=new BoolTypeNode();
         }		      	
- 	    | ID               
+ 	    | id=ID{
+ 	    	$ast = new RefTypeNode($id.text);
+ 	    }               
  	    ;  
  	  
 arrow returns [Node ast]: {

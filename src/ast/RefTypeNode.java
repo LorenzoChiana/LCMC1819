@@ -6,7 +6,9 @@ public class RefTypeNode implements Node {
 	public RefTypeNode (String id) {
 		classId = id;
 	}
-
+	public String getClassId() {
+		return classId;
+	}
 	public String toPrint(String s) {
 		return s + "RefType " + classId + "\n";
 	}
