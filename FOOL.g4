@@ -307,6 +307,7 @@ value returns [Node ast]:
 	    	System.out.println("Id "+$id.text+" at line "+$id.line+" is not a class");
             System.exit(0);
 	    }
+	    STentry entry = symTable.get(0).get($id.text);
 		} LPAR {
 	   		ArrayList<Node> arglist = new ArrayList<Node>();
 	   	}
@@ -317,7 +318,7 @@ value returns [Node ast]:
 	   	 	arglist.add($a1.ast);
 	   	 }
 	   	 )* )? RPAR {
-	   	 	$ast = new NewNode(arglist);
+	   	 	$ast = new NewNode($id.text,entry,arglist);
 	   	 }        
 	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {$ast= new IfNode($x.ast,$y.ast,$z.ast);}    
 	    | NOT LPAR x=exp RPAR {$ast= new NotNode($x.ast);}

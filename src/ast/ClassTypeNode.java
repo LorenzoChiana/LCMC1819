@@ -18,7 +18,15 @@ public class ClassTypeNode implements Node {
 	public void addMethod(int offset, Node method) {
 		allMethods.add(offset, method);
 	}
-
+	
+	public ArrayList<Node> getFields() {
+		return allFields;
+	}
+	
+	public ArrayList<Node> getMethods() {
+		return allMethods;
+	}
+	
 	public String toPrint(String s) {
 		String fieldList = "";
 		String methodList = "";
