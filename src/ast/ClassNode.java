@@ -9,7 +9,8 @@ public class ClassNode implements DecNode {
 	private Node symType;
 	private ArrayList<Node> field = new ArrayList<Node>(); 
 	private ArrayList<Node> method = new ArrayList<Node>(); 
-
+	private ArrayList<String> dispatchTable; 
+	
 	public ClassNode (String i) {
 		id=i;
 	}
@@ -28,8 +29,8 @@ public class ClassNode implements DecNode {
 	}  
 
 
-	public void addMethod (Node p) { 
-		method.add(p);  
+	public void addMethod (MethodNode p) { 
+		method.add(p); 
 	}  
 
 	public String toPrint(String s) {

@@ -131,7 +131,9 @@ cllist  returns [ArrayList<Node> classList]: {
                  	)* )? RPAR {
                  		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast); // A Giada non convince
                  		classType.addMethod(offsetVT, atn);
-                 		method.setSymType(atn);					////forse ci va la entry.addType(atn);
+                 		method.setSymType(atn);
+                 		////forse ci va la entry.addType(atn);
+                 		method.setOffset();					
                  		classNode.addMethod(method);
                  	}
 	                     (LET {
@@ -367,21 +369,14 @@ value returns [Node ast]:
 	         	}
 	         	
 	         	STentry methodEntry=virtualTable.get($id2.text); 
-	         	//Controllo che la entry sia davvero un metodo
-	         	if (!methodEntry.getIsMethod()) {
-            		System.out.println("Id "+$id2.text+" at line "+$id2.line+" isn't a method'");
-            		System.exit(0);
-            	}
-	         }
-	         
-	         {
 	         	//Recupero gli argomenti del metodo, il controllo sui parametri si fa nel ClassCallNode
 	         	ArrayList<Node> arglistMethod = new ArrayList<Node>();
 	         }
+	         
 	         LPAR (a=exp {arglistMethod.add($a.ast);}
 	         (COMMA a1=exp{arglistMethod.add($a1.ast);})* )? RPAR {
 	         	//Creo il ClassCallNode
-	         	$ast= new ClassCallNode ($id1.text, methodEntry, arglistMethod, nestingLevel);
+	         	$ast= new ClassCallNode ($id1.text, methodEntry, arglistMethod, nestingLevel); // Da controllare più avanti se c'è tutto
 	         }
 	         )?
 	         	   

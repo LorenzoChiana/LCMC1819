@@ -1,9 +1,21 @@
 package lib;
 
-import ast.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import ast.ArrowTypeNode;
+import ast.BoolTypeNode;
+import ast.EmptyTypeNode;
+import ast.IntTypeNode;
+import ast.Node;
+import ast.RefTypeNode;
 
 public class FOOLlib {
 	public final static int MEMSIZE = 10000; 
+	
+	//definisce la gerarchia dei tipi riferimento (costruita durante il parsing)
+	private static HashMap<String, String> superType = new HashMap<>();
+	private static ArrayList<ArrayList<String>> dispatchTables = new ArrayList<>();
 	
 	//valuta se il tipo "a" � <= al tipo "b", dove "a" e "b" sono tipi di base: int o bool
 	public static boolean isSubtype (Node a, Node b) {
@@ -21,6 +33,28 @@ public class FOOLlib {
 			} else {
 				return false;
 			}
+			if ((a instanceof EmptyTypeNode && !(b instanceof RefTypeNode || b instanceof EmptyTypeNode))) {	
+				return false;
+			}
+
+
+			/*Controllo che in superType esista una coppia con chiave a (sottotipo)
+			 * se esiste controllo che il super tipo di a sia uguale a b, se non lo è
+			 * chiamo ricorsivamente (ora il sotto tipo sarà il super tipo di a e il super tipo rimane b
+			 * itero finchè non trovo una corrispondenza nella hashmap, se non la trovo vuol dire che
+			 * a non è sottotipo di b
+			 * 
+			 * CONTROLLARE CON CHIANA*/
+			if (a instanceof RefTypeNode && b instanceof RefTypeNode) {
+				if(!superType.containsKey(superType.get(a))) {
+					return false;
+				}
+				if(!((RefTypeNode)b).getClassId().equals((superType.get(a)))){
+					isSubtype(new RefTypeNode(superType.get(a)), b);
+				}
+			}
+
+
 			return true;
 		} else {
 			return a.getClass().equals(b.getClass()) ||
@@ -40,7 +74,7 @@ public class FOOLlib {
 	public static String getCode() { 
 		return funCode;
 	} 
-	
+
 	public static String freshLabel() { 
 		return "label"+(labCount++);
 	} 
