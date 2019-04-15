@@ -1,16 +1,17 @@
+import lib.FOOLlib;
+
 public class ExecuteVM {
     
     public static final int CODESIZE = 10000;
-    public static final int MEMSIZE = 10000;
     
     private int[] code;
-    private int[] memory = new int[MEMSIZE];
+    private int[] memory = new int[FOOLlib.MEMSIZE];
     
     private int ip = 0;
-    private int sp = MEMSIZE;
+    private int sp = FOOLlib.MEMSIZE;
     
     private int hp = 0;       
-    private int fp = MEMSIZE; 
+    private int fp = FOOLlib.MEMSIZE; 
     private int ra;           
     private int rv;
     
@@ -106,7 +107,7 @@ public class ExecuteVM {
             push(hp);
             break;
          case SVMParser.PRINT :
-            System.out.println((sp<MEMSIZE)?memory[sp]:"Empty stack!");
+            System.out.println((sp<FOOLlib.MEMSIZE)?memory[sp]:"Empty stack!");
             break;
          case SVMParser.HALT :
             return;

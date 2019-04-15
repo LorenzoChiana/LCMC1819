@@ -26,7 +26,7 @@ int lexicalErrors=0;
 /*------------------------------------------------------------------
  * PARSER RULES
  *------------------------------------------------------------------*/
-
+ 
 prog returns [Node ast]
 	: {HashMap<String,STentry> hm = new HashMap<String,STentry> ();
        symTable.add(hm);}          
