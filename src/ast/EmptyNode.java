@@ -14,6 +14,6 @@ public class EmptyNode implements Node {
 	}
 
 	public String codeGeneration() {
-		return "push "+"\n";
+		return "push -1"+"\n";
 	}
 }

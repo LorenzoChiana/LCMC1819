@@ -7,30 +7,30 @@ public class ClassNode implements DecNode {
 
 	private String id;
 	private Node symType;
-	private ArrayList<Node> field = new ArrayList<Node>(); 
-	private ArrayList<Node> method = new ArrayList<Node>(); 
+	private ArrayList<Node> fields = new ArrayList<Node>(); 
+	private ArrayList<Node> methods = new ArrayList<Node>(); 
 	private ArrayList<String> dispatchTable; 
-	
+
 	public ClassNode (String i) {
 		id=i;
 	}
-	
+
 	@Override
 	public Node getSymType() {
 		return this.symType;
 	}
-	
+
 	public void setSymType(Node symType) {
 		this.symType = symType;
 	}
-	
+
 	public void addField (ArrayList<Node> f) {
-		field=f;
+		fields=f;
 	}  
 
 
 	public void addMethod (MethodNode p) { 
-		method.add(p); 
+		methods.add(p); 
 	}  
 
 	public String toPrint(String s) {
@@ -38,57 +38,37 @@ public class ClassNode implements DecNode {
 	}
 
 	public Node typeCheck() {
-		for (Node dec:field){dec.typeCheck();};
-		
+		for (Node dec:fields){
+			dec.typeCheck();
+		}
+
 		return null;
 	}
 
 	public String codeGeneration() {
-		String declCode = "";
-		for (Node dec:field) {
-			declCode += dec.codeGeneration();
+		ArrayList<String> dt = new ArrayList<String>();
+		FOOLlib.addDispatchTable(dt);		//per ereditarietà copiare dispatch table della classe da cui si eredita (contenuto)
+
+		for(Node m: methods) {
+			m.codeGeneration();
+			dt.add(((MethodNode) m).getOffset(), ((MethodNode) m).getLabel());
 		}
 
-		String popDecl="";
-		for (Node dec:field) {
-			if(((DecNode)dec).getSymType() instanceof ArrowTypeNode) {
-				popDecl += "pop\n";
-				popDecl += "pop\n";
-			} else {
-				popDecl += "pop\n";
-			}
+		String labelList = "";
+		for(String s: dt) {
+			labelList += "push " + s + "\n" 	//carico le label sullo heap
+					+ "lhp \n"					
+					+ "sw \n" 
+					+ "lhp \n" 					//incremento hp
+					+ "push 1 \n" 
+					+ "add \n"
+					+ "shp";					//salva la nuova cima dello heap
 		}
 
-		String popParl = "";
-		for (Node par: method) {
-			if(((DecNode)par).getSymType() instanceof ArrowTypeNode) {
-				popParl += "pop\n";
-				popParl += "pop\n";
-			} else {
-				popParl += "pop\n";
-			}
-		}
-
-		String funl = FOOLlib.freshFunLabel();
-
-		FOOLlib.putCode(
-				funl + ":\n" + 
-						"cfp\n" + //setta $fp a $sp (fp = frame pointer; sp = stack pointer) 
-						"lra\n" + //inserisce return address
-						declCode + // inserisce le dichiarazioni locali 
-						"srv\n" + //pop del return value
-						popDecl + //pop delle dichiarazioni
-						"sra\n" + //pop del return address
-						"pop\n" + //pop di AL
-						popParl + //pop dei parametri
-						"sfp\n" + //setto $fp al valore del CL
-						"lrv\n" + //risultato della funione sullo stack
-						"lra\n" + "js\n" //salta a $ra
-				);
-
-		return "lfp\n push " + funl + "\n";
+		return "lhp \n" +
+		labelList;
 	}
 
-	
+
 
 }  

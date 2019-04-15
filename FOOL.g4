@@ -129,11 +129,11 @@ cllist  returns [ArrayList<Node> classList]: {
 	                }
                  }		
                  	)* )? RPAR {
-                 		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast); // A Giada non convince
+                 		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast); // A Giada non convince 
                  		classType.addMethod(offsetVT, atn);
                  		method.setSymType(atn);
                  		////forse ci va la entry.addType(atn);
-                 		method.setOffset();					
+                 		method.setOffset(offsetVT);					
                  		classNode.addMethod(method);
                  	}
 	                     (LET {

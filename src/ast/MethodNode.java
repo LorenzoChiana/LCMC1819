@@ -18,6 +18,7 @@ public class MethodNode implements DecNode {
 		return offset;
 	}
 
+	//mettiamo l'offset della virtual table
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
@@ -46,6 +47,14 @@ public class MethodNode implements DecNode {
 	
 	public void addBody(Node e) {
 		exp = e;
+	}
+	
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
 	}
 	
 	public String toPrint(String s) {
@@ -115,6 +124,8 @@ public class MethodNode implements DecNode {
 
 		return "";
 	}
+
+
 	
  
 }  
