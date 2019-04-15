@@ -29,6 +29,7 @@ public class ClassCallNode implements Node {
 
 	public Node typeCheck() {	 
 		ArrowTypeNode t=null;
+		
 		if (entry.getType() instanceof ArrowTypeNode) {
 			t=(ArrowTypeNode) entry.getType(); 
 		} else {
@@ -63,19 +64,19 @@ public class ClassCallNode implements Node {
 
 		/*
 		 * nel caso di higher order 
-		 * nella prima parte dell'offset c'è la dichiarazione della funzione 
-		 * e nella seconda c'è l'indirizzo
+		 * nella prima parte dell'offset c'ï¿½ la dichiarazione della funzione 
+		 * e nella seconda c'ï¿½ l'indirizzo
 		 * */
 
 		"push "+entry.getOffset()+"\n"+			 
 		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
-		//in cui è dichiarata la funzione (Access Link)					 
+		//in cui ï¿½ dichiarata la funzione (Access Link)					 
 		"add\n"+
 		"lw\n"+ //carica sullo stack l'indirizzo della funzione
 
 		"push "+(entry.getOffset()-1)+"\n"+			 
 		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
-		//in cui è dichiarata la funzione (Access Link)					 
+		//in cui ï¿½ dichiarata la funzione (Access Link)					 
 		"add\n"+
 		"lw\n"+ //carica sullo stack l'indirizzo della funzione
 		"js\n"; //effettua il salto

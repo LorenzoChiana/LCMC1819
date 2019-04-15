@@ -8,10 +8,20 @@ public class MethodNode implements DecNode {
 	private String id;
 	private Node type; 		//tipo di ritorno del metodo
 	private Node symType;
-	private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist" che è lista di Node
+	private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist" che ï¿½ lista di Node
 	private ArrayList<Node> declist = new ArrayList<Node>(); 
 	private Node exp;
+	private String label;
+	private int offset;
 	
+	public int getOffset() {
+		return offset;
+	}
+
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+
 	public MethodNode (String i, Node type) {
 		id=i;
 		this.type = type;
@@ -24,6 +34,10 @@ public class MethodNode implements DecNode {
 	@Override
 	public Node getSymType() {
 		return symType;
+	} 
+	
+	public String getId() {
+		return id;
 	} 
 	
 	public void addPar(ParNode p) {
@@ -56,6 +70,8 @@ public class MethodNode implements DecNode {
 	}
 
 	public String codeGeneration() {
+		label = FOOLlib.freshFunLabel();
+		
 		String declCode = "";
 		for (Node dec:declist) {
 			declCode += dec.codeGeneration();
@@ -80,11 +96,9 @@ public class MethodNode implements DecNode {
 				popParl += "pop\n";
 			}
 		}
-
-		String funl = FOOLlib.freshFunLabel();
-
+		
 		FOOLlib.putCode(
-				funl + ":\n" + 
+				label + ":\n" + 
 						"cfp\n" + //setta $fp a $sp (fp = frame pointer; sp = stack pointer) 
 						"lra\n" + //inserisce return address
 						declCode + // inserisce le dichiarazioni locali
@@ -99,7 +113,7 @@ public class MethodNode implements DecNode {
 						"lra\n" + "js\n" //salta a $ra
 				);
 
-		return "lfp\n push " + funl + "\n";
+		return "";
 	}
 	
  
