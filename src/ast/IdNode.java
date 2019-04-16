@@ -41,13 +41,15 @@ public class IdNode implements Node {
 
 	private String getAddress(int offset) {
 		String getAR="";
-		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++)
+		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++) {
 			getAR+="lw\n";
+		}
+		
 		return "push "+offset+"\n"+			 
-		"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
-		//in cui ï¿½ dichiarata la variabile			 
-		"add\n"+
-		"lw\n"; //prende il valore all'indirizzo specificato e lo poppa sullo stack
+			"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
+			//in cui è dichiarata la variabile			 
+			"add\n"+
+			"lw\n"; //prende il valore all'indirizzo specificato e lo poppa sullo stack
 	}
 
 }  

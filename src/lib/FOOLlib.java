@@ -70,6 +70,11 @@ public class FOOLlib {
 	public static void addDispatchTable(ArrayList<String> dt) {
 		dispatchTables.add(dt);
 	}
+	
+	public static ArrayList<String> getDispatchTable(int i){
+		return dispatchTables.get(i);
+	}
+	
 	public static void putCode(String c) { 
 		funCode+="\n"+c; //aggiunge una linea vuota di separazione prima di funzione
 	} 

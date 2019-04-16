@@ -28,7 +28,6 @@ public class ClassNode implements DecNode {
 		fields=f;
 	}  
 
-
 	public void addMethod (MethodNode p) { 
 		methods.add(p); 
 	}  

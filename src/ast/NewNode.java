@@ -46,8 +46,32 @@ public class NewNode implements Node {
 	}
 
 	public String codeGeneration() {
-
-		return "";
+		String parCode="";
+		for (int i=arglist.size()-1; i>=0; i--) {
+			parCode+=arglist.get(i).codeGeneration();
+		}
+		
+		String labelList = "";
+		for(int i = 0; i<arglist.size(); i++) {
+			labelList += "lhp \n"	//carico sullo stack l'indirizzo dello heap pointer				
+					+ "sw \n" 		//salvo all'indirizzo di hp quello che c'è nel top dello stack
+					+ "lhp \n" 		//incremento hp
+					+ "push 1 \n" 
+					+ "add \n"
+					+ "shp";		//salva la nuova cima dello heap (il nuovo heap pointer)
+		}
+		
+		return parCode 
+				+"lhp \n"
+				+ labelList
+				+ (FOOLlib.MEMSIZE + entry.getOffset()) 	//recupera il dispatch pointer
+				+ "lhp \n"						
+				+ "sw \n"									//carica il dispatch pointer a indirizzo hp
+				+ "lhp \n"			//quello che rimane sullo stack (object pointer da ritornare)
+				+ "lhp \n" 									//incremento hp
+				+ "push 1 \n" 
+				+ "add \n"
+				+ "shp";
 	}
 
 }

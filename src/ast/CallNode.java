@@ -62,23 +62,22 @@ public class CallNode implements Node {
 
 		if (entry.getIsMethod()) {
 			//Object Oriented
-			result = "lfp\n"+ 		//Control Link - salvo il frame poiner precedente (della funzione che mi ha chiamato)
+			result = "lfp\n"+ 			//Control Link - salvo il frame pointer precedente (della funzione che mi ha chiamato)
 					parCode+ 			//allocazione valori parametri	
 
 					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui è dichiarata la funzione (Access Link)					 
-
+										//in cui è dichiarata la funzione (Access Link)					 
 					"push "+(entry.getOffset())+"\n"+
-					"lfp\n"+ //carica il frame pointer
-					getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui è dichiarata la funzione (Access Link)			
+					"lfp\n"+ 			//carica il frame pointer
+					getAR+ 				//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+										//in cui è dichiarata la funzione (Access Link)			
 					"lw \n"+
 					"add\n"+
-					"lw\n"+ //carica sullo stack l'indirizzo della funzione
-					"js\n"; //effettua il salto
+					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
+					"js\n"; 			//effettua il salto
 		} else {
 			//Higher order
-			result = "lfp\n"+ 		//Control Link
+			result = "lfp\n"+ 			//Control Link
 					parCode+ 			//allocazione valori parametri	
 
 					/*
@@ -90,17 +89,17 @@ public class CallNode implements Node {
 					//usato per settare un nuovo access link
 					"push "+entry.getOffset()+"\n"+		 
 					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui è dichiarata la funzione (Access Link)					 
+										//in cui è dichiarata la funzione (Access Link)					 
 					"add\n"+
 					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
 
-				//usato per saltare al codice della funzione
-				"push "+(entry.getOffset()-1)+"\n"+			 
-				"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-				//in cui è dichiarata la funzione (Access Link)					 
-				"add\n"+
-				"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
-				"js\n"; 			//effettua il salto
+					//usato per saltare al codice della funzione
+					"push "+(entry.getOffset()-1)+"\n"+			 
+					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+										//in cui è dichiarata la funzione (Access Link)					 
+					"add\n"+
+					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
+					"js\n"; 			//effettua il salto
 		}
 
 		return result;

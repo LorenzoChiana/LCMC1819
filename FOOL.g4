@@ -371,12 +371,12 @@ value returns [Node ast]:
 	         	STentry methodEntry=virtualTable.get($id2.text); 
 	         	//Recupero gli argomenti del metodo, il controllo sui parametri si fa nel ClassCallNode
 	         	ArrayList<Node> arglistMethod = new ArrayList<Node>();
-	         }
+	         } 
 	         
 	         LPAR (a=exp {arglistMethod.add($a.ast);}
 	         (COMMA a1=exp{arglistMethod.add($a1.ast);})* )? RPAR {
-	         	//Creo il ClassCallNode
-	         	$ast= new ClassCallNode ($id1.text, methodEntry, arglistMethod, nestingLevel); // Da controllare più avanti se c'è tutto
+	         	//Creo il ClassCallNode 
+	         	$ast= new ClassCallNode ($id1.text, $id2.text, methodEntry, entry, arglistMethod, nestingLevel); // Da  controllare più avanti se c'è tutto
 	         }
 	         )?
 	         	   

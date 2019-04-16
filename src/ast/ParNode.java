@@ -23,5 +23,9 @@ public class ParNode implements DecNode {
 	public Node getSymType() {
 		return this.type;
 	}
+	
+	public String getId() {
+		return this.id;
+	}
 
 }  
