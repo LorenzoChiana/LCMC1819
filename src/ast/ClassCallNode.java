@@ -60,7 +60,7 @@ public class ClassCallNode implements Node {
 			getAR+="lw\n";
 		}
 		return "push "+offset+"\n"+			 
-		"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata la variabile
+		"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata l'oggetto
 		"add\n"+
 		"lw\n"; 			//prende il valore all'indirizzo specificato e lo poppa sullo stack
 	}
@@ -76,7 +76,8 @@ public class ClassCallNode implements Node {
 		return "lfp \n"						//salva il control link
 				+ parCode					//dobbiamo settare l'AL a objectPointer
 				+ objectPointer 			//salvare il valore dell'access link
-				+ objectPointer				//salvare l'indirizzo del metodo
+				+ objectPointer				
+				+ "lw \n"					//con lw precedente salviamo l'indirizzo, questo lo usiamo per raggiungere l'indirizzo del metodo 
 				+ "push " + methodEntry.getOffset() + "\n"
 				+ "add \n"					//stiamo puntando al metodo chiamato
 				+ "lw \n"

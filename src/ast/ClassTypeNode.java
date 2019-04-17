@@ -11,6 +11,14 @@ public class ClassTypeNode implements Node {
 		allMethods = new ArrayList<Node>();
 	}
 	
+	public void addAllFields(ArrayList<Node> f) {
+		allFields.addAll(f);
+	}
+	
+	public void addAllMethods(ArrayList<Node> m) {
+		allMethods.addAll(m);
+	}
+	
 	public void addField(int offset, Node field) {
 		allFields.add(offset, field);
 	}

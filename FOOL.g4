@@ -61,7 +61,21 @@ cllist  returns [ArrayList<Node> classList]: {
 		               	nestingLevel++;
 		               	symTable.add(vt);
 					}
-					(EXTENDS ID)? LPAR (i =ID COLON t = type {     
+					(EXTENDS id2 = ID {
+						if(hm.containsKey($id2.text)){
+							if (hm.get($id2.text).getType() instanceof ClassTypeNode){
+								classType.addAllFields(((ClassTypeNode) hm.get($id2.text).getType()).getFields());
+								classType.addAllMethods(((ClassTypeNode) hm.get($id2.text).getType()).getMethods());
+							} else {
+								System.out.println("Id "+$id2.text+" at line "+$id2.line+" is not a class");
+              					System.exit(0);	
+							}
+						} else {
+							System.out.println("Class id "+$id2.text+" at line "+$id2.line+" doesn\'t exist");
+              				System.exit(0);
+						}
+						vt.putAll(new HashMap<String, STentry>(classTable.get($id2.text)));
+					})? LPAR (i =ID COLON t = type {     
 		               ArrayList<Node> fieldList = new ArrayList<Node>();
 		               FieldNode f = new FieldNode($i.text, $t.ast);
 		               if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT)) != null  ) {
@@ -352,7 +366,7 @@ value returns [Node ast]:
 	         | DOT id2=ID {
 	         	//Controllo che sia un classNode
 	         	if(!(entry.getType() instanceof RefTypeNode)){
-	         		System.out.println("Id "+$id1.text+" at line "+$id1.line+" isn't a class");
+	         		System.out.println("Id "+$id1.text+" at line "+$id1.line+" is not a class");
 	         		System.exit(0);
 	         	}
 	         	//Controllo che la classe è stata dichiarata cercandola nella classTable
