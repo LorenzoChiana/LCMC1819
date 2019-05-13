@@ -35,6 +35,7 @@ public class ClassTypeNode implements Node {
 		return allMethods;
 	}
 	
+	
 	public String toPrint(String s) {
 		String fieldList = "";
 		String methodList = "";

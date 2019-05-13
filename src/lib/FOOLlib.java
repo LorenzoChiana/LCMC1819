@@ -17,7 +17,7 @@ public class FOOLlib {
 	private static HashMap<String, String> superType = new HashMap<>();
 	private static ArrayList<ArrayList<String>> dispatchTables = new ArrayList<>();
 	
-	//valuta se il tipo "a" è <= al tipo "b", dove "a" e "b" sono tipi di base: int o bool
+	//valuta se il tipo "a" Ã¨ <= al tipo "b"
 	public static boolean isSubtype (Node a, Node b) {
 		if(a instanceof ArrowTypeNode && b instanceof ArrowTypeNode) {
 			ArrowTypeNode nodeA = (ArrowTypeNode)a;
@@ -46,11 +46,12 @@ public class FOOLlib {
 			 * 
 			 * CONTROLLARE CON CHIANA*/
 			if (a instanceof RefTypeNode && b instanceof RefTypeNode) {
-				if(!superType.containsKey(superType.get(a))) {
+				if(!superType.containsKey(superType.get(((RefTypeNode) a).getClassId()))){
 					return false;
 				}
-				if(!((RefTypeNode)b).getClassId().equals((superType.get(a)))){
-					isSubtype(new RefTypeNode(superType.get(a)), b);
+				
+				if(!((RefTypeNode)b).getClassId().equals(superType.get(((RefTypeNode) a).getClassId()))){
+					isSubtype(new RefTypeNode(superType.get(((RefTypeNode) a).getClassId())), b);
 				}
 			}
 
@@ -71,6 +72,9 @@ public class FOOLlib {
 		dispatchTables.add(dt);
 	}
 	
+	public static void addSuperType(String sup, String sub) {
+		superType.put(sub,sup);
+	}
 	public static ArrayList<String> getDispatchTable(int i){
 		return dispatchTables.get(i);
 	}

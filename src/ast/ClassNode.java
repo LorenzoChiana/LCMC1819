@@ -9,7 +9,7 @@ public class ClassNode implements DecNode {
 	private Node symType;
 	private ArrayList<Node> fields = new ArrayList<Node>(); 
 	private ArrayList<Node> methods = new ArrayList<Node>(); 
-	private ArrayList<String> dispatchTable; 
+	private STentry superEntry;
 
 	public ClassNode (String i) {
 		id=i;
@@ -30,7 +30,15 @@ public class ClassNode implements DecNode {
 
 	public void addMethod (MethodNode p) { 
 		methods.add(p); 
-	}  
+	} 
+	
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 
 	public String toPrint(String s) {
 		return null;
@@ -40,13 +48,41 @@ public class ClassNode implements DecNode {
 		for (Node dec:fields){
 			dec.typeCheck();
 		}
-
+		ArrayList<Node> superTypeFields =((ClassTypeNode)superEntry.getType()).getFields();
+		for(int i = 0; i<superTypeFields.size(); i++) {
+			if (!FOOLlib.isSubtype (fields.get(i), superTypeFields.get(i))) {
+				System.out.println("Incompatible value for field");
+				System.exit(0);
+			}
+		}
+		
+		ArrayList<Node> superTypeMethods =((ClassTypeNode)superEntry.getType()).getMethods();
+		for(int i = 0; i<superTypeMethods.size(); i++) {
+			if (!FOOLlib.isSubtype (methods.get(i), superTypeMethods.get(i))) {
+				System.out.println("Incompatible value for methods");
+				System.exit(0);
+			}
+		}
 		return null;
 	}
+	
+	public STentry getSuperEntry() {
+		return superEntry;
+	}
 
+	public void setSuperEntry(STentry superEntry) {
+		this.superEntry = superEntry;
+	}
+	
 	public String codeGeneration() {
-		ArrayList<String> dt = new ArrayList<String>();
-		FOOLlib.addDispatchTable(dt);		//per ereditarietà copiare dispatch table della classe da cui si eredita (contenuto)
+		ArrayList<String> dt;
+		if (superEntry!=null) {
+			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-(superEntry.getOffset())-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
+		}else {
+			dt = new ArrayList<String>();
+		}
+		
+		FOOLlib.addDispatchTable(dt);		//per ereditarietï¿½ copiare dispatch table della classe da cui si eredita (contenuto)
 
 		for(Node m: methods) {
 			m.codeGeneration();

@@ -3,6 +3,7 @@ grammar FOOL;
 @header{
 import java.util.ArrayList;
 import java.util.HashMap;
+import lib.FOOLlib;
 import ast.*;
 }
 
@@ -39,6 +40,7 @@ prog returns [Node ast]
       SEMIC ;
 
 cllist  returns [ArrayList<Node> classList]: {
+						boolean isExtends = false;
 						$classList = new ArrayList<Node>();
 						int offsetVT = -1; //perch� i campi sono la prima cosa che vediamo
 					}( CLASS classID=ID {
@@ -74,39 +76,64 @@ cllist  returns [ArrayList<Node> classList]: {
 							System.out.println("Class id "+$id2.text+" at line "+$id2.line+" doesn\'t exist");
               				System.exit(0);
 						}
+						
+						classNode.setSuperEntry(symTable.get(0).get($classID.text));
 						vt.putAll(new HashMap<String, STentry>(classTable.get($id2.text)));
+						offsetVT = -(classType.getFields().size())-1;
+						isExtends=true;
+						FOOLlib.addSuperType($id2.text, $classID.text);
+						
 					})? LPAR (i =ID COLON t = type {     
 		               ArrayList<Node> fieldList = new ArrayList<Node>();
-		               FieldNode f = new FieldNode($i.text, $t.ast);
-		               if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT)) != null  ) {
+		               FieldNode field = new FieldNode($i.text, $t.ast);
+		               fieldList.add(field);
+		               
+		               	if (vt.containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
 		             		//Overriding
-		              		vt.replace($classID.text, new STentry(nestingLevel, $t.ast, offsetVT));
-		               }
-		               offsetVT--;
-		               classType.addField(offsetVT, f.getSymType());
-		               fieldList.add(f);
+		             		if(!vt.get($i.text).getIsMethod()){
+		             			vt.replace($i.text, new STentry(nestingLevel, $t.ast, vt.get($i.text).getOffset()));
+		             			classType.addField(-(vt.get($i.text).getOffset())-1, field.getSymType());
+		             		}
+						}else{
+							vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
+							offsetVT--;
+						    classType.addField(-offsetVT-1, field.getSymType());
+						}
 					}(COMMA i=ID COLON t=type {
-						FieldNode field = new FieldNode($i.text, $t.ast);
+						field = new FieldNode($i.text, $t.ast);
 						fieldList.add(field);
-						/* da modificare con la versone con ereditariet� */
-						if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT)) != null  ) {
+						if (vt.containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
 		             		//Overriding
-		              		vt.replace($classID.text, new STentry(nestingLevel, $t.ast, offsetVT));
-		                }
-		                offsetVT--;
-						classType.addField(-offsetVT-1, field.getSymType());
+		             		if(!vt.get($i.text).getIsMethod()){
+		             			vt.replace($i.text, new STentry(nestingLevel, $t.ast, vt.get($i.text).getOffset()));
+		             			classType.addField(-(vt.get($i.text).getOffset())-1, field.getSymType());
+		             		}
+						}else{
+							vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
+							offsetVT--;
+						    classType.addField(-offsetVT-1, field.getSymType());
+						}
 					})* {
 						classNode.addField(fieldList);
 					} )? RPAR    
               CLPAR
                  ( FUN i=ID COLON t=type {
                  	MethodNode method = new MethodNode($i.text, $t.ast);
-                 	offsetVT = 0;
-                 	if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT, true)) != null  ) {
-		             	//Overriding
-		              	vt.replace($classID.text, new STentry(nestingLevel, $t.ast, offsetVT));
-		            }
-		            offsetVT++;
+                 	if (isExtends){
+                 		offsetVT = (classType.getMethods().size());
+                 	}else{
+                 		offsetVT = 0;
+                 	}
+                 	if (vt.containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
+		             		//Overriding
+		            	if(vt.get($i.text).getIsMethod()){
+		             		vt.replace($i.text, new STentry(nestingLevel, $t.ast, vt.get($i.text).getOffset()));
+		             	}
+					}else{
+						vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
+						offsetVT++;
+						
+					}
 	                nestingLevel++;
                  }
                  LPAR {

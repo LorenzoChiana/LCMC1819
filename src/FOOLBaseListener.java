@@ -2,6 +2,7 @@
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import lib.FOOLlib;
 import ast.*;
 
 
