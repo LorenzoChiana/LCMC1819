@@ -72,6 +72,10 @@ public class FOOLlib {
 		dispatchTables.add(dt);
 	}
 	
+	public static ArrayList<ArrayList<String>> getDispatchTables() {
+		return dispatchTables;
+	}
+	
 	public static void addSuperType(String sup, String sub) {
 		superType.put(sub,sup);
 	}

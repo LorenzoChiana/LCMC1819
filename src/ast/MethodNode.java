@@ -22,6 +22,10 @@ public class MethodNode implements DecNode {
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
+	
+	public void addDec(ArrayList<Node> d) {
+		declist = d;
+	}
 
 	public MethodNode (String i, Node type) {
 		id=i;

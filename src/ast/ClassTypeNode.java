@@ -1,54 +1,73 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class ClassTypeNode implements Node {
-	ArrayList<Node> allFields;
-	ArrayList<Node> allMethods;
 
-	public ClassTypeNode () {
-		allFields = new ArrayList<Node>();
-		allMethods = new ArrayList<Node>();
+	private ArrayList<Node> allFields = new ArrayList<>();
+	private ArrayList<Node> allMethods = new ArrayList<>();
+	
+	public ClassTypeNode() {}
+	
+	public ClassTypeNode(ArrayList<Node> fields, ArrayList<Node> methods) {
+		this.allFields = fields;
+		this.allMethods = methods;
+	}
+
+	public void addField(Node f, int offset) {
+		this.allFields.add(offset, f);
 	}
 	
-	public void addAllFields(ArrayList<Node> f) {
-		allFields.addAll(f);
+	public void replaceField(Node f, int offset) {
+		this.allFields.set(offset, f);
+	}
+
+	public void addMethod(Node m, int offset) {
+		this.allMethods.add(offset, m);
 	}
 	
-	public void addAllMethods(ArrayList<Node> m) {
-		allMethods.addAll(m);
+	public void replaceMethod(Node m, int offset) {
+		this.allMethods.set(offset, m);
+	}
+
+	public List<Node> getFields() {
+		return Collections.unmodifiableList(this.allFields);
 	}
 	
-	public void addField(int offset, Node field) {
-		allFields.add(offset, field);
+	public List<Node> getMethods() {
+		return Collections.unmodifiableList(this.allMethods);
 	}
-	
-	public void addMethod(int offset, Node method) {
-		allMethods.add(offset, method);
-	}
-	
-	public ArrayList<Node> getFields() {
-		return allFields;
-	}
-	
-	public ArrayList<Node> getMethods() {
-		return allMethods;
-	}
-	
-	
-	public String toPrint(String s) {
+
+	@Override
+	public String toPrint(String indent) {
+
 		String fieldList = "";
+		for (Node n : allFields)
+			fieldList += n.toPrint(indent + "  ");
+
 		String methodList = "";
-		for (Node field:allFields){fieldList+=field.toPrint(s+"  ");}
-		for (Node method:allMethods){methodList+=method.toPrint(s+"  ");}
-		
-		return s+"ClassTypeNode\n" + fieldList + methodList; 
+		for (Node n : allMethods)
+			methodList += n.toPrint(indent + "  ");
+
+		return indent + "ClassType\n" + fieldList + methodList;
 	}
 
-	//non utilizzato
-	public Node typeCheck() {return null;}
+	// non utilizzato
+	@Override
+	public Node typeCheck() {
+		return null;
+	}
 
-	//non utilizzato
-	public String codeGeneration() {return "";}
+	// non utilizzato
+	@Override
+	public String codeGeneration() {
+		return "";
+	}
+	
+	public ClassTypeNode copy() {
+		return new ClassTypeNode(new ArrayList<>(allFields), new ArrayList<>(allMethods));
+	}
 
 }
