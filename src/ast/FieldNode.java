@@ -4,6 +4,7 @@ public class FieldNode implements DecNode {
 
 	private String id;
 	private Node type;
+	
 
 	public FieldNode (String i, Node type) {
 		id=i;

@@ -27,23 +27,44 @@ int lexicalErrors=0;
 /*------------------------------------------------------------------
  * PARSER RULES
  *------------------------------------------------------------------*/
- 
-prog returns [Node ast]
-	: {HashMap<String,STentry> hm = new HashMap<String,STentry> ();
-       symTable.add(hm);}          
-	  ( e=exp 	
-        {$ast = new ProgNode($e.ast);} 
-      | LET d=declist IN e=exp  
-        {$ast = new ProgLetInNode($d.astlist,$e.ast);}      
-	  ) 
-	  {symTable.remove(nestingLevel);}
-      SEMIC ;
 
-cllist  returns [ArrayList<Node> classList]: {
-						boolean isExtends = false;
+prog  returns [Node ast]
+	:{
+		HashMap<String,STentry> hm = new HashMap<String,STentry> ();
+        symTable.add(hm);
+        boolean isOO=false;
+	}
+	( LET ( c=cllist (d=declist)? 
+		{	isOO=true;
+		}
+        | d=declist
+    ) IN e=exp
+    {
+    	if (isOO){
+    		System.out.println("classList "+$c.classList);
+    		$ast = new ProgLetInNode($c.classList,$d.astlist,$e.ast);
+    	}else{
+    		$ast = new ProgLetInNode($d.astlist,$e.ast);
+    	}
+    }
+        |e=exp
+        {
+        	$ast = new ProgNode($e.ast);
+        	symTable.remove(nestingLevel);
+        }
+        
+        ) SEMIC
+      ;
+
+
+cllist returns [ArrayList<Node> classList]: {
 						$classList = new ArrayList<Node>();
-						int offsetVT = -1; //perch� i campi sono la prima cosa che vediamo
 					}( CLASS classID=ID {
+						ArrayList <String> fieldsMethodsinClass= new ArrayList<>();
+						boolean isExtends = false;
+						int offsetVT = -1; //perch� i campi sono la prima cosa che vediamo
+						System.out.println("CLASSE "+$classID.text);
+						//System.out.println("Offset vero "+ (offsetVT));
 						ClassTypeNode classType = new ClassTypeNode();
 						HashMap<String,STentry> hm = symTable.get(nestingLevel);
 						HashMap<String,STentry> vt = new HashMap<String, STentry>();  //virtualTable tiene sia le cose ha la nostra classe sia quello che eredita
@@ -53,17 +74,11 @@ cllist  returns [ArrayList<Node> classList]: {
 		              	} else {
 		              		classOffset--;
 		              	}
-		              	symTable.add(vt);
-		              	if (classTable.put($classID.text, vt) != null) {
-		              		System.out.println("Class id "+$i.text+" at line "+$i.line+" already declared");
-              				System.exit(0);
-		              	}
-						ClassNode classNode = new ClassNode($classID.text);  
-	               		$classList.add(classNode);
-		               	nestingLevel++;
-		               	symTable.add(vt);
+		                
+		               	ClassNode classNode = new ClassNode($classID.text); 
 					}
 					(EXTENDS id2 = ID {
+						hm = symTable.get(0);
 						if(hm.containsKey($id2.text)){
 							if (hm.get($id2.text).getType() instanceof ClassTypeNode){
 								classType.addAllFields(((ClassTypeNode) hm.get($id2.text).getType()).getFields());
@@ -79,62 +94,121 @@ cllist  returns [ArrayList<Node> classList]: {
 						
 						classNode.setSuperEntry(symTable.get(0).get($classID.text));
 						vt.putAll(new HashMap<String, STentry>(classTable.get($id2.text)));
-						offsetVT = -(classType.getFields().size())-1;
+						offsetVT = -classType.getFields().size()-1;
 						isExtends=true;
 						FOOLlib.addSuperType($id2.text, $classID.text);
 						
-					})? LPAR (i =ID COLON t = type {     
+					})? 
+					{
+						$classList.add(classNode);
+		              	if (classTable.put($classID.text, vt) != null) {
+		              		System.out.println("Class id "+$i.text+" at line "+$i.line+" already declared");
+              				System.exit(0);
+		              	}
+	               		
+	               		symTable.add(vt);
+		               	nestingLevel++;
+					}
+					LPAR (i =ID COLON t = type {    
+						//System.out.println("Offset vero "+$i.text+ (offsetVT)); 
 		               ArrayList<Node> fieldList = new ArrayList<Node>();
-		               FieldNode field = new FieldNode($i.text, $t.ast);
-		               fieldList.add(field);
 		               
-		               	if (vt.containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
+		               if (fieldsMethodsinClass.contains($i.text)){
+		               		System.out.println("Id "+$i.text+" at line "+$i.line+" already declared in this class");
+              				System.exit(0);
+		               }else{
+		               		fieldsMethodsinClass.add($i.text);
+		               } 
+		              
+		               	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
 		             		//Overriding
-		             		if(!vt.get($i.text).getIsMethod()){
-		             			vt.replace($i.text, new STentry(nestingLevel, $t.ast, vt.get($i.text).getOffset()));
-		             			classType.addField(-(vt.get($i.text).getOffset())-1, field.getSymType());
+		             		if(!classTable.get($id2.text).get($i.text).getIsMethod()){
+		             			FieldNode field = new FieldNode($i.text, $t.ast);
+							    //fieldList.add(field);
+		             			vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset()));
+		             			classType.addField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
+		             		}else{
+		             			System.out.println("Override is not permitted");
+              					System.exit(0);
 		             		}
 						}else{
+							FieldNode field = new FieldNode($i.text, $t.ast);
+							fieldList.add(field);
+							//System.out.println("Offset vero "+$i.text+ (offsetVT));
 							vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
-							offsetVT--;
-						    classType.addField(-offsetVT-1, field.getSymType());
+						    classType.addField(-offsetVT-1, field);
+						    offsetVT--;
 						}
 					}(COMMA i=ID COLON t=type {
-						field = new FieldNode($i.text, $t.ast);
-						fieldList.add(field);
-						if (vt.containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
+						if (fieldsMethodsinClass.contains($i.text)){
+		               		System.out.println("Id "+$i.text+" at line "+$i.line+" already declared in this class");
+              				System.exit(0);
+		               }else{
+		               		fieldsMethodsinClass.add($i.text);
+		               }
+		               	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
 		             		//Overriding
-		             		if(!vt.get($i.text).getIsMethod()){
-		             			vt.replace($i.text, new STentry(nestingLevel, $t.ast, vt.get($i.text).getOffset()));
-		             			classType.addField(-(vt.get($i.text).getOffset())-1, field.getSymType());
+		             		if(!classTable.get($id2.text).get($i.text).getIsMethod()){
+		             			FieldNode field = new FieldNode($i.text, $t.ast);
+							    //fieldList.add(field);
+		             			vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset()));
+		             			classType.addField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
+		             		}else{
+		             			System.out.println("Override is not permitted");
+              					System.exit(0);
 		             		}
 						}else{
+							FieldNode field = new FieldNode($i.text, $t.ast);
+							fieldList.add(field);
+							//System.out.println("Offset vero "+$i.text+ (offsetVT));
 							vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
-							offsetVT--;
-						    classType.addField(-offsetVT-1, field.getSymType());
+						    classType.addField(-offsetVT-1, field);
+						    offsetVT--;
 						}
 					})* {
 						classNode.addField(fieldList);
 					} )? RPAR    
-              CLPAR
-                 ( FUN i=ID COLON t=type {
+              CLPAR{
+              	if (isExtends){
+                	offsetVT = (classType.getMethods().size());
+                }else{
+                 	offsetVT = 0;
+                }
+                 	}( FUN i=ID COLON t=type {
                  	MethodNode method = new MethodNode($i.text, $t.ast);
-                 	if (isExtends){
-                 		offsetVT = (classType.getMethods().size());
-                 	}else{
-                 		offsetVT = 0;
-                 	}
-                 	if (vt.containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
-		             		//Overriding
-		            	if(vt.get($i.text).getIsMethod()){
-		             		vt.replace($i.text, new STentry(nestingLevel, $t.ast, vt.get($i.text).getOffset()));
+                 	//Do errore se il metodo è già dichiarato in questa classe
+                 	if (fieldsMethodsinClass.contains($i.text)){
+		            	System.out.println("Id "+$i.text+" at line "+$i.line+" already declared in this class");
+              			System.exit(0);
+		            }else{
+		               	fieldsMethodsinClass.add($i.text);
+		            }
+		               
+                 	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
+		             	//Overriding
+		             	if(classTable.get($id2.text).get($i.text).getIsMethod()){
+		             		method.setOffset(classTable.get($id2.text).get($i.text).getOffset());
+							classType.addMethod(classTable.get($id2.text).get($i.text).getOffset(), method);
+                 			classNode.addMethod(method);
+		             		vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset(), true));
+		             		
+		             	}else{
+		            		System.out.println("Override is not permitted");
+              				System.exit(0);
 		             	}
 					}else{
-						vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
+						//No override
+						method.setOffset(offsetVT);
+						classType.addMethod(offsetVT, method);
+                 		classNode.addMethod(method);
+						if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT, true))!=null){
+							System.out.println("Id "+$i.text+" at line "+$i.line+" already declared");
+              				System.exit(0);
+						}
 						offsetVT++;
-						
 					}
 	                nestingLevel++;
+	                symTable.add(new HashMap<String,STentry>());
                  }
                  LPAR {
                  	ArrayList<Node> parType = new ArrayList<Node>(); 
@@ -170,27 +244,40 @@ cllist  returns [ArrayList<Node> classList]: {
 	                }
                  }		
                  	)* )? RPAR {
-                 		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast); // A Giada non convince 
-                 		classType.addMethod(offsetVT, atn);
+                 		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast);
                  		method.setSymType(atn);
-                 		////forse ci va la entry.addType(atn);
-                 		method.setOffset(offsetVT);					
-                 		classNode.addMethod(method);
+                 		////forse ci va la entry.addType(atn);	
+                 		
                  	}
 	                     (LET {
 	                     	ArrayList<Node> declist = new ArrayList<Node>();
+	                     	int varoffset = -2; 
 	                     }(VAR i=ID COLON t=type ASS e=exp SEMIC {
 	                     	Node v = new VarNode($i.text, $t.ast, $e.ast);
+	                     	HashMap<String,STentry> hmVar = symTable.get(nestingLevel);
+             				if (hmVar.put($i.text, new STentry(nestingLevel, $t.ast,varoffset)) != null  ) {
+             					System.out.println("Var id "+$i.text+" at line "+$i.line+" already declared");
+              					System.exit(0);
+              				} else {
+              					if(((VarNode)v).getSymType() instanceof ArrowTypeNode){
+              						varoffset -= 2;
+              					} else{
+              						varoffset--;
+              					}
+              				}
+              				method.setDeclist(declist);
 	                     	declist.add(v);
-	                     })+ IN)? e = exp 
-	                     {
+	                     })+ IN{method.setDeclist(declist);})? e = exp 
+	                     {  
 	                     	method.addBody($e.ast);
+	                     	symTable.remove(nestingLevel--);
 	                     }
         	       SEMIC
         	     )* {
-              		vt.get($classID.text).addType(classType);
+        	     	classNode.setSymType(classType);
               		//rimuovere la hashmap corrente poich� esco dallo scope               
 	                symTable.remove(nestingLevel--);
+	                
               }               
               CRPAR 
           )+
@@ -370,13 +457,14 @@ value returns [Node ast]:
 	    | id1=ID {//cercare la dichiarazione
            int j=nestingLevel;
            STentry entry=null; 
-           while (j>=0 && entry==null)
-             entry=(symTable.get(j--)).get($id1.text);
+           while (j>=0 && entry==null){
+             entry=(symTable.get(j)).get($id1.text);
+           	}
            if (entry==null){
            		System.out.println("Id "+$id1.text+" at line "+$id1.line+" not declared");
             	System.exit(0);
             }  
-	   		$ast=  new IdNode($id1.text,entry,nestingLevel);  ;
+	   		$ast=  new IdNode($id1.text,entry,nestingLevel);  
 	   		} 
 	   ( LPAR {
 	   		ArrayList<Node> arglist = new ArrayList<Node>();

@@ -49,6 +49,14 @@ public class MethodNode implements DecNode {
 		exp = e;
 	}
 	
+	public ArrayList<Node> getDeclist() {
+		return declist;
+	}
+
+	public void setDeclist(ArrayList<Node> declist) {
+		this.declist = declist;
+	}
+
 	public String getLabel() {
 		return label;
 	}
