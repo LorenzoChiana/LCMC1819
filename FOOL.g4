@@ -59,16 +59,16 @@ prog  returns [Node ast]
 
 cllist returns [ArrayList<Node> classList]: {
 						$classList = new ArrayList<Node>();
+						boolean isExtends = false;
 					}( CLASS classID=ID {
 						ArrayList <String> fieldsMethodsinClass= new ArrayList<>();
-						boolean isExtends = false;
 						int offsetVT = -1; //perch� i campi sono la prima cosa che vediamo
 						System.out.println("CLASSE "+$classID.text);
-						//System.out.println("Offset vero "+ (offsetVT));
 						ClassTypeNode classType = new ClassTypeNode();
-						HashMap<String,STentry> hm = symTable.get(nestingLevel);
+						HashMap<String,STentry> hm =symTable.get(nestingLevel); 
 						HashMap<String,STentry> vt = new HashMap<String, STentry>();  //virtualTable tiene sia le cose ha la nostra classe sia quello che eredita
-		             	if (hm.put($classID.text, new STentry(nestingLevel, classType, classOffset)) != null  ) {
+						STentry entry = new STentry(nestingLevel, classOffset);
+		             	if (hm.put($classID.text, entry)!= null) {
 		             		System.out.println("Class id "+$i.text+" at line "+$i.line+" already declared");
               				System.exit(0);
 		              	} else {
@@ -112,7 +112,6 @@ cllist returns [ArrayList<Node> classList]: {
 					LPAR (i =ID COLON t = type {    
 						//System.out.println("Offset vero "+$i.text+ (offsetVT)); 
 		               ArrayList<Node> fieldList = new ArrayList<Node>();
-		               
 		               if (fieldsMethodsinClass.contains($i.text)){
 		               		System.out.println("Id "+$i.text+" at line "+$i.line+" already declared in this class");
               				System.exit(0);
@@ -246,8 +245,7 @@ cllist returns [ArrayList<Node> classList]: {
                  	)* )? RPAR {
                  		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast);
                  		method.setSymType(atn);
-                 		////forse ci va la entry.addType(atn);	
-                 		
+                 		entry.addType(atn);
                  	}
 	                     (LET {
 	                     	ArrayList<Node> declist = new ArrayList<Node>();
@@ -267,9 +265,10 @@ cllist returns [ArrayList<Node> classList]: {
               				}
               				method.setDeclist(declist);
 	                     	declist.add(v);
-	                     })+ IN{method.setDeclist(declist);})? e = exp 
+	                     })+ IN{method.setDeclist(declist);})?{System.out.println("exp "+$classID.text);} ex = exp 
 	                     {  
-	                     	method.addBody($e.ast);
+	                     	System.out.println("Body "+$classID.text);
+	                     	method.addBody($ex.ast);
 	                     	symTable.remove(nestingLevel--);
 	                     }
         	       SEMIC
@@ -277,7 +276,7 @@ cllist returns [ArrayList<Node> classList]: {
         	     	classNode.setSymType(classType);
               		//rimuovere la hashmap corrente poich� esco dallo scope               
 	                symTable.remove(nestingLevel--);
-	                
+	                System.out.println("finish "+$classID.text);
               }               
               CRPAR 
           )+
@@ -369,8 +368,9 @@ declist returns [ArrayList<Node> astlist]: {
           )+
         ;
 
-exp	returns [Node ast]: 
+exp	returns [Node ast]: {System.out.println("Exp1");}
 	f=term {
+		System.out.println("Exp1");
 		$ast= $f.ast;
 	} ( 
 		PLUS l=term {
@@ -385,7 +385,7 @@ exp	returns [Node ast]:
        )* 
     ;  
 
-term returns [Node ast]: 
+term returns [Node ast]: {System.out.println("term");}
 	f=factor {
 		$ast= $f.ast;
 	} ( 
@@ -404,22 +404,23 @@ term returns [Node ast]:
     
 factor	returns [Node ast]:
 	f=value {
+		{System.out.println("factor");}
 		$ast= $f.ast;
 	} (
-		EQ eq=value {
+		(EQ eq=value {
 			$ast= new EqualNode ($ast,$eq.ast);
-		}
-	    | GE ge=value {
+		})
+	    | (GE ge=value {
 	     	$ast= new GreaterEqualNode ($ast,$ge.ast);
-	    }
-	    | LE le=value {
+	    })
+	    | (LE le=value {
 	     	$ast= new LessEqualNode ($ast,$le.ast);
-	     } 
+	     }) 
 	   )*
  	;	 	
    	
   	
-value returns [Node ast]: 
+value returns [Node ast]: {System.out.println("value");}
 	n=INTEGER {
 		$ast= new IntNode(Integer.parseInt($n.text));
 	} 
