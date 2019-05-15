@@ -27,6 +27,8 @@ public class IfNode implements Node {
 	}
 	Node t= th.typeCheck();  
 	Node e= el.typeCheck();  
+	System.out.println(t.toPrint("  "));
+	System.out.println(e.toPrint("  "));
 	if (FOOLlib.isSubtype(t, e))
       return e;
 	if (FOOLlib.isSubtype(e, t))

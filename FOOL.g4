@@ -106,8 +106,7 @@ cllist returns [ArrayList<Node> classList]: {
 	               		symTable.add(vt);
 		               	nestingLevel++;
 					}
-					LPAR (i =ID COLON t = type {    
-						//System.out.println("Offset vero "+$i.text+ (offsetVT)); 
+					LPAR (i =ID COLON t = type {
 		               ArrayList<Node> fieldList = new ArrayList<Node>();
 		               if (fieldsMethodsinClass.contains($i.text)){
 		               		System.out.println("Id "+$i.text+" at line "+$i.line+" already declared in this class");
@@ -120,9 +119,9 @@ cllist returns [ArrayList<Node> classList]: {
 		             		//Overriding
 		             		if(!classTable.get($id2.text).get($i.text).getIsMethod()){
 		             			FieldNode field = new FieldNode($i.text, $t.ast);
-							    //fieldList.add(field);
 		             			vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset()));
 		             			classType.overrideField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
+		             			fieldList.add(field);
 		             		}else{
 		             			System.out.println("Override is not permitted");
               					System.exit(0);
@@ -146,7 +145,7 @@ cllist returns [ArrayList<Node> classList]: {
 		             		//Overriding
 		             		if(!classTable.get($id2.text).get($i.text).getIsMethod()){
 		             			FieldNode field = new FieldNode($i.text, $t.ast);
-							    //fieldList.add(field);
+							    fieldList.add(field);
 		             			vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset()));
 		             			classType.overrideField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
 		             		}else{
@@ -156,7 +155,6 @@ cllist returns [ArrayList<Node> classList]: {
 						}else{
 							FieldNode field = new FieldNode($i.text, $t.ast);
 							fieldList.add(field);
-							//System.out.println("Offset vero "+$i.text+ (offsetVT));
 							vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
 						    classType.addField(-offsetVT-1, field);
 						    offsetVT--;

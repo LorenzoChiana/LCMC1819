@@ -12,11 +12,11 @@ import ast.RefTypeNode;
 
 public class FOOLlib {
 	public final static int MEMSIZE = 10000; 
-	
+
 	//definisce la gerarchia dei tipi riferimento (costruita durante il parsing)
 	private static HashMap<String, String> superType = new HashMap<>();
 	private static ArrayList<ArrayList<String>> dispatchTables = new ArrayList<>();
-	
+
 	//valuta se il tipo "a" è <= al tipo "b"
 	public static boolean isSubtype (Node a, Node b) {
 		if(a instanceof ArrowTypeNode && b instanceof ArrowTypeNode) {
@@ -30,55 +30,50 @@ public class FOOLlib {
 						return false;
 					}
 				}
-			} else {
-				return false;
 			}
-			if ((a instanceof EmptyTypeNode && !(b instanceof RefTypeNode || b instanceof EmptyTypeNode))) {	
-				return false;
-			}
-
-
+			return true;
+			/*}else if ((a instanceof EmptyTypeNode && !(b instanceof RefTypeNode || b instanceof EmptyTypeNode))) {	
+			return false;*/
+		}else 
 			/*Controllo che in superType esista una coppia con chiave a (sottotipo)
 			 * se esiste controllo che il super tipo di a sia uguale a b, se non lo è
 			 * chiamo ricorsivamente (ora il sotto tipo sarà il super tipo di a e il super tipo rimane b
 			 * itero finchè non trovo una corrispondenza nella hashmap, se non la trovo vuol dire che
 			 * a non è sottotipo di b
-			 * 
-			 * CONTROLLARE CON CHIANA*/
+			 * */
 			if (a instanceof RefTypeNode && b instanceof RefTypeNode) {
 				if(!superType.containsKey(superType.get(((RefTypeNode) a).getClassId()))){
 					return false;
 				}
-				
+
 				if(!((RefTypeNode)b).getClassId().equals(superType.get(((RefTypeNode) a).getClassId()))){
 					isSubtype(new RefTypeNode(superType.get(((RefTypeNode) a).getClassId())), b);
 				}
+			}else if(a instanceof RefTypeNode && b instanceof EmptyTypeNode) {
+				return true;
+			}else {
+				return a.getClass().equals(b.getClass()) ||
+						((a instanceof BoolTypeNode) && (b instanceof IntTypeNode));
 			}
-
-
-			return true;
-		} else {
-			return a.getClass().equals(b.getClass()) ||
-					((a instanceof BoolTypeNode) && (b instanceof IntTypeNode));
-		}
+		return false;
 	}
 
 	private static int labCount=0; //nome etichette (univoche)
 	private static int funlabCount=0; 
 
 	private static String funCode="" ; 
-	
+
 	public static void addDispatchTable(ArrayList<String> dt) {
 		dispatchTables.add(dt);
 	}
-	
+
 	public static void addSuperType(String sup, String sub) {
 		superType.put(sub,sup);
 	}
 	public static ArrayList<String> getDispatchTable(int i){
 		return dispatchTables.get(i);
 	}
-	
+
 	public static void putCode(String c) { 
 		funCode+="\n"+c; //aggiunge una linea vuota di separazione prima di funzione
 	} 

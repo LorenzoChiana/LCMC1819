@@ -51,24 +51,40 @@ public class ClassNode implements DecNode {
 	}
 
 	public Node typeCheck() {
-		for (Node dec:fields){
-			dec.typeCheck();
+		for (Node m:methods){
+			m.typeCheck();
 		}
-		ArrayList<Node> superTypeFields =((ClassTypeNode)superEntry.getType()).getFields();
-		for(int i = 0; i<superTypeFields.size(); i++) {
-			if (!FOOLlib.isSubtype (fields.get(i), superTypeFields.get(i))) {
-				System.out.println("Incompatible value for field");
-				System.exit(0);
+		if (superEntry!=null) { //faccio il check se la classe estende da un superType
+			
+			//controllo campi overridedati
+			ArrayList<Node> superTypeFields =((ClassTypeNode)superEntry.getType()).getFields();
+			for (Node field: fields){
+				for(int i = 0; i<superTypeFields.size(); i++) {
+					if (((FieldNode) superTypeFields.get(i)).getId().equals(((FieldNode)field).getId())) { //Se hanno lo stesso id c'è override (faccio il checking)
+						if (!FOOLlib.isSubtype (field, superTypeFields.get(i))) {
+							System.out.println("Incompatible value for field");
+							System.exit(0);
+						}
+					}
+				}
+				
+			}
+			//controllo metodi overridedati
+			ArrayList<Node> superTypeMethods =((ClassTypeNode)superEntry.getType()).getMethods();
+			for (Node method: methods){
+				for(int i = 0; i<superTypeMethods.size(); i++) {
+					if (((MethodNode) superTypeMethods.get(i)).getId().equals(((MethodNode)method).getId())) { //Se hanno lo stesso id c'è override (faccio il checking)
+						if (!FOOLlib.isSubtype (method, superTypeMethods.get(i))) {
+							System.out.println("Incompatible value for methods");
+							System.exit(0);
+						}
+					}
+				}
+				
 			}
 		}
 		
-		ArrayList<Node> superTypeMethods =((ClassTypeNode)superEntry.getType()).getMethods();
-		for(int i = 0; i<superTypeMethods.size(); i++) {
-			if (!FOOLlib.isSubtype (methods.get(i), superTypeMethods.get(i))) {
-				System.out.println("Incompatible value for methods");
-				System.exit(0);
-			}
-		}
+		
 		return null;
 	}
 	
