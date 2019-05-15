@@ -12,11 +12,21 @@ public class STentry {
 	  this.isMethod = false;
   } 
 
+  public STentry (int n, boolean isMethod) {
+	  nl=n;
+	  this.isMethod = isMethod;
+  } 
   public STentry (int n, Node t, int os) {
 	  nl=n;
 	  type=t;
 	  offset=os;
 	  this.isMethod = false;
+  }
+  
+  public STentry (int n, int os, boolean isMethod) {
+	  nl=n;
+	  offset=os;
+	  this.isMethod = isMethod;
   }
   
   public STentry (int n, Node t, int os, boolean isMethod) {
@@ -34,6 +44,10 @@ public class STentry {
 	  return type;
   }
 
+  public void setOffset(int offset) {
+	  this.offset=offset;
+  }
+  
   public int getOffset() {
 	  return offset;
   }

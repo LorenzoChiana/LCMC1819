@@ -13,7 +13,7 @@ public class ProgLetInNode implements Node {
 		declist=d;
 		exp=e;
 	}
-	
+
 	public ProgLetInNode (ArrayList<Node> c, ArrayList<Node> d, Node e) {
 		classlist=c;
 		declist=d;
@@ -21,11 +21,17 @@ public class ProgLetInNode implements Node {
 	}
 
 	public String toPrint(String s) {
+		//class List
+		String cstr="";
+		for (Node c:classlist){
+			cstr+=c.toPrint(s+"  ");
+		};
+		//dec List
 		String declstr="";
-		for (Node dec:declist){declstr+=dec.toPrint(s+"  ");};
-		String declCstr="";
-		for (Node decC:declist){declCstr+=decC.toPrint(s+"  ");};
-		return s+"ProgLetIn\n" + declstr + declCstr + exp.toPrint(s+"  "); 
+		for (Node dec:declist){
+			declstr+=dec.toPrint(s+"  ");
+		};
+		return s+"ProgLetIn\n" + cstr + declstr + exp.toPrint(s+"  "); 
 	}
 
 	public Node typeCheck() {

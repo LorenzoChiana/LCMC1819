@@ -41,7 +41,13 @@ public class ClassNode implements DecNode {
 	}
 
 	public String toPrint(String s) {
-		return null;
+		String fieldList = "";
+		String methodList = "";
+		for (Node field:fields){fieldList+=field.toPrint(s+"  ");}
+		for (Node method:methods){methodList+=method.toPrint(s+"  ");}
+		
+		return s+"ClassNode: "+id
+				+"\n" + fieldList + methodList; 
 	}
 
 	public Node typeCheck() {

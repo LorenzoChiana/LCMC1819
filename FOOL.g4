@@ -80,13 +80,10 @@ cllist returns [ArrayList<Node> classList]: {
 					(EXTENDS id2 = ID {
 						hm = symTable.get(0);
 						if(hm.containsKey($id2.text)){
-							if (hm.get($id2.text).getType() instanceof ClassTypeNode){
-								classType.addAllFields(((ClassTypeNode) hm.get($id2.text).getType()).getFields());
-								classType.addAllMethods(((ClassTypeNode) hm.get($id2.text).getType()).getMethods());
-							} else {
-								System.out.println("Id "+$id2.text+" at line "+$id2.line+" is not a class");
-              					System.exit(0);	
-							}
+						
+							classType.addAllFields(((ClassTypeNode) hm.get($id2.text).getType()).getFields());
+							classType.addAllMethods(((ClassTypeNode) hm.get($id2.text).getType()).getMethods());
+
 						} else {
 							System.out.println("Class id "+$id2.text+" at line "+$id2.line+" doesn\'t exist");
               				System.exit(0);
@@ -125,7 +122,7 @@ cllist returns [ArrayList<Node> classList]: {
 		             			FieldNode field = new FieldNode($i.text, $t.ast);
 							    //fieldList.add(field);
 		             			vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset()));
-		             			classType.addField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
+		             			classType.overrideField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
 		             		}else{
 		             			System.out.println("Override is not permitted");
               					System.exit(0);
@@ -151,7 +148,7 @@ cllist returns [ArrayList<Node> classList]: {
 		             			FieldNode field = new FieldNode($i.text, $t.ast);
 							    //fieldList.add(field);
 		             			vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset()));
-		             			classType.addField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
+		             			classType.overrideField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
 		             		}else{
 		             			System.out.println("Override is not permitted");
               					System.exit(0);
@@ -182,14 +179,16 @@ cllist returns [ArrayList<Node> classList]: {
 		            }else{
 		               	fieldsMethodsinClass.add($i.text);
 		            }
-		               
+		             
+		            STentry mEntry = new STentry(nestingLevel, true);
                  	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
 		             	//Overriding
 		             	if(classTable.get($id2.text).get($i.text).getIsMethod()){
 		             		method.setOffset(classTable.get($id2.text).get($i.text).getOffset());
-							classType.addMethod(classTable.get($id2.text).get($i.text).getOffset(), method);
+							classType.overrideMethod(classTable.get($id2.text).get($i.text).getOffset(), method);
                  			classNode.addMethod(method);
-		             		vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset(), true));
+                 			mEntry.setOffset(classTable.get($id2.text).get($i.text).getOffset());
+		             		vt.put($i.text, mEntry);
 		             		
 		             	}else{
 		            		System.out.println("Override is not permitted");
@@ -200,7 +199,8 @@ cllist returns [ArrayList<Node> classList]: {
 						method.setOffset(offsetVT);
 						classType.addMethod(offsetVT, method);
                  		classNode.addMethod(method);
-						if (vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT, true))!=null){
+                 		mEntry.setOffset(offsetVT);
+						if (vt.put($i.text, mEntry)!=null){
 							System.out.println("Id "+$i.text+" at line "+$i.line+" already declared");
               				System.exit(0);
 						}
@@ -245,7 +245,7 @@ cllist returns [ArrayList<Node> classList]: {
                  	)* )? RPAR {
                  		ArrowTypeNode atn = new ArrowTypeNode(parType, $t.ast);
                  		method.setSymType(atn);
-                 		entry.addType(atn);
+                 		mEntry.addType(atn);
                  	}
 	                     (LET {
 	                     	ArrayList<Node> declist = new ArrayList<Node>();
@@ -265,18 +265,17 @@ cllist returns [ArrayList<Node> classList]: {
               				}
               				method.setDeclist(declist);
 	                     	declist.add(v);
-	                     })+ IN{method.setDeclist(declist);})?{System.out.println("exp "+$classID.text);} ex = exp 
+	                     })+ IN{method.setDeclist(declist);})? ex = exp 
 	                     {  
-	                     	System.out.println("Body "+$classID.text);
 	                     	method.addBody($ex.ast);
 	                     	symTable.remove(nestingLevel--);
 	                     }
         	       SEMIC
         	     )* {
         	     	classNode.setSymType(classType);
+        	        entry.addType(classType);
               		//rimuovere la hashmap corrente poich� esco dallo scope               
 	                symTable.remove(nestingLevel--);
-	                System.out.println("finish "+$classID.text);
               }               
               CRPAR 
           )+
@@ -368,9 +367,8 @@ declist returns [ArrayList<Node> astlist]: {
           )+
         ;
 
-exp	returns [Node ast]: {System.out.println("Exp1");}
+exp	returns [Node ast]: 
 	f=term {
-		System.out.println("Exp1");
 		$ast= $f.ast;
 	} ( 
 		PLUS l=term {
@@ -385,7 +383,7 @@ exp	returns [Node ast]: {System.out.println("Exp1");}
        )* 
     ;  
 
-term returns [Node ast]: {System.out.println("term");}
+term returns [Node ast]: 
 	f=factor {
 		$ast= $f.ast;
 	} ( 
@@ -404,7 +402,6 @@ term returns [Node ast]: {System.out.println("term");}
     
 factor	returns [Node ast]:
 	f=value {
-		{System.out.println("factor");}
 		$ast= $f.ast;
 	} (
 		(EQ eq=value {
@@ -420,7 +417,7 @@ factor	returns [Node ast]:
  	;	 	
    	
   	
-value returns [Node ast]: {System.out.println("value");}
+value returns [Node ast]: 
 	n=INTEGER {
 		$ast= new IntNode(Integer.parseInt($n.text));
 	} 
@@ -451,22 +448,26 @@ value returns [Node ast]: {System.out.println("value");}
 	   	 )* )? RPAR {
 	   	 	$ast = new NewNode($id.text,entry,arglist);
 	   	 }        
-	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {$ast= new IfNode($x.ast,$y.ast,$z.ast);}    
+	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {
+	    	$ast= new IfNode($x.ast,$y.ast,$z.ast);
+	    }    
 	    | NOT LPAR x=exp RPAR {$ast= new NotNode($x.ast);}
 	    | PRINT LPAR e=exp RPAR {$ast= new PrintNode($e.ast);}   
-        | LPAR exp RPAR  
-	    | id1=ID {//cercare la dichiarazione
+        | LPAR exp RPAR {$ast= $exp.ast;} 
+	    | id1=ID {
            int j=nestingLevel;
            STentry entry=null; 
            while (j>=0 && entry==null){
              entry=(symTable.get(j)).get($id1.text);
+             j--;
            	}
            if (entry==null){
            		System.out.println("Id "+$id1.text+" at line "+$id1.line+" not declared");
             	System.exit(0);
             }  
 	   		$ast=  new IdNode($id1.text,entry,nestingLevel);  
-	   		} 
+	   		
+	   	} 
 	   ( LPAR {
 	   		ArrayList<Node> arglist = new ArrayList<Node>();
 	   }

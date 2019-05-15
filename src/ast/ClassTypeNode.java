@@ -27,12 +27,19 @@ public class ClassTypeNode implements Node {
 		allMethods.add(offset, method);
 	}
 	
+	public void overrideMethod(int offset, Node method) {
+		allMethods.set(offset, method);
+	}
+	
+	public void overrideField(int offset, Node method) {
+		allMethods.set(offset, method);
+	}
 	public ArrayList<Node> getFields() {
-		return allFields;
+		return new ArrayList<>(allFields);
 	}
 	
 	public ArrayList<Node> getMethods() {
-		return allMethods;
+		return new ArrayList<>(allMethods);
 	}
 	
 	

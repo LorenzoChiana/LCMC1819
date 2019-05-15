@@ -70,8 +70,9 @@ public class MethodNode implements DecNode {
 		for (Node par:parlist){parlstr+=par.toPrint(s+"  ");};
 		String declstr="";
 		for (Node dec:declist){declstr+=dec.toPrint(s+"  ");};
-		return s+"Fun:" + id +"\n"
-		+type.toPrint(s+"  ")
+		return s+"MethodNode:" + id +"\n"
+		+symType.toPrint(s+"  ")
+		+ "offset: "+offset
 		+parlstr
 		+declstr
 		+exp.toPrint(s+"  ") ; 
