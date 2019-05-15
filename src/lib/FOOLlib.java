@@ -17,43 +17,58 @@ public class FOOLlib {
 	private static HashMap<String, String> superType = new HashMap<>();
 	private static ArrayList<ArrayList<String>> dispatchTables = new ArrayList<>();
 
-	//valuta se il tipo "a" è <= al tipo "b"
+	//valuta se il tipo "a" e' <= al tipo "b"
 	public static boolean isSubtype (Node a, Node b) {
 		if(a instanceof ArrowTypeNode && b instanceof ArrowTypeNode) {
 			ArrowTypeNode nodeA = (ArrowTypeNode)a;
 			ArrowTypeNode nodeB = (ArrowTypeNode)b;
-			if(nodeA.getParListLength() == nodeB.getParListLength() &&
-					isSubtype(nodeA.getRet(), nodeB.getRet())){
+			if(nodeA.getParListLength() != nodeB.getParListLength() ||
+					!(isSubtype(nodeA.getRet(), nodeB.getRet()))) {
+				return false;
+			} else {
 				//i tipi di ritorno devono essere sottotipi rispetto ai parametri
-				for(int i = 0; i< nodeA.getParListLength(); i++) {
+				int dimA = nodeA.getParListLength();
+				for(int i = 0; i< dimA; i++) {
 					if(!isSubtype(nodeB.getParList().get(i), nodeA.getParList().get(i))) {
 						return false;
 					}
 				}
+				return true;
 			}
-			return true;
+			//return true;
 			/*}else if ((a instanceof EmptyTypeNode && !(b instanceof RefTypeNode || b instanceof EmptyTypeNode))) {	
 			return false;*/
 		}else 
 			/*Controllo che in superType esista una coppia con chiave a (sottotipo)
-			 * se esiste controllo che il super tipo di a sia uguale a b, se non lo è
-			 * chiamo ricorsivamente (ora il sotto tipo sarà il super tipo di a e il super tipo rimane b
-			 * itero finchè non trovo una corrispondenza nella hashmap, se non la trovo vuol dire che
-			 * a non è sottotipo di b
+			 * se esiste controllo che il super tipo di a sia uguale a b, se non lo e'
+			 * chiamo ricorsivamente (ora il sotto tipo sara'� il super tipo di a e il super tipo rimane b
+			 * itero finche' non trovo una corrispondenza nella hashmap, se non la trovo vuol dire che
+			 * a non e' sottotipo di b
 			 * */
 			if (a instanceof RefTypeNode && b instanceof RefTypeNode) {
-				if(!superType.containsKey(superType.get(((RefTypeNode) a).getClassId()))){
+				RefTypeNode refB = (RefTypeNode) b; // classe padre -> supertipo
+				RefTypeNode refA = (RefTypeNode) a; // classe figlio -> sottotipo
+				String superTypeA = superType.get(refA.getClassId());
+				
+				if(refB.getClassId().equals(refA.getClassId())) {
+					return true;
+				}
+				
+				if(superTypeA == null){
 					return false;
 				}
 
-				if(!((RefTypeNode)b).getClassId().equals(superType.get(((RefTypeNode) a).getClassId()))){
-					isSubtype(new RefTypeNode(superType.get(((RefTypeNode) a).getClassId())), b);
+				if(!(refB.getClassId().equals(superTypeA))){
+					return isSubtype(new RefTypeNode(superTypeA), refB);
+				} else {
+					return true;
 				}
-			}else if(a instanceof RefTypeNode && b instanceof EmptyTypeNode) {
+			} else if(a instanceof RefTypeNode && b instanceof EmptyTypeNode) {
 				return true;
-			}else {
-				return a.getClass().equals(b.getClass()) ||
-						((a instanceof BoolTypeNode) && (b instanceof IntTypeNode));
+			} else if
+					(a.getClass().equals(b.getClass()) ||
+					((a instanceof BoolTypeNode) && (b instanceof IntTypeNode))){
+				return true;
 			}
 		return false;
 	}

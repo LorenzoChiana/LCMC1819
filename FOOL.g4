@@ -63,7 +63,7 @@ cllist returns [ArrayList<Node> classList]: {
 					}( CLASS classID=ID {
 						ArrayList <String> fieldsMethodsinClass= new ArrayList<>();
 						int offsetVT = -1; //perch� i campi sono la prima cosa che vediamo
-						System.out.println("CLASSE "+$classID.text);
+						//System.out.println("CLASSE "+$classID.text);
 						ClassTypeNode classType = new ClassTypeNode();
 						HashMap<String,STentry> hm =symTable.get(nestingLevel); 
 						HashMap<String,STentry> vt = new HashMap<String, STentry>();  //virtualTable tiene sia le cose ha la nostra classe sia quello che eredita
@@ -444,6 +444,9 @@ value returns [Node ast]:
 	   	 	arglist.add($a1.ast);
 	   	 }
 	   	 )* )? RPAR {
+	   	 	System.out.println("INIZIO ------>");
+	   	 	arglist.forEach(System.out::println);
+	   	 	System.out.println("ID: "+$id.text+"\nEntry: "+entry+"\n<----- FINEEEE");
 	   	 	$ast = new NewNode($id.text,entry,arglist);
 	   	 }        
 	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {
