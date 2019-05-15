@@ -11,6 +11,14 @@ public class ClassTypeNode implements Node {
 		allMethods = new ArrayList<Node>();
 	}
 	
+	public void addField(Node f, int offset) {
+		this.allFields.add(offset, f);
+	}
+	
+	public void replaceField(Node f, int offset) {
+		this.allFields.set(offset, f);
+	}
+	
 	public void addAllFields(ArrayList<Node> f) {
 		allFields.addAll(f);
 	}
@@ -23,16 +31,20 @@ public class ClassTypeNode implements Node {
 		allFields.add(offset, field);
 	}
 	
-	public void addMethod(int offset, Node method) {
+	public void addMethod(Node method, int offset) {
 		allMethods.add(offset, method);
 	}
 	
+	public void replaceMethod(Node m, int offset) {
+		this.allMethods.set(offset, m);
+	}
+	
 	public ArrayList<Node> getFields() {
-		return allFields;
+		return new ArrayList<Node>(allFields);
 	}
 	
 	public ArrayList<Node> getMethods() {
-		return allMethods;
+		return new ArrayList<Node>(allMethods);
 	}
 	
 	

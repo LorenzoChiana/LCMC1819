@@ -3,95 +3,175 @@ package lib;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import ast.ArrowTypeNode;
-import ast.BoolTypeNode;
-import ast.EmptyTypeNode;
-import ast.IntTypeNode;
-import ast.Node;
-import ast.RefTypeNode;
+import ast.*;
 
 public class FOOLlib {
-	public final static int MEMSIZE = 10000; 
-	
-	//definisce la gerarchia dei tipi riferimento (costruita durante il parsing)
+	private static int labCount = 0;
+	private static int functCount = 0;
+	private static int methodLabCount = 0;
 	private static HashMap<String, String> superType = new HashMap<>();
+	private static String funCode = ""; // codice delle dichiarazioni di funzioni
+
 	private static ArrayList<ArrayList<String>> dispatchTables = new ArrayList<>();
+
+	public static final int MEMSIZE = 10000;
 	
-	//valuta se il tipo "a" Ã¨ <= al tipo "b"
-	public static boolean isSubtype (Node a, Node b) {
-		if(a instanceof ArrowTypeNode && b instanceof ArrowTypeNode) {
-			ArrowTypeNode nodeA = (ArrowTypeNode)a;
-			ArrowTypeNode nodeB = (ArrowTypeNode)b;
-			if(nodeA.getParListLength() == nodeB.getParListLength() &&
-					isSubtype(nodeA.getRet(), nodeB.getRet())){
-				//i tipi di ritorno devono essere sottotipi rispetto ai parametri
-				for(int i = 0; i< nodeA.getParListLength(); i++) {
-					if(!isSubtype(nodeB.getParList().get(i), nodeA.getParList().get(i))) {
+	// valuta se il tipo "a" è <= al tipo "b",
+	public static boolean isSubtype(Node a, Node b) {
+		// NULL è sottotipo di tutte le classi
+		if (a instanceof EmptyTypeNode && b instanceof RefTypeNode) {
+			return true;
+		}
+
+		else if (a instanceof RefTypeNode && b instanceof RefTypeNode) {
+			// Classe figlia
+			RefTypeNode refA = (RefTypeNode) a;
+			// Classe padre
+			RefTypeNode refB = (RefTypeNode) b;
+
+			if (refA.getClassId().equals(refB.getClassId())) {
+				return true;
+			}
+			
+			String entry = superType.get(refA.getClassId());
+			if (entry == null) {
+				return false;
+			}
+			if (entry.equals(refB.getClassId())) {
+				return true;
+			} else {
+				return isSubtype(new RefTypeNode(entry), refB);
+			}
+		}
+		/*
+		 * i nodi sono tipi funzionali
+		 */
+		else if (a instanceof ArrowTypeNode && b instanceof ArrowTypeNode) {
+			ArrowTypeNode arrA = (ArrowTypeNode) a;
+			ArrowTypeNode arrB = (ArrowTypeNode) b;
+			/*
+			 * lista dei parametri da entrambi i tipi funzionali
+			 */
+			ArrayList<Node> parA = arrA.getParList();
+			ArrayList<Node> parB = arrB.getParList();
+
+			/*
+			 * controllo la covarianza sui tipi di ritorno; controllo della controvarianza
+			 * sui parametri
+			 */
+			if ((parA.size() != parB.size()) || !(isSubtype(arrA.getRet(), arrB.getRet())))
+				return false;
+			else {
+				int i, dimA = parA.size();
+				for (i = 0; i < dimA; i++) {
+					if (!isSubtype(parB.get(i), parA.get(i))) {
 						return false;
 					}
 				}
-			} else {
-				return false;
+				return true;
 			}
-			if ((a instanceof EmptyTypeNode && !(b instanceof RefTypeNode || b instanceof EmptyTypeNode))) {	
-				return false;
-			}
-
-
-			/*Controllo che in superType esista una coppia con chiave a (sottotipo)
-			 * se esiste controllo che il super tipo di a sia uguale a b, se non lo Ã¨
-			 * chiamo ricorsivamente (ora il sotto tipo sarÃ  il super tipo di a e il super tipo rimane b
-			 * itero finchÃ¨ non trovo una corrispondenza nella hashmap, se non la trovo vuol dire che
-			 * a non Ã¨ sottotipo di b
-			 * 
-			 * CONTROLLARE CON CHIANA*/
-			if (a instanceof RefTypeNode && b instanceof RefTypeNode) {
-				if(!superType.containsKey(superType.get(((RefTypeNode) a).getClassId()))){
-					return false;
-				}
-				
-				if(!((RefTypeNode)b).getClassId().equals(superType.get(((RefTypeNode) a).getClassId()))){
-					isSubtype(new RefTypeNode(superType.get(((RefTypeNode) a).getClassId())), b);
-				}
-			}
-
-
+		} else if (a.getClass().equals(b.getClass()) || ((a instanceof BoolTypeNode) && (b instanceof IntTypeNode))) {
 			return true;
-		} else {
-			return a.getClass().equals(b.getClass()) ||
-					((a instanceof BoolTypeNode) && (b instanceof IntTypeNode));
 		}
+
+		return false;
 	}
 
-	private static int labCount=0; //nome etichette (univoche)
-	private static int funlabCount=0; 
+	public static Node lowestCommonAncestor(Node a, Node b) {
+		// per a e b tipi bool/int
+		// torna int se almeno uno è int, bool altrimenti
+		if (isSubtype(a, new IntTypeNode()) && isSubtype(b, new IntTypeNode())) {
+			if (a instanceof IntTypeNode || b instanceof IntTypeNode) {
+				return new IntTypeNode();
+			} else {
+				return new BoolTypeNode();
+			}
+		}
 
-	private static String funCode="" ; 
-	
-	public static void addDispatchTable(ArrayList<String> dt) {
-		dispatchTables.add(dt);
-	}
-	
-	public static void addSuperType(String sup, String sub) {
-		superType.put(sub,sup);
-	}
-	public static ArrayList<String> getDispatchTable(int i){
-		return dispatchTables.get(i);
-	}
-	
-	public static void putCode(String c) { 
-		funCode+="\n"+c; //aggiunge una linea vuota di separazione prima di funzione
-	} 
+		// se uno tra "a" e "b" è EmptyTypeNode torna l'altro
+		else if (a instanceof EmptyTypeNode) {
+			return b;
+		} else if (b instanceof EmptyTypeNode) {
+			return a;
+		} else if (a instanceof RefTypeNode && b instanceof RefTypeNode) {
+			// cerca super classe in comune
+			RefTypeNode classA = (RefTypeNode) a;
+			String s = superType.get(classA.getClassId());
+			while (s != null) {				
+				if (isSubtype(b, new RefTypeNode(s))) {
+					return new RefTypeNode(s);
+				}
+				s = superType.get(s);
+			}
+			
+		} else if (a instanceof ArrowTypeNode && b instanceof ArrowTypeNode) {
+			//lowest common ancestor per tipi funzionali
+			ArrowTypeNode arrA = (ArrowTypeNode) a;
+			ArrowTypeNode arrB = (ArrowTypeNode) b;
+			if (arrA.getParList().size() == arrB.getParList().size()) {
+				Node lca = lowestCommonAncestor(arrA.getRet(), arrB.getRet());
+				if (lca != null) {
+					ArrayList<Node> parList = new ArrayList<>();
+					for (int i = 0; i < arrA.getParList().size(); i++) {
+						Node parA = arrA.getParList().get(i);
+						Node parB = arrB.getParList().get(i);
+						if (isSubtype(parA, parB)) {
+							parList.add(parA);
+						} else if (isSubtype(parB, parA)) {
+							parList.add(parB);
+						} else {
+							return null;
+						}
+					}
+					return new ArrowTypeNode(parList, lca);
+				}
+			}
+		}
 
-	public static String getCode() { 
+		return null;
+
+	}
+
+	public static String freshLabel() {
+		return "label" + (labCount++);
+	}
+
+	public static String freshFunLabel() {
+		return "function" + (functCount++);
+	}
+
+	public static String freshMethodLabel() {
+		return "method" + (methodLabCount++);
+	}
+
+	/**
+	 * usato tutte le volte che incotriamo una dichiarazione di funzione
+	 * 
+	 * @param c
+	 */
+	public static void putCode(String c) {
+		funCode += "\n" + c;
+	}
+
+	/**
+	 * legge in maniera incrementale il codice delle funzioni dichiarate(?)
+	 * 
+	 * @return
+	 */
+	public static String getCode() {
 		return funCode;
-	} 
+	}
 
-	public static String freshLabel() { 
-		return "label"+(labCount++);
-	} 
+	public static ArrayList<ArrayList<String>> getDispatchTables() {
+		return dispatchTables;
+	}
 
-	public static String freshFunLabel() { 
-		return "function"+(funlabCount++);
-	} 	
+	public static void addDispatchTable(ArrayList<String> dispatchTable) {
+		FOOLlib.dispatchTables.add(dispatchTable);
+	}
+
+	// aggiunta nella hashMap con coppia: chiave = classe che estende, valore = classe base
+	public static void addSuperType(final String superClass, final String extendClass) {
+		superType.put(extendClass, superClass);
+	}
 }

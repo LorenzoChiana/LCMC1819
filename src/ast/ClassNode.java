@@ -23,6 +23,10 @@ public class ClassNode implements DecNode {
 	public void setSymType(Node symType) {
 		this.symType = symType;
 	}
+	
+	public void addField(FieldNode f) {
+		this.fields.add(f);
+	}
 
 	public void addField (ArrayList<Node> f) {
 		fields=f;
@@ -77,7 +81,7 @@ public class ClassNode implements DecNode {
 	public String codeGeneration() {
 		ArrayList<String> dt;
 		if (superEntry!=null) {
-			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-(superEntry.getOffset())-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
+			dt = new ArrayList<String>(FOOLlib.getDispatchTables().get(-(superEntry.getOffset())-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
 		}else {
 			dt = new ArrayList<String>();
 			

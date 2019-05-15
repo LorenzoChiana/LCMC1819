@@ -27,6 +27,10 @@ public class MethodNode implements DecNode {
 		id=i;
 		this.type = type;
 	}
+	
+	public void addDec(ArrayList<Node> d) {
+		declist = d;
+	}
 
 	public void setSymType(Node type) {
 		this.symType = type;

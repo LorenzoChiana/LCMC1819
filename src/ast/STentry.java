@@ -26,6 +26,12 @@ public class STentry {
 	  this.isMethod = isMethod;
   }
   
+  public STentry(int nestLevel, int offset, boolean isMethod) {
+		this.nl = nestLevel;
+		this.offset = offset;
+		this.isMethod = isMethod;
+	}
+  
   public void addType(Node t) {
 	  type=t;
   }

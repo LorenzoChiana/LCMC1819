@@ -1,29 +1,30 @@
 package ast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lib.FOOLlib;
 
 public class NewNode implements Node {
-	private ArrayList<Node> arglist = new ArrayList<Node>();
+	private ArrayList<Node> argList = new ArrayList<Node>();
 	private String id;
 	private STentry entry;
 	
 	public NewNode (String id, STentry entry, ArrayList<Node> arglist) {
-		this.arglist = arglist;
+		this.argList = arglist;
 		this.id = id;
 		this.entry = entry;
 	}
 
 	public String toPrint(String s) {
 		String list = "";
-		for (Node arg:arglist){list+=arg.toPrint(s+"  ");}
+		for (Node arg:argList){list+=arg.toPrint(s+"  ");}
 		return s+"New: "+id+"\n"
 		+entry.toPrint(s+"  ")
 		+list;
 	}
 
-	public Node typeCheck() {
+	/*public Node typeCheck() {
 		if (!(entry.getType() instanceof ClassTypeNode)) {
 			System.out.println("Invocation of a non-class "+id);
 			System.exit(0);
@@ -43,16 +44,39 @@ public class NewNode implements Node {
 			} 
 		}
 		return new RefTypeNode(id);
+	}*/
+	
+	@Override
+	public Node typeCheck() {
+		if (entry.getType() instanceof ClassTypeNode) {
+			List<Node> fields = ((ClassTypeNode) entry.getType()).getFields();
+			// Controllo numero di parametri
+			if (argList.size() != fields.size()) {
+				System.out.println("Wrong number of parameters in the invocation of " + id);
+				System.exit(0);
+			}
+			// Controllo che siano sottotipi
+			for (int i = 0; i < argList.size(); i++)
+				if (!(FOOLlib.isSubtype((argList.get(i)).typeCheck(), ((FieldNode) fields.get(i)).getSymType()))) {
+					System.out.println("Wrong type for " + (i + 1) + "-th parameter in the invocation of " + id);
+					System.exit(0);
+				}
+		} else {
+			System.out.println("Non class invocation error " + id);
+			System.exit(0);
+		}
+
+		return new RefTypeNode(id);
 	}
 
 	public String codeGeneration() {
 		String parCode="";
-		for (int i=arglist.size()-1; i>=0; i--) {
-			parCode+=arglist.get(i).codeGeneration();
+		for (int i=argList.size()-1; i>=0; i--) {
+			parCode+=argList.get(i).codeGeneration();
 		}
 		
 		String labelList = "";
-		for(int i = 0; i<arglist.size(); i++) {
+		for(int i = 0; i<argList.size(); i++) {
 			labelList += "lhp \n"	//carico sullo stack l'indirizzo dello heap pointer				
 					+ "sw \n" 		//salvo all'indirizzo di hp quello che c'è nel top dello stack
 					+ "lhp \n" 		//incremento hp
