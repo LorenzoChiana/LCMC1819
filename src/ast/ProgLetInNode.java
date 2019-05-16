@@ -57,7 +57,7 @@ public class ProgLetInNode implements Node {
 		}
 	}
 
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		if(isOO) {
 			String declCode="";
 			String declCCode="";
@@ -78,6 +78,24 @@ public class ProgLetInNode implements Node {
 			"halt\n"+
 			FOOLlib.getCode();
 		}
+	}*/
+	
+	public String codeGeneration() {
+		String classCode = "";
+		for (Node clas : classlist) {
+			classCode += clas.codeGeneration();
+		}
+
+		String declCode = "";
+		for (Node dec : declist)
+			declCode += dec.codeGeneration();
+
+		return "push 0\n" 
+			+ classCode 
+			+ declCode 
+			+ exp.codeGeneration() 
+			+ "halt\n\n" 
+			+ FOOLlib.getCode();
 	}
 
 }  
