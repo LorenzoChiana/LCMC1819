@@ -88,8 +88,8 @@ cllist returns [ArrayList<Node> classList]: {
 							System.out.println("Class id "+$id2.text+" at line "+$id2.line+" doesn\'t exist");
               				System.exit(0);
 						}
-						
-						classNode.setSuperEntry(symTable.get(0).get($classID.text));
+						//System.out.println(symTable.get(0).get($classID.text).getOffset());
+						classNode.setSuperEntry(symTable.get(0).get($id2.text));
 						vt.putAll(new HashMap<String, STentry>(classTable.get($id2.text)));
 						offsetVT = -classType.getFields().size()-1;
 						isExtends=true;
@@ -164,7 +164,6 @@ cllist returns [ArrayList<Node> classList]: {
               CLPAR{
               	if (isExtends){
                 	offsetVT = (classType.getMethods().size());
-                	System.out.println("------->"+classType.getMethods().size());
                 }else{
                  	offsetVT = 0;
                 }
