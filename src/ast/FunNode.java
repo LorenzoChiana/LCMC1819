@@ -52,7 +52,7 @@ public class FunNode implements DecNode {
 		return null;
 	}
 
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		String declCode = "";
 		for (Node dec:declist) {
 			declCode += dec.codeGeneration();
@@ -97,6 +97,41 @@ public class FunNode implements DecNode {
 				);
 
 		return "lfp\n push " + funl + "\n";
+	}*/
+	
+	public String codeGeneration() {
+		String declCode = "";
+		String popCode = "";
+		String popParCode = "";
+		for (Node dec : declist) {
+			declCode += dec.codeGeneration();
+			/* se arrowtype devo poppare un valore in più */
+			if (((DecNode) dec).getSymType() instanceof ArrowTypeNode)
+				popCode += "pop\n";
+			popCode += "pop\n";
+		}
+
+		for (Node par : parlist) {
+			/* se arrowtype devo poppare un valore in più */
+			if (((ParNode) par).getSymType() instanceof ArrowTypeNode)
+				popParCode += "pop\n";
+			popParCode += "pop\n";
+		}
+
+		String funl = FOOLlib.freshFunLabel();
+		FOOLlib.putCode(funl + ":\n" + "cfp\n" + // setta $fp a $sp
+				"lra\n" + // restituisce il return address
+				declCode + // inserisce le dichiarazioni locali
+				exp.codeGeneration() + "srv\n" + // pop del return value
+				popCode + // pop delle dichiarazioni
+				"sra\n" + // pop del return address
+				"pop\n" + // pop di AL
+				popParCode + // pop dei parametri
+				"sfp\n" + // setto $fp al valore del control link
+				"lrv\n" + // risultato della funzione sullo stack
+				"lra\n" + "js\n" // salta a $ra
+		);
+		return "lfp\n" + "push " + funl + "\n";
 	}
 
 	@Override

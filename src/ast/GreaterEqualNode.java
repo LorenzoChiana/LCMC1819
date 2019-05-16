@@ -29,7 +29,7 @@ public class GreaterEqualNode implements Node {
 	/*
 	 * Se è vero salto a l1 se è falso continuo
 	 */
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		String l1 = FOOLlib.freshLabel();
 		String l2 = FOOLlib.freshLabel();
 		return right.codeGeneration() 
@@ -39,6 +39,19 @@ public class GreaterEqualNode implements Node {
 				+ "b " + l2 + "\n" 
 				+ l1 + ": \n" 
 				+ "push 1\n" 
+				+ l2 + ": \n";
+	}*/
+	public String codeGeneration() {
+		String l1 = FOOLlib.freshLabel();
+		String l2 = FOOLlib.freshLabel();
+
+		return right.codeGeneration()				
+				+ left.codeGeneration()
+				+ "bleq " + l1 + "\n"	
+				+ "push 0\n"
+				+ "b " + l2 + "\n"
+				+ l1 + ": \n"
+				+ "push 1\n"
 				+ l2 + ": \n";
 	}
 

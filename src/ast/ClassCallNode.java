@@ -65,7 +65,7 @@ public class ClassCallNode implements Node {
 		"lw\n"; 			//prende il valore all'indirizzo specificato e lo poppa sullo stack
 	}
 
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		String objectPointer = getAddress(entry.getOffset());
 		
 		String parCode="";
@@ -82,6 +82,42 @@ public class ClassCallNode implements Node {
 				+ "add \n"					//stiamo puntando al metodo chiamato
 				+ "lw \n"
 				+ "js \n";
-	}  
+	}*/
+	
+	@Override
+	public String codeGeneration() {
+		String parCode = "";
+		for (int i = parlist.size() - 1; i >= 0; i--)
+			parCode += parlist.get(i).codeGeneration();
+		String getAR = "";
+		for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++)
+			getAR += "lw\n";
+
+		return // CONTROL LINK
+				"lfp\n"
+				
+				// ALLOCAZIONE PARAMETRI
+				+ parCode 
+
+				// ACCESS LINK
+				+ "push " + entry.getOffset() + "\n" 
+				+ "lfp\n" + getAR // risalgo la catena statica per ottenere  l'indirizzo dell'AR in cui e' dichiarato l'oggetto
+				+ "add\n" 
+				+ "lw\n"
+
+				// JUMP AL METODO
+				+ "push " + entry.getOffset() + "\n" 
+				+ "lfp\n" + getAR  // risalgo la catena statica per ottenere l'indirizzo dell'AR in cui e' dichiarato l'oggetto
+				+ "add\n" 
+				+ "lw\n"
+								
+				/* vado in dispatch table*/
+				+ "lw\n"
+				/*Somma offset per avere il puntatore al metodo chiamato*/
+				+ "push " + methodEntry.getOffset() + "\n" 
+				+ "add\n" 
+				+ "lw\n"
+				+ "js\n";
+	}
 
 }

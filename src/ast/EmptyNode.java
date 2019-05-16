@@ -13,7 +13,12 @@ public class EmptyNode implements Node {
 		return new EmptyTypeNode(); 
 	}
 
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		return "push -1"+"\n";
+	}*/
+	
+	@Override
+	public String codeGeneration() {
+		return "push -1\n";
 	}
 }

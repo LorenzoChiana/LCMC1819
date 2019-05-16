@@ -48,61 +48,116 @@ public class CallNode implements Node {
 		return t.getRet();
 	}
 
+//	public String codeGeneration() {
+//		String result; 
+//		String parCode="";
+//		for (int i=parlist.size()-1; i>=0; i--) {
+//			parCode+=parlist.get(i).codeGeneration();
+//		}
+//
+//		String getAR="";
+//		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++) {
+//			getAR+="lw\n";      
+//		}
+//
+//		if (entry.getIsMethod()) {
+//			//Object Oriented
+//			result = "lfp\n"+ 			//Control Link - salvo il frame pointer precedente (della funzione che mi ha chiamato) che ci serve poi per tornare al punto in cui eravamo 
+//					parCode+ 			//allocazione valori parametri	
+//
+//					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+//										//in cui è dichiarata la funzione (Access Link)					 
+//					"lfp\n"+ 			//carica il frame pointer
+//					getAR+ 				//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+//										//in cui è dichiarata la funzione (Access Link)			
+//					"lw \n"+			//aggiungo 1 alla differenza di nesting level in modo da raggiungere la dispatch table
+//					"push "+(entry.getOffset())+"\n"+
+//					"add\n"+			//otteniamo l'indirizzo del metodo nella dispatch table
+//					"lw\n"+ 			//carica sullo stack l'etichetta del metodo trovato nella dispatch table
+//					"js\n"; 			//effettua il salto
+//		} else {
+//			//Higher order
+//			result = "lfp\n"+ 			//Control Link
+//					parCode+ 			//allocazione valori parametri	
+//
+//					/*
+//					 * nel caso di higher order 
+//					 * nella prima parte dell'offset c'è la dichiarazione della funzione 
+//					 * e nella seconda c'è l'indirizzo
+//					 */
+//
+//					//usato per settare un nuovo access link
+//					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+//										//in cui è dichiarata la funzione (Access Link)	
+//					"push "+entry.getOffset()+"\n"+		 				 
+//					"add\n"+
+//					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
+//
+//					//usato per saltare al codice della funzione
+//					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+//					//in cui è dichiarata la funzione (Access Link)	
+//					"push "+(entry.getOffset()-1)+"\n"+			 				 
+//					"add\n"+
+//					
+//					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
+//					"js\n"; 			//effettua il salto
+//		}
+//
+//		return result;
+//	}  
 	public String codeGeneration() {
-		String result; 
-		String parCode="";
-		for (int i=parlist.size()-1; i>=0; i--) {
-			parCode+=parlist.get(i).codeGeneration();
-		}
-
-		String getAR="";
-		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++) {
-			getAR+="lw\n";      
-		}
-
-		if (entry.getIsMethod()) {
-			//Object Oriented
-			result = "lfp\n"+ 			//Control Link - salvo il frame pointer precedente (della funzione che mi ha chiamato) che ci serve poi per tornare al punto in cui eravamo 
-					parCode+ 			//allocazione valori parametri	
-
-					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-										//in cui è dichiarata la funzione (Access Link)					 
-					"lfp\n"+ 			//carica il frame pointer
-					getAR+ 				//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-										//in cui è dichiarata la funzione (Access Link)			
-					"lw \n"+			//aggiungo 1 alla differenza di nesting level in modo da raggiungere la dispatch table
-					"push "+(entry.getOffset())+"\n"+
-					"add\n"+			//otteniamo l'indirizzo del metodo nella dispatch table
-					"lw\n"+ 			//carica sullo stack l'etichetta del metodo trovato nella dispatch table
-					"js\n"; 			//effettua il salto
+		String parCode = "";
+		for (int i = parlist.size() - 1; i >= 0; i--)
+			parCode += parlist.get(i).codeGeneration();
+		String getAR = "";
+		for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++)
+			getAR += "lw\n";
+		
+		if(entry.getIsMethod()) {
+			//METHOD CALL
+			return  //CONTROL LINK
+	    			"lfp\n" 
+					  
+					//ALLOCAZIONE PARAMETRI
+	    			+ parCode  
+	    			 
+	    			//ACCESS LINK	 
+	    			+ "lfp\n" 
+	    			+ getAR		
+	    			
+	    			//JUMP AL METODO
+	    			+ "push " + entry.getOffset() +"\n"			 
+	    			+ "lfp\n" 
+	    			+ getAR
+	    			+ "lw\n"
+	    			+ "add\n"
+	    			+ "lw\n"
+	    	        + "js\n";
+			
 		} else {
-			//Higher order
-			result = "lfp\n"+ 			//Control Link
-					parCode+ 			//allocazione valori parametri	
-
-					/*
-					 * nel caso di higher order 
-					 * nella prima parte dell'offset c'è la dichiarazione della funzione 
-					 * e nella seconda c'è l'indirizzo
-					 */
-
-					//usato per settare un nuovo access link
-					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-										//in cui è dichiarata la funzione (Access Link)	
-					"push "+entry.getOffset()+"\n"+		 				 
-					"add\n"+
-					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
-
-					//usato per saltare al codice della funzione
-					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui è dichiarata la funzione (Access Link)	
-					"push "+(entry.getOffset()-1)+"\n"+			 				 
-					"add\n"+
-					
-					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
-					"js\n"; 			//effettua il salto
+			//HIGHER ORDER
+			return  //CONTROL LINK
+	    			"lfp\n" 
+					  
+					//ALLOCAZIONE PARAMETRI
+	    			+ parCode  
+	    			 
+	    			//ACCESS LINK
+	    			+ "push " + entry.getOffset()+"\n"		 
+	    			+ "lfp\n" + getAR			 
+	    			+ "add\n"
+	    			+ "lw \n"   
+	    			
+	    			//JUMP ALLA FUNZIONE
+	    			//Se è un metodo uso l'offset normale, altrimenti vado ad offset-1 
+	    			//(nell'higher order infatti le funzioni occupano 2 spazi e l'indirizzo della funzione è nel secondo)
+	    			+ "push " + (entry.getOffset()-1)+"\n"			 
+	    			+ "lfp\n" +getAR
+	    			+ "add\n"
+	    			+ "lw\n"
+	    	        + "js\n";
+			
 		}
 
-		return result;
-	}  
+  }  
 }  

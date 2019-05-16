@@ -31,7 +31,7 @@ public class IdNode implements Node {
 		return entry.getType();
 	}
 
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		if (entry.getType() instanceof ArrowTypeNode) {
 			return getAddress(entry.getOffset()) + getAddress(entry.getOffset()-1); 
 		} else {
@@ -50,6 +50,33 @@ public class IdNode implements Node {
 			//in cui ï¿½ dichiarata la variabile			 
 			"add\n"+
 			"lw\n"; //prende il valore all'indirizzo specificato e lo poppa sullo stack
-	}
+	}*/
+	
+	public String codeGeneration() {
+		String getAR = "";
+		for (int i = 0; i < nestingLevel - entry.getNestinglevel(); i++)
+			getAR += "lw\n";
+
+      /*se è di tipo arrowtype devo trovare 2 valori: ar in cui è dichirata la variabile e indirizzo della funzione*/
+      if(entry.getType() instanceof ArrowTypeNode) {
+    	  return "push "+ entry.getOffset() +"\n"+			 
+ 				 "lfp\n"+getAR+ /*risalgo la catena statica per ottenere l'indirizzo dell'AR 
+	                              in cui e' dichiarata la variabile*/		
+ 				 "add\n"+
+	             "lw\n"+ 
+ 				 "push "+ (entry.getOffset()-1) +"\n"+	
+	             "lfp\n"+getAR+ /*risalgo la catena statica per ottenere l'indirizzo dell'AR 
+		                		  in cui e' dichiarato l'indirizzo della funzione*/	
+	             "add\n"+
+		         "lw\n";
+      } else {
+    	  return "push "+entry.getOffset()+"\n"+		
+                 "lfp\n"+getAR+ 	/*risalgo la catena statica per ottenere l'indirizzo dell'AR 
+    				                  in cui e' dichiarata la variabile	*/		 
+                 "add\n"+
+    			 "lw\n";
+      }
+			
+  }
 
 }  

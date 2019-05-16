@@ -10,6 +10,8 @@ public class ClassNode implements DecNode {
 	private ArrayList<Node> fields = new ArrayList<Node>(); 
 	private ArrayList<Node> methods = new ArrayList<Node>(); 
 	private STentry superEntry;
+	
+	private ArrayList<String> dispatchTable = new ArrayList<>(); //pacini
 
 	public ClassNode (String i) {
 		id=i;
@@ -96,7 +98,7 @@ public class ClassNode implements DecNode {
 		this.superEntry = superEntry;
 	}
 	
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		ArrayList<String> dt;
 		if (superEntry!=null) {
 			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-superEntry.getOffset()-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
@@ -125,6 +127,46 @@ public class ClassNode implements DecNode {
 
 		return "lhp \n" +
 		labelList;
+	}*/
+	
+	@Override
+	public String codeGeneration() {
+		if (this.superEntry != null)
+			this.dispatchTable = new ArrayList<>(FOOLlib.getDispatchTable(-this.superEntry.getOffset() - 2)/*.get(-this.superEntry.getOffset() - 2)*/);
+		int i = 0;
+		int dimMethods = methods.size();
+
+		for (i = 0; i < dimMethods; i++) {
+			MethodNode mtN = (MethodNode) methods.get(i);
+			mtN.codeGeneration();
+
+			final String labelMethod = mtN.getLabel();
+			final int offsetMethod = mtN.getOffset();
+
+			if (dispatchTable.size() > offsetMethod) { // l'offset del metodo è compreso nella dispatch table madre
+				dispatchTable.set(offsetMethod, labelMethod); // rimpiazzo in caso di override dei metodi
+			} else {
+				dispatchTable.add(offsetMethod, labelMethod);
+			}
+
+		}
+
+		FOOLlib.addDispatchTable(dispatchTable);
+
+		String retCode = "lhp\n";
+
+		for (String lbl : dispatchTable) {
+			/* memorizzo la label ad indirizzo puntato da hp */
+			retCode += "push " + lbl + "\n"
+					+ "lhp\n"
+					+ "sw\n"
+					/* incremento valore di hp */
+					+ "lhp\n"
+					+ "push 1 \n"
+					+ "add\n"
+					+ "shp\n";
+		}
+		return retCode;
 	}
 
 

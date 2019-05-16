@@ -31,7 +31,7 @@ public class EqualNode implements Node {
 		return new BoolTypeNode();
 	}
 
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		String l1= FOOLlib.freshLabel();
 		String l2= FOOLlib.freshLabel();
 		return left.codeGeneration()+
@@ -43,6 +43,18 @@ public class EqualNode implements Node {
 				"push 1\n"+
 				l2+": \n"
 				;
+	}*/
+	public String codeGeneration() {
+		String l1 = FOOLlib.freshLabel();
+		String l2 = FOOLlib.freshLabel();
+		return left.codeGeneration() 
+				+ right.codeGeneration() 
+				+ "beq " + l1 + "\n" 
+				+ "push 0\n" 
+				+ "b " + l2 + "\n" 
+				+ l1 + ": \n" 
+				+ "push 1\n" 
+				+ l2 + ": \n";
 	}
 
 }  

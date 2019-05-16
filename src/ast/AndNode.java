@@ -26,7 +26,7 @@ public class AndNode implements Node {
 		return new BoolTypeNode();
 	}
 
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		String l1= FOOLlib.freshLabel();
 		String l2= FOOLlib.freshLabel();
 		String l3= FOOLlib.freshLabel();
@@ -47,6 +47,24 @@ public class AndNode implements Node {
 				"push 1\n"+
 				
 				l2+": \n";
+	}*/
+	
+	public String codeGeneration() {
+		String l1 = FOOLlib.freshLabel();
+		String l2 = FOOLlib.freshLabel();
+		return left.codeGeneration() 
+				+"push 0\n"
+				// Controlla se left vale 0; in caso affermativo pusha 0 sullo stack e non controlla il resto
+				+ "beq " + l1 + "\n"
+				+ right.codeGeneration() 
+				+ "push 0\n"
+				// Se arrivo qui, left non vale 0 quindi controllo il valore di right
+				+ "beq " + l1 + "\n"
+				+ "push 1\n"
+				+ "b " + l2 + "\n"
+				+ l1 + ": \n" 
+				+ "push 0\n" 
+				+ l2 + ": \n";
 	}
 
 }

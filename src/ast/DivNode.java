@@ -26,8 +26,11 @@ public class DivNode implements Node {
    return new IntTypeNode();
   }
   
-  public String codeGeneration() {
+  /*public String codeGeneration() {
 	  return left.codeGeneration()+right.codeGeneration()+"div\n";
-  }
+  }*/
+  public String codeGeneration() {
+		return left.codeGeneration() + right.codeGeneration() + "div\n";
+	}
 
 }  

@@ -16,8 +16,11 @@ public class BoolNode implements Node {
 		return new BoolTypeNode(); 
   }
 	  
-  public String codeGeneration() {
+  /*public String codeGeneration() {
 	  return "push "+(val?1:0)+"\n";
-  }
+  }*/
+  public String codeGeneration() {
+		return "push " + (val ? 1 : 0) + "\n";
+	}
       
 }  
