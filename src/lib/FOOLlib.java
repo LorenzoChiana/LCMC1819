@@ -73,7 +73,7 @@ public class FOOLlib {
 		return false;
 	}
 
-	public Node lowestCommonAncestor (Node a, Node b) {
+	public static Node lowestCommonAncestor (Node a, Node b) {
 		//per a e b tipi bool/int
 		if (a instanceof BoolTypeNode && b instanceof BoolTypeNode) {
 			return a;
@@ -100,12 +100,13 @@ public class FOOLlib {
 			RefTypeNode refA = (RefTypeNode) a; 
 
 			String type = refA.getClassId();
-			if(isSubtype(refB,new RefTypeNode(type))) {//controllo che b sia sottotipo della classe considerata
-				return refB;
+			RefTypeNode c = new RefTypeNode(type);
+			if(isSubtype(refB,c)) {//controllo che b sia sottotipo della classe considerata
+				return c;
 			} 
 
 			while (superType.containsKey(type)) { //risalgo la catena di superclassi
-				RefTypeNode c = new RefTypeNode(superType.get(type));
+				c = new RefTypeNode(superType.get(type));
 				if(isSubtype(refB,c)) {//controllo che b sia sottotipo della classe considerata
 					return c;
 				} else{
@@ -160,6 +161,7 @@ public class FOOLlib {
 		superType.put(sub,sup);
 	}
 	public static ArrayList<String> getDispatchTable(int i){
+		dispatchTables.get(0).forEach(a->{System.out.println(a.toString());});
 		return dispatchTables.get(i);
 	}
 

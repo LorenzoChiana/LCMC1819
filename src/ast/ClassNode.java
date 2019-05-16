@@ -100,14 +100,15 @@ public class ClassNode implements DecNode {
 	public String codeGeneration() {
 		ArrayList<String> dt;
 		if (superEntry!=null) {
-			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-(superEntry.getOffset())-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
+			System.out.println(superEntry.getOffset());
+			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-superEntry.getOffset()-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
 		}else {
 			dt = new ArrayList<String>();
 			
 		}
+		
 		FOOLlib.addDispatchTable(dt);		//per ereditariet� copiare dispatch table della classe da cui si eredita (contenuto)
 		
-
 		for(Node m: methods) {
 			m.codeGeneration();
 			dt.add(((MethodNode) m).getOffset(), ((MethodNode) m).getLabel());

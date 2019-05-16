@@ -129,7 +129,6 @@ cllist returns [ArrayList<Node> classList]: {
 						}else{
 							FieldNode field = new FieldNode($i.text, $t.ast);
 							fieldList.add(field);
-							//System.out.println("Offset vero "+$i.text+ (offsetVT));
 							vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
 						    classType.addField(-offsetVT-1, field);
 						    offsetVT--;
@@ -165,6 +164,7 @@ cllist returns [ArrayList<Node> classList]: {
               CLPAR{
               	if (isExtends){
                 	offsetVT = (classType.getMethods().size());
+                	System.out.println("------->"+classType.getMethods().size());
                 }else{
                  	offsetVT = 0;
                 }
