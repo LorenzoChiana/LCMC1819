@@ -42,8 +42,8 @@ public class NewNode implements Node {
 		} 
 		//controlla che i parametri della chiamata siano sottotipo della funzione che chiami
 		for (int i=0; i<arglist.size(); i++) {
-			System.out.print("SUB "+id+" -----> 1: "+ (arglist.get(i)).typeCheck()+" 2: "+((FieldNode)fieldsList.get(i)).getSymType());
-			System.out.println(" --- isSub? "+FOOLlib.isSubtype((arglist.get(i)).typeCheck(), ((FieldNode)fieldsList.get(i)).getSymType()));
+//			System.out.print("SUB "+id+" -----> 1: "+ (arglist.get(i)).typeCheck()+" 2: "+((FieldNode)fieldsList.get(i)).getSymType());
+//			System.out.println(" --- isSub? "+FOOLlib.isSubtype((arglist.get(i)).typeCheck(), ((FieldNode)fieldsList.get(i)).getSymType()));
 			if ( !(FOOLlib.isSubtype((arglist.get(i)).typeCheck(), ((FieldNode)fieldsList.get(i)).getSymType()))) {
 				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
 				System.exit(0);
@@ -72,7 +72,7 @@ public class NewNode implements Node {
 		return parCode 
 				+"lhp \n"
 				+ labelList
-				+ (FOOLlib.MEMSIZE + entry.getOffset()) 	//recupera il dispatch pointer
+				+ (FOOLlib.MEMSIZE + entry.getOffset()) + "\n"	//recupera il dispatch pointer
 				+ "lhp \n"						
 				+ "sw \n"									//carica il dispatch pointer a indirizzo hp
 				+ "lhp \n"			//quello che rimane sullo stack (object pointer da ritornare)

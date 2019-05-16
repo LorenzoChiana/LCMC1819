@@ -444,9 +444,9 @@ value returns [Node ast]:
 	   	 	arglist.add($a1.ast);
 	   	 }
 	   	 )* )? RPAR {
-	   	 	System.out.println("INIZIO ------>");
+	   	 	/*System.out.println("INIZIO ------>");
 	   	 	arglist.forEach(System.out::println);
-	   	 	System.out.println("ID: "+$id.text+"\nEntry: "+entry+"\n<----- FINEEEE");
+	   	 	System.out.println("ID: "+$id.text+"\nEntry: "+entry+"\n<----- FINEEEE");*/
 	   	 	$ast = new NewNode($id.text,entry,arglist);
 	   	 }        
 	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {

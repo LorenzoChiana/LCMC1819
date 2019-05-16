@@ -42,9 +42,11 @@ public class FunNode implements DecNode {
 	}
 
 	public Node typeCheck() {
-		for (Node dec:declist){dec.typeCheck();};
+		for (Node dec:declist){
+			dec.typeCheck();
+		}
 		if (! FOOLlib.isSubtype(exp.typeCheck(),type)) {
-			System.out.println("Incompatible value for variable");
+			System.out.println("FunNode "  + this.id + " error: Incompatible value for variable");
 			System.exit(0);
 		}
 		return null;
@@ -101,7 +103,7 @@ public class FunNode implements DecNode {
 	public Node getSymType() {
 		return this.symType;
 	}
-	
+
 	public void setSymType(Node symType) {
 		this.symType = symType;
 	}

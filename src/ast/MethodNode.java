@@ -13,7 +13,7 @@ public class MethodNode implements DecNode {
 	private Node exp;
 	private String label;
 	private int offset;
-	
+
 	public int getOffset() {
 		return offset;
 	}
@@ -36,19 +36,19 @@ public class MethodNode implements DecNode {
 	public Node getSymType() {
 		return symType;
 	} 
-	
+
 	public String getId() {
 		return id;
 	} 
-	
+
 	public void addPar(ParNode p) {
 		parlist.add(p);
 	}
-	
+
 	public void addBody(Node e) {
 		exp = e;
 	}
-	
+
 	public ArrayList<Node> getDeclist() {
 		return declist;
 	}
@@ -64,7 +64,7 @@ public class MethodNode implements DecNode {
 	public void setLabel(String label) {
 		this.label = label;
 	}
-	
+
 	public String toPrint(String s) {
 		String parlstr="";
 		for (Node par:parlist){parlstr+=par.toPrint(s+"  ");};
@@ -79,9 +79,12 @@ public class MethodNode implements DecNode {
 	}
 
 	public Node typeCheck() {	 
-		for (Node dec:declist){dec.typeCheck();};
+		for (Node dec:declist){System.out.println("dec: "+dec);
+		dec.typeCheck();
+		}
+		System.out.println("isSub error: "+FOOLlib.isSubtype(exp.typeCheck(),type));
 		if (! FOOLlib.isSubtype(exp.typeCheck(),type)) {
-			System.out.println("Incompatible value for variable");
+			System.out.println("MethodNode " + this.id + " error: Incompatible value for variable");
 			System.exit(0);
 		}
 		return null;
@@ -89,7 +92,7 @@ public class MethodNode implements DecNode {
 
 	public String codeGeneration() {
 		label = FOOLlib.freshFunLabel();
-		
+
 		String declCode = "";
 		for (Node dec:declist) {
 			declCode += dec.codeGeneration();
@@ -114,7 +117,7 @@ public class MethodNode implements DecNode {
 				popParl += "pop\n";
 			}
 		}
-		
+
 		FOOLlib.putCode(
 				label + ":\n" + 
 						"cfp\n" + //setta $fp a $sp (fp = frame pointer; sp = stack pointer) 
@@ -135,6 +138,6 @@ public class MethodNode implements DecNode {
 	}
 
 
-	
- 
+
+
 }  
