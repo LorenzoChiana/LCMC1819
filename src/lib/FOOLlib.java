@@ -161,7 +161,6 @@ public class FOOLlib {
 		superType.put(sub,sup);
 	}
 	public static ArrayList<String> getDispatchTable(int i){
-		dispatchTables.get(0).forEach(a->{System.out.println(a.toString());});
 		return dispatchTables.get(i);
 	}
 

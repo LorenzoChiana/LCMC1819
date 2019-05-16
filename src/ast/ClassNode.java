@@ -55,7 +55,6 @@ public class ClassNode implements DecNode {
 			m.typeCheck();
 		}
 		if (superEntry!=null) { //faccio il check se la classe estende da un superType
-			System.out.println("super entry offset "+this.superEntry.getOffset());
 			//controllo campi overridedati
 			ArrayList<Node> superTypeFields =((ClassTypeNode)superEntry.getType()).getFields();
 			for (Node field: fields){
@@ -100,7 +99,6 @@ public class ClassNode implements DecNode {
 	public String codeGeneration() {
 		ArrayList<String> dt;
 		if (superEntry!=null) {
-			System.out.println(superEntry.getOffset());
 			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-superEntry.getOffset()-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
 		}else {
 			dt = new ArrayList<String>();
