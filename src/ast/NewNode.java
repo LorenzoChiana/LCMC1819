@@ -52,7 +52,7 @@ public class NewNode implements Node {
 		return new RefTypeNode(id);
 	}
 	
-	@Override
+	/*@Override
 	public String codeGeneration() {
 		String parCode="";
 		for (int i=arglist.size()-1; i>=0; i--) {
@@ -80,8 +80,8 @@ public class NewNode implements Node {
 				+ "push 1 \n" 
 				+ "add \n"
 				+ "shp \n";
-	}
-	/*@Override
+	}*/
+	@Override
 	public String codeGeneration() {
 		String storeCode="";
 		for(int i = arglist.size()-1;i>=0;i--) {
@@ -106,7 +106,7 @@ public class NewNode implements Node {
 				 + "add\n"
 				 + "shp\n";
 				
-	}*/
+	}
 
 }
 

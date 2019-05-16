@@ -1,65 +1,65 @@
 push 0
 push 40000
+lhp
+sw
+lhp
+push 1 
+add
+shp
 push 50000
-lhp 
-lhp 
-sw 
-lhp 
+lhp
+sw
+lhp
 push 1 
-add 
-shp 
+add
+shp
+push 9997
+lw
+lhp
+sw
 lhp 
-sw 
-lhp 
+lhp
 push 1 
-add 
-shp 
-9997
-lhp 
-sw 
-lhp 
-lhp 
+add
+shp
+lhp
+sw
+lhp
 push 1 
-add 
-shp 
+add
+shp
+push 9995
+lw
+lhp
+sw
 lhp 
-lhp 
-sw 
-lhp 
+lhp
 push 1 
-add 
-shp 
-9995
-lhp 
-sw 
-lhp 
-lhp 
-push 1 
-add 
-shp 
+add
+shp
 push 5000
+lhp
+sw
+lhp
+push 1 
+add
+shp
 push 20000
-lhp 
-lhp 
-sw 
-lhp 
+lhp
+sw
+lhp
 push 1 
-add 
-shp 
+add
+shp
+push 9997
+lw
+lhp
+sw
 lhp 
-sw 
-lhp 
+lhp
 push 1 
-add 
-shp 
-9997
-lhp 
-sw 
-lhp 
-lhp 
-push 1 
-add 
-shp 
+add
+shp
 lfp 
 push -7
 lfp
@@ -280,21 +280,21 @@ push 0
 add 
 lw 
 js 
-lhp 
-lhp 
-sw 
-lhp 
+lhp
+sw
+lhp
 push 1 
-add 
-shp 
-9998
+add
+shp
+push 9998
+lw
+lhp
+sw
 lhp 
-sw 
-lhp 
-lhp 
+lhp
 push 1 
-add 
-shp 
+add
+shp
 label1: 
 srv
 sra
@@ -350,6 +350,12 @@ push 1
 add 
 lw 
 js 
+lhp
+sw
+lhp
+push 1 
+add
+shp
 lfp 
 push -1
 lfp
@@ -366,27 +372,21 @@ push 0
 add 
 lw 
 js 
-lhp 
-lhp 
-sw 
-lhp 
+lhp
+sw
+lhp
 push 1 
-add 
-shp 
+add
+shp
+push 9997
+lw
+lhp
+sw
 lhp 
-sw 
-lhp 
+lhp
 push 1 
-add 
-shp 
-9997
-lhp 
-sw 
-lhp 
-lhp 
-push 1 
-add 
-shp 
+add
+shp
 label5: 
 srv
 sra
