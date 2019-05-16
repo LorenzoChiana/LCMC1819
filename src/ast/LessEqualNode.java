@@ -25,10 +25,10 @@ public class LessEqualNode implements Node {
 	}
 
 	/*
-	 * Se è vero salto a l1 se è falso continuo
+	 * Se ï¿½ vero salto a l1 se ï¿½ falso continuo
 	 * */
 	
-	public String codeGeneration() {
+/*	public String codeGeneration() {
 		String l1= FOOLlib.freshLabel();
 		String l2= FOOLlib.freshLabel();
 		return left.codeGeneration()+
@@ -40,6 +40,18 @@ public class LessEqualNode implements Node {
 				"push 1\n"+
 				l2+": \n"
 				;
+	}*/
+	public String codeGeneration() {
+		String l1 = FOOLlib.freshLabel();
+		String l2 = FOOLlib.freshLabel();
+		return left.codeGeneration() 
+				+ right.codeGeneration() 
+				+ "bleq " + l1 + "\n" 
+				+ "push 0\n" 
+				+ "b " + l2 + "\n" 
+				+ l1 + ": \n" 
+				+ "push 1\n" 
+				+ l2 + ": \n";
 	}
 
 

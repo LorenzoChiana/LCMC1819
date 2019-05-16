@@ -150,6 +150,7 @@ public class FOOLlib {
 	}
 	private static int labCount=0; //nome etichette (univoche)
 	private static int funlabCount=0; 
+	private static int methodLabCount = 0;
 
 	private static String funCode="" ; 
 
@@ -178,5 +179,8 @@ public class FOOLlib {
 
 	public static String freshFunLabel() { 
 		return "function"+(funlabCount++);
+	} 	
+	public static String freshMethodLabel() { 
+		return "method"+(methodLabCount++);
 	} 	
 }

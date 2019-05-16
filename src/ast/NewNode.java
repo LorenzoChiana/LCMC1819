@@ -81,7 +81,7 @@ public class NewNode implements Node {
 				+ "add \n"
 				+ "shp \n";
 	}*/
-	@Override
+	/*@Override
 	public String codeGeneration() {
 		String storeCode="";
 		for(int i = arglist.size()-1;i>=0;i--) {
@@ -101,6 +101,38 @@ public class NewNode implements Node {
 				+ "sw\n" // scrivo il dispatch pointer sullo heap
 				
 				+ "lhp \n"
+				 + "lhp\n"
+				 + "push 1 \n"
+				 + "add\n"
+				 + "shp\n";
+				
+	}*/
+	
+	@Override
+	public String codeGeneration() {
+		//String parCode="";
+		String storeCode="";
+		for(int i = arglist.size()-1;i>=0;i--) {
+			 storeCode+= 
+					 //scrivo i campi sullo heap
+					 arglist.get(i).codeGeneration() 
+					 + "lhp\n"
+					 + "sw\n"
+				     /*incremento valore di hp: da fare dopo aver caricato tutti i parametri*/
+					 + "lhp\n"
+					 + "push 1 \n"
+					 + "add\n"
+					 +"shp\n";
+		}
+		return  storeCode 
+				+ "push " + (FOOLlib.MEMSIZE + entry.getOffset()) + "\n"
+				+ "lw\n" // carico su stack il dispatch pointer
+				+ "lhp\n"
+				+ "sw\n" // scrivo il dispatch pointer sullo heap
+				
+				/* scrivo object pointer sullo stack */
+				+ "lhp \n"
+				/*incremento valore di hp*/
 				 + "lhp\n"
 				 + "push 1 \n"
 				 + "add\n"

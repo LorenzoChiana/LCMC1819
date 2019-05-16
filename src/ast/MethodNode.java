@@ -89,7 +89,7 @@ public class MethodNode implements DecNode {
 		return null;
 	}
 
-	public String codeGeneration() {
+	/*public String codeGeneration() {
 		label = FOOLlib.freshFunLabel();
 
 		String declCode = "";
@@ -135,7 +135,42 @@ public class MethodNode implements DecNode {
 
 		return "";
 	}
+*/
+	public String codeGeneration() {
+		String declCode = "";
+		String popCode = "";
+		String popParCode = "";
+		for (Node dec : declist) {
+			declCode += dec.codeGeneration();
+			if (((DecNode) dec).getSymType() instanceof ArrowTypeNode)
+				popCode += "pop\n";
+			popCode += "pop\n";
+		}
 
+		for (Node par : parlist) {
+			if (((ParNode) par).getSymType() instanceof ArrowTypeNode)
+				popParCode += "pop\n";
+			popParCode += "pop\n";
+		}
+
+		label = FOOLlib.freshMethodLabel();
+
+		FOOLlib.putCode(label + ":\n" + "cfp\n" + // setta $fp a $sp
+				"lra\n" + // inserisce in cima allo stack ra (return address)
+				declCode + // inserisce le dichiarazioni locali
+				exp.codeGeneration() + "srv\n" + // pop del return value (pop e store in rv)
+				popCode + // pop delle dichiarazioni
+				"sra\n" + // memorizzazione del return address (pop e store in ra)
+				"pop\n" + // pop di AL (access link)
+				popParCode + // pop dei parametri
+				"sfp\n" + // setto $fp al valore del control link
+				"lrv\n" + // risultato della funzione sullo stack (return value)
+				"lra\n" + // push dell'indirizzo di ritorno (return address)
+				"js\n" // salta a $ra
+		);
+
+		return "";
+	}
 
 
 

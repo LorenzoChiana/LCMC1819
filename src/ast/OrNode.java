@@ -26,7 +26,7 @@ public class OrNode implements Node {
 		return new BoolTypeNode();
 	}
 
-	public String codeGeneration() {
+/*	public String codeGeneration() {
 		String l1= FOOLlib.freshLabel();
 		String l2= FOOLlib.freshLabel();
 		return 
@@ -43,6 +43,25 @@ public class OrNode implements Node {
 				"push 1\n"+
 				
 				l2+": \n";
+	}
+*/
+	
+	public String codeGeneration() {
+		String l1 = FOOLlib.freshLabel();
+		String l2 = FOOLlib.freshLabel();
+		return left.codeGeneration() 
+				+"push 1\n"
+				// Controlla se left vale 1; in caso affermativo pusha 1 sullo stack e non controlla il resto
+				+ "beq " + l1 + "\n"
+				+ right.codeGeneration() 
+				+ "push 1\n"
+				// Se arrivo qui, left non vale 1 quindi controllo il valore di right
+				+ "beq " + l1 + "\n"
+				+ "push 0\n"
+				+ "b " + l2 + "\n"
+				+ l1 + ": \n" 
+				+ "push 1\n" 
+				+ l2 + ": \n";
 	}
 
 }

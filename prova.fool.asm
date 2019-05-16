@@ -79,7 +79,7 @@ add
 lw 
 js 
 lhp 
-push function0
+push method0
 lhp 
 sw 
 lhp 
@@ -87,29 +87,14 @@ push 1
 add 
 shp 
 lhp 
-push function0
+push method0
 lhp 
 sw 
 lhp 
 push 1 
 add 
 shp 
-push function1
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-lhp 
-push function2
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push function3
+push method1
 lhp 
 sw 
 lhp 
@@ -117,21 +102,36 @@ push 1
 add 
 shp 
 lhp 
-push function2
+push method2
 lhp 
 sw 
 lhp 
 push 1 
 add 
 shp 
-push function4
+push method3
 lhp 
 sw 
 lhp 
 push 1 
 add 
 shp 
-push function3
+lhp 
+push method2
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push method4
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push method3
 lhp 
 sw 
 lhp 
@@ -172,7 +172,7 @@ label9:
 print
 halt
 
-function0:
+method0:
 cfp
 lra
 push -1
@@ -188,7 +188,7 @@ lrv
 lra
 js
 
-function1:
+method1:
 cfp
 lra
 push -2
@@ -204,7 +204,7 @@ lrv
 lra
 js
 
-function2:
+method2:
 cfp
 lra
 push -1
@@ -220,7 +220,7 @@ lrv
 lra
 js
 
-function3:
+method3:
 cfp
 lra
 push 30000
@@ -305,7 +305,7 @@ lrv
 lra
 js
 
-function4:
+method4:
 cfp
 lra
 push 20000
