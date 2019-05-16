@@ -57,45 +57,15 @@ public class ProgLetInNode implements Node {
 		}
 	}
 
-	/*public String codeGeneration() {
-		if(isOO) {
-			String declCode="";
-			String declCCode="";
-			for (Node dec:declist) declCode+=dec.codeGeneration();
-			for (Node decC:classlist) declCode+=decC.codeGeneration();
-			return  "push 0\n"+
-			declCCode+
-			declCode+
-			exp.codeGeneration()+
-			"halt\n"+
-			FOOLlib.getCode();
-		}else {
-			String declCode="";
-			for (Node dec:declist) declCode+=dec.codeGeneration();
-			return  "push 0\n"+
-			declCode+
-			exp.codeGeneration()+
-			"halt\n"+
-			FOOLlib.getCode();
-		}
-	}*/
-	
 	public String codeGeneration() {
-		String classCode = "";
-		for (Node clas : classlist) {
-			classCode += clas.codeGeneration();
-		}
-
-		String declCode = "";
-		for (Node dec : declist)
-			declCode += dec.codeGeneration();
-
-		return "push 0\n" 
-			+ classCode 
-			+ declCode 
-			+ exp.codeGeneration() 
-			+ "halt\n\n" 
-			+ FOOLlib.getCode();
+			String declCode="";
+			for (Node decC:classlist) declCode+=decC.codeGeneration();
+			for (Node dec:declist) declCode+=dec.codeGeneration();
+			return  "push 0\n"+
+			declCode+
+			exp.codeGeneration()+
+			"halt\n"+
+			FOOLlib.getCode();
 	}
 
 }  

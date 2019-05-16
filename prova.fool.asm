@@ -1,4 +1,64 @@
 push 0
+lhp 
+push function0
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+push function0
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push function1
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+push function2
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push function3
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+push function2
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push function4
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push function3
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
 push 40000
 lhp
 sw
@@ -78,66 +138,6 @@ push 1
 add 
 lw 
 js 
-lhp 
-push function0
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-lhp 
-push function0
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push function1
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-lhp 
-push function2
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push function3
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-lhp 
-push function2
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push function4
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push function3
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
 push -8
 lfp
 add
