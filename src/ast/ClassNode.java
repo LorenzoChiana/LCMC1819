@@ -69,6 +69,7 @@ public class ClassNode implements DecNode {
 				}
 				
 			}
+			
 			//controllo metodi overridedati
 			ArrayList<Node> superTypeMethods =((ClassTypeNode)superEntry.getType()).getMethods();
 			for (Node method: methods){
@@ -120,7 +121,7 @@ public class ClassNode implements DecNode {
 					+ "lhp \n" 					//incremento hp
 					+ "push 1 \n" 
 					+ "add \n"
-					+ "shp";					//salva la nuova cima dello heap
+					+ "shp \n";					//salva la nuova cima dello heap
 		}
 
 		return "lhp \n" +

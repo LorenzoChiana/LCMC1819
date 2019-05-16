@@ -79,10 +79,9 @@ public class MethodNode implements DecNode {
 	}
 
 	public Node typeCheck() {	 
-		for (Node dec:declist){System.out.println("dec: "+dec);
+		for (Node dec:declist){
 		dec.typeCheck();
 		}
-		System.out.println("isSub error: "+FOOLlib.isSubtype(exp.typeCheck(),type));
 		if (! FOOLlib.isSubtype(exp.typeCheck(),type)) {
 			System.out.println("MethodNode " + this.id + " error: Incompatible value for variable");
 			System.exit(0);

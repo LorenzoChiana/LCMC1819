@@ -7,32 +7,37 @@ sw
 lhp 
 push 1 
 add 
-shplhp 
-sw 
-lhp 
-push 1 
-add 
-shp9997
-lhp 
-sw 
-lhp 
-lhp 
-push 1 
-add 
-shplhp 
+shp 
 lhp 
 sw 
 lhp 
 push 1 
 add 
-shp9995
+shp 
+9997
 lhp 
 sw 
 lhp 
 lhp 
 push 1 
 add 
-shppush 5000
+shp 
+lhp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+9995
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
+push 5000
 push 20000
 lhp 
 lhp 
@@ -40,19 +45,22 @@ sw
 lhp 
 push 1 
 add 
-shplhp 
+shp 
+lhp 
 sw 
 lhp 
 push 1 
 add 
-shp9997
+shp 
+9997
 lhp 
 sw 
 lhp 
 lhp 
 push 1 
 add 
-shplfp 
+shp 
+lfp 
 push -7
 lfp
 add
@@ -78,32 +86,37 @@ sw
 lhp 
 push 1 
 add 
-shplhp 
-sw 
-lhp 
-push 1 
-add 
-shp9997
-lhp 
-sw 
-lhp 
-lhp 
-push 1 
-add 
-shplhp 
+shp 
 lhp 
 sw 
 lhp 
 push 1 
 add 
-shp9995
+shp 
+9997
 lhp 
 sw 
 lhp 
 lhp 
 push 1 
 add 
-shppush 5000
+shp 
+lhp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+9995
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
+push 5000
 push 20000
 lhp 
 lhp 
@@ -111,19 +124,22 @@ sw
 lhp 
 push 1 
 add 
-shplhp 
+shp 
+lhp 
 sw 
 lhp 
 push 1 
 add 
-shp9997
+shp 
+9997
 lhp 
 sw 
 lhp 
 lhp 
 push 1 
 add 
-shplfp 
+shp 
+lfp 
 push -7
 lfp
 add

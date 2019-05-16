@@ -41,7 +41,7 @@ public class FOOLlib {
 		}else 
 			/*Controllo che in superType esista una coppia con chiave a (sottotipo)
 			 * se esiste controllo che il super tipo di a sia uguale a b, se non lo e'
-			 * chiamo ricorsivamente (ora il sotto tipo sara'  il super tipo di a e il super tipo rimane b
+			 * chiamo ricorsivamente (ora il sotto tipo sara'ï¿½ il super tipo di a e il super tipo rimane b
 			 * itero finche' non trovo una corrispondenza nella hashmap, se non la trovo vuol dire che
 			 * a non e' sottotipo di b
 			 * */
@@ -63,7 +63,7 @@ public class FOOLlib {
 				} else {
 					return true;
 				}
-			} else if(a instanceof RefTypeNode && b instanceof EmptyTypeNode) {
+			} else if(a instanceof EmptyTypeNode) { //EmptyTypeNode Ã¨ sottotipo di tutti i tipi
 				return true;
 			} else if
 					(a.getClass().equals(b.getClass()) ||

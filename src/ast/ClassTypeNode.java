@@ -32,7 +32,7 @@ public class ClassTypeNode implements Node {
 	}
 	
 	public void overrideField(int offset, Node method) {
-		allMethods.set(offset, method);
+		allFields.set(offset, method);
 	}
 	public ArrayList<Node> getFields() {
 		return new ArrayList<>(allFields);

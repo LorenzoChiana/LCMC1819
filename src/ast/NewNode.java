@@ -66,7 +66,7 @@ public class NewNode implements Node {
 					+ "lhp \n" 		//incremento hp
 					+ "push 1 \n" 
 					+ "add \n"
-					+ "shp";		//salva la nuova cima dello heap (il nuovo heap pointer)
+					+ "shp \n";		//salva la nuova cima dello heap (il nuovo heap pointer)
 		}
 
 		return parCode 
@@ -79,7 +79,7 @@ public class NewNode implements Node {
 				+ "lhp \n" 									//incremento hp
 				+ "push 1 \n" 
 				+ "add \n"
-				+ "shp";
+				+ "shp \n";
 	}
 	/*@Override
 	public String codeGeneration() {
