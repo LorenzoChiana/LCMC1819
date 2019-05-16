@@ -24,7 +24,7 @@ public class IdNode implements Node {
 			System.out.println("Wrong usage of function identifier");
 			System.exit(0);
 		} 
-		if (entry.getType() instanceof ClassTypeNode) {
+		if ((entry.getType() instanceof ClassTypeNode) || (entry.getIsMethod())) {
 			System.out.println("Wrong usage of function identifier");
 			System.exit(0);
 		} 
@@ -47,7 +47,7 @@ public class IdNode implements Node {
 		
 		return "push "+offset+"\n"+			 
 			"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
-			//in cui è dichiarata la variabile			 
+			//in cui ï¿½ dichiarata la variabile			 
 			"add\n"+
 			"lw\n"; //prende il valore all'indirizzo specificato e lo poppa sullo stack
 	}
