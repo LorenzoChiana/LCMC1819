@@ -18,7 +18,7 @@ let
         then {l2}
         else {new List(l1.first(), append(l1.rest(),l2))} ;  
     
-  fun filter:List (l:List, accept:(int)->bool) 
+  fun filter:List (l:List, accept:(int)->bool)
       if (l == null) 
         then {null}
         else {if ( accept(l.first()) )

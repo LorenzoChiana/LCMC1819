@@ -453,6 +453,7 @@ function5:
 cfp
 lra
 push 1
+push 1
 lfp
 add
 lw
@@ -602,6 +603,7 @@ label8:
 push -1
 label9: 
 srv
+pop
 sra
 pop
 pop

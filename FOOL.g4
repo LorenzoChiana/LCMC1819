@@ -1,8 +1,7 @@
 grammar FOOL;
  
 @header{
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import lib.FOOLlib;
 import ast.*;
 }
@@ -60,15 +59,16 @@ cllist returns [ArrayList<Node> classList]: {
 						$classList = new ArrayList<Node>();
 						boolean isExtends = false;
 					}( CLASS classID=ID {
-						ArrayList <String> fieldsMethodsinClass= new ArrayList<>();
-						int offsetVT = -1; //perch� i campi sono la prima cosa che vediamo
+						HashSet <String> methodsUsedYet = new HashSet<>(); //rende possibile rilevare la ridefinizione di metodi con lo stesso nome
+						HashSet <String> fieldsUsedYet = new HashSet<>(); //rende possibile rilevare la ridefinizione di campi con lo stesso nome
+						int offsetVT = -1; //perche' i campi sono la prima cosa che vediamo
 						//System.out.println("CLASSE "+$classID.text);
 						ClassTypeNode classType = new ClassTypeNode();
 						HashMap<String,STentry> hm =symTable.get(nestingLevel); 
 						HashMap<String,STentry> vt = new HashMap<String, STentry>();  //virtualTable tiene sia le cose ha la nostra classe sia quello che eredita
 						STentry entry = new STentry(nestingLevel, classOffset);
 		             	if (hm.put($classID.text, entry)!= null) {
-		             		System.out.println("Class id "+$i.text+" at line "+$i.line+" already declared");
+		             		System.out.println("Class id "+$classID.text+" at line "+$classID.line+" already declared");
               				System.exit(0);
 		              	} else {
 		              		classOffset--;
@@ -98,7 +98,7 @@ cllist returns [ArrayList<Node> classList]: {
 					{
 						$classList.add(classNode);
 		              	if (classTable.put($classID.text, vt) != null) {
-		              		System.out.println("Class id "+$i.text+" at line "+$i.line+" already declared");
+		              		System.out.println("Class id "+$classID.text+" at line "+$classID.line+" already declared");
               				System.exit(0);
 		              	}
 	               		
@@ -107,42 +107,42 @@ cllist returns [ArrayList<Node> classList]: {
 					}
 					LPAR (i =ID COLON t = type {
 		               ArrayList<Node> fieldList = new ArrayList<Node>();
-		               if (fieldsMethodsinClass.contains($i.text)){
-		               		System.out.println("Id "+$i.text+" at line "+$i.line+" already declared in this class");
+		               if (fieldsUsedYet.contains($i.text)){
+		               		System.out.println("Field id "+$i.text+" at line "+$i.line+" already declared in this class");
               				System.exit(0);
-		               }else{
-		               		fieldsMethodsinClass.add($i.text);
+		               } else {
+		               		fieldsUsedYet.add($i.text);
 		               } 
 		              
-		               	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
+		               	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id e' gia'� presente nella vt e se questo non e' un metodo faccio l'override
 		             		//Overriding
 		             		if(!classTable.get($id2.text).get($i.text).getIsMethod()){
-		             			FieldNode field = new FieldNode($i.text, $t.ast);
+		             			FieldNode field = new FieldNode($i.text, $t.ast, classTable.get($id2.text).get($i.text).getOffset());
 		             			vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset()));
 		             			classType.overrideField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
 		             			fieldList.add(field);
-		             		}else{
+		             		} else {
 		             			System.out.println("Override is not permitted");
               					System.exit(0);
 		             		}
 						}else{
-							FieldNode field = new FieldNode($i.text, $t.ast);
+							FieldNode field = new FieldNode($i.text, $t.ast, offsetVT);
 							fieldList.add(field);
 							vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
 						    classType.addField(-offsetVT-1, field);
 						    offsetVT--;
 						}
 					}(COMMA i=ID COLON t=type {
-						if (fieldsMethodsinClass.contains($i.text)){
-		               		System.out.println("Id "+$i.text+" at line "+$i.line+" already declared in this class");
+						if (fieldsUsedYet.contains($i.text)){
+		               		System.out.println("Field id "+$i.text+" at line "+$i.line+" already declared in this class");
               				System.exit(0);
 		               }else{
-		               		fieldsMethodsinClass.add($i.text);
+		               		fieldsUsedYet.add($i.text);
 		               }
-		               	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
+		               	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id e' gia'� presente nella vt e se questo non e' un metodo faccio l'override
 		             		//Overriding
 		             		if(!classTable.get($id2.text).get($i.text).getIsMethod()){
-		             			FieldNode field = new FieldNode($i.text, $t.ast);
+		             			FieldNode field = new FieldNode($i.text, $t.ast, classTable.get($id2.text).get($i.text).getOffset());
 							    fieldList.add(field);
 		             			vt.put($i.text, new STentry(nestingLevel, $t.ast, classTable.get($id2.text).get($i.text).getOffset()));
 		             			classType.overrideField((-classTable.get($id2.text).get($i.text).getOffset())-1, field);
@@ -151,7 +151,7 @@ cllist returns [ArrayList<Node> classList]: {
               					System.exit(0);
 		             		}
 						}else{
-							FieldNode field = new FieldNode($i.text, $t.ast);
+							FieldNode field = new FieldNode($i.text, $t.ast, offsetVT);
 							fieldList.add(field);
 							vt.put($i.text, new STentry(nestingLevel, $t.ast, offsetVT));
 						    classType.addField(-offsetVT-1, field);
@@ -168,16 +168,16 @@ cllist returns [ArrayList<Node> classList]: {
                 }
                  	}( FUN i=ID COLON t=type {
                  	MethodNode method = new MethodNode($i.text, $t.ast);
-                 	//Do errore se il metodo è già dichiarato in questa classe
-                 	if (fieldsMethodsinClass.contains($i.text)){
-		            	System.out.println("Id "+$i.text+" at line "+$i.line+" already declared in this class");
+                 	//Do errore se il metodo e' gia'� dichiarato in questa classe
+                 	if (methodsUsedYet.contains($i.text)){
+		            	System.out.println("Method id "+$i.text+" at line "+$i.line+" already declared in this class");
               			System.exit(0);
 		            }else{
-		               	fieldsMethodsinClass.add($i.text);
+		               	methodsUsedYet.add($i.text);
 		            }
 		             
 		            STentry mEntry = new STentry(nestingLevel, true);
-                 	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id è già presente nella vt e se questo non è un metodo faccio l'override
+                 	if (isExtends && classTable.get($id2.text).containsKey($i.text)){   //Se l'id e' gia'� presente nella vt e se questo non e' un metodo faccio l'override
 		             	//Overriding
 		             	if(classTable.get($id2.text).get($i.text).getIsMethod()){
 		             		method.setOffset(classTable.get($id2.text).get($i.text).getOffset());

@@ -8,20 +8,11 @@ public class MethodNode implements DecNode {
 	private String id;
 	private Node type; 		//tipo di ritorno del metodo
 	private Node symType;
-	private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist" che � lista di Node
+	private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist" che e' lista di Node
 	private ArrayList<Node> declist = new ArrayList<Node>(); 
 	private Node exp;
 	private String label;
 	private int offset;
-
-	public int getOffset() {
-		return offset;
-	}
-
-	//mettiamo l'offset della virtual table
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
 
 	public MethodNode (String i, Node type) {
 		id=i;
@@ -37,6 +28,15 @@ public class MethodNode implements DecNode {
 		return symType;
 	} 
 
+	public int getOffset() {
+		return offset;
+	}
+	
+	//mettiamo l'offset della virtual table
+	public void setOffset(int offset) {
+		this.offset = offset;
+	}
+	
 	public String getId() {
 		return id;
 	} 
