@@ -131,6 +131,62 @@ push 1
 add
 lw
 js
+<<<<<<< HEAD
+=======
+lhp
+push method0
+lhp
+sw
+lhp
+push 1 
+add
+shp
+lhp
+push method0
+lhp
+sw
+lhp
+push 1 
+add
+shp
+push method1
+lhp
+sw
+lhp
+push 1 
+add
+shp
+lhp
+push method2
+lhp
+sw
+lhp
+push 1 
+add
+shp
+push method3
+lhp
+sw
+lhp
+push 1 
+add
+shp
+lhp
+push method2
+lhp
+sw
+lhp
+push 1 
+add
+shp
+push method4
+lhp
+sw
+lhp
+push 1 
+add
+shp
+>>>>>>> 0a45b720ae249428d5dab99c73db490fb4234cc6
 push -8
 lfp
 add
