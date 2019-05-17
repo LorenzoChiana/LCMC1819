@@ -60,9 +60,9 @@ public class NewNode implements Node {
 			parCode+=arglist.get(i).codeGeneration();
 		}
 		
-		String labelList = "";
+		String parStack2Heap = "";
 		for(int i = 0; i<arglist.size(); i++) {
-			labelList += "lhp \n"	//carico sullo stack l'indirizzo dello heap pointer				
+			parStack2Heap += "lhp \n"	//carico sullo stack l'indirizzo dello heap pointer				
 					+ "sw \n" 		//salvo all'indirizzo di hp quello che c'ï¿½ nel top dello stack
 					+ "lhp \n" 		//incremento hp
 					+ "push 1 \n" 
@@ -71,7 +71,7 @@ public class NewNode implements Node {
 		}
 		
 		return parCode
-				+ labelList
+				+ parStack2Heap
 				+ "push " + (FOOLlib.MEMSIZE + entry.getOffset()) + "\n"	//recupera il dispatch pointer
 				+ "lw \n"		//carica sullo stack il contenuto di una cella di memoria di cui è indicato l'indirizzo sul top dello stack
 				+ "lhp \n"						
