@@ -13,13 +13,15 @@ public class ExecuteVM {
     private int fp = MEMSIZE; 
     private int ra;           
     private int rv;
-    
+    int num_pop = 0;
     public ExecuteVM(int[] code) {
       this.code = code;
     }
     
     public void cpu() {
       while ( true ) {
+
+    	  //System.out.println(num_pop++ +" ip: " +ip);
         int bytecode = code[ip++]; // fetch
         int v1,v2;
         int address;

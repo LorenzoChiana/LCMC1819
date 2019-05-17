@@ -56,7 +56,8 @@ public class CallNode implements Node {
 		}
 		String getAR="";
 		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++)
-			getAR+="lw\n";      
+			getAR+="lw\n";   
+		//System.out.println("offset ------->"+entry.getOffset());
 		return "lfp\n"+ //Contro Link
 		parCode+ //allocazione valori parametri	
 

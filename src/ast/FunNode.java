@@ -77,7 +77,7 @@ public class FunNode implements DecNode {
 		}
 
 		String funl = FOOLlib.freshFunLabel();
-
+		System.out.println(exp);
 		FOOLlib.putCode(
 				funl + ":\n" + 
 						"cfp\n" + //setta $fp a $sp (fp = frame pointer; sp = stack pointer) 

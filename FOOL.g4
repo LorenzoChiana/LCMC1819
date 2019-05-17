@@ -70,11 +70,11 @@ declist returns [ArrayList<Node> astlist]: {
 	               $astlist.add(f);                              
 	               HashMap<String,STentry> hm = symTable.get(nestingLevel);
 	               STentry entry=new STentry(nestingLevel, offset);
-	               offset-=2;
 	               if ( hm.put($i.text,entry) != null  ) {
 	               	System.out.println("Fun id "+$i.text+" at line "+$i.line+" already declared");
 	                System.exit(0);
 	               }
+	               offset-=2;
 	               //creare una nuova hashmap per la symTable
 	               nestingLevel++;
 	               HashMap<String,STentry> hmn = new HashMap<String,STentry> ();
@@ -82,37 +82,34 @@ declist returns [ArrayList<Node> astlist]: {
 	            }
                 LPAR {
                 	ArrayList<Node> parTypes = new ArrayList<Node>();
-              	    int paroffset=1;
+              	    int paroffset=0;
                 } (fid=ID COLON fht=hotype {
                 	parTypes.add($fht.ast);
                   ParNode fpar = new ParNode($fid.text,$fht.ast); //creo nodo ParNode
                   f.addPar(fpar);                                 //lo attacco al FunNode con addPar
-                  
-                  if ( hmn.put($fid.text,new STentry(nestingLevel,$fht.ast,paroffset)) != null  ){ //aggiungo dich a hmn
-                  	System.out.println("Parameter id "+$fid.text+" at line "+$fid.line+" already declared");
-                   	System.exit(0);
-                  } else {
-                  	if(fpar.getSymType() instanceof ArrowTypeNode){
+                  if(fpar.getSymType() instanceof ArrowTypeNode){
               			paroffset += 2;
               	  	} else{
               			paroffset++;
               	  	}
-                  }
+                  if ( hmn.put($fid.text,new STentry(nestingLevel,$fht.ast,paroffset)) != null  ){ //aggiungo dich a hmn
+                  	System.out.println("Parameter id "+$fid.text+" at line "+$fid.line+" already declared");
+                   	System.exit(0);
+                  } 
                 } (COMMA id=ID COLON hty=hotype
                 	{
                     parTypes.add($hty.ast);
                     ParNode par = new ParNode($id.text,$hty.ast);
                     f.addPar(par);
-                    if ( hmn.put($id.text,new STentry(nestingLevel,$hty.ast,paroffset)) != null){
-                    	System.out.println("Parameter id "+$id.text+" at line "+$id.line+" already declared");
-                     	System.exit(0);
-                    } else {
-                    	if(par.getSymType() instanceof ArrowTypeNode){
+                    if(par.getSymType() instanceof ArrowTypeNode){
               				paroffset += 2;
 	              		} else{
 	              			paroffset++;
 	              		}
-                    }
+                    if ( hmn.put($id.text,new STentry(nestingLevel,$hty.ast,paroffset)) != null){
+                    	System.out.println("Parameter id "+$id.text+" at line "+$id.line+" already declared");
+                     	System.exit(0);
+                    } 
                   }
                 )* )? RPAR {
                 	ArrowTypeNode atn = new ArrowTypeNode(parTypes, $t.ast);
@@ -196,12 +193,15 @@ value returns [Node ast]:
 	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {$ast= new IfNode($x.ast,$y.ast,$z.ast);}    
 	    | NOT LPAR x=exp RPAR {$ast= new NotNode($x.ast);}
 	    | PRINT LPAR e=exp RPAR {$ast= new PrintNode($e.ast);}   
-        | LPAR exp RPAR  
+        | LPAR e=exp RPAR  {$ast=$e.ast;}
 	    | i=ID {//cercare la dichiarazione
            int j=nestingLevel;
            STentry entry=null; 
-           while (j>=0 && entry==null)
-             entry=(symTable.get(j--)).get($i.text);
+           while (j>=0 && entry==null){
+	   	 	entry=(symTable.get(j--)).get($i.text);}
+	   	 	
+	   	 	//System.out.println(" entry: "+entry.toPrint(""));
+             
            if (entry==null)
            {
            	System.out.println("Id "+$i.text+" at line "+$i.line+" not declared");
@@ -211,7 +211,10 @@ value returns [Node ast]:
 	   ( LPAR {ArrayList<Node> arglist = new ArrayList<Node>();}
 	   	 (a=exp {arglist.add($a.ast);}
 	   	 	(COMMA a=exp {arglist.add($a.ast);} )*
-	   	 )? RPAR {$ast= new CallNode($i.text,entry,arglist,nestingLevel);}
+	   	 )? RPAR {
+	   	 	System.out.println("FOOL effoset "+entry.getOffset());
+	   	 	$ast= new CallNode($i.text,entry,arglist,nestingLevel);
+	   	 }
 	         | DOT ID LPAR (exp (COMMA exp)* )? RPAR 
 	         )?	   
         ; 
