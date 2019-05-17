@@ -11,37 +11,37 @@ public class CallNode implements Node {
 	private ArrayList<Node> parlist = new ArrayList<Node>(); 
 
 	public CallNode (String i, STentry st, ArrayList<Node> p, int nl) {
-		id=i;
-		nestingLevel=nl;
-		entry=st;
-		parlist=p;
+		id = i;
+		nestingLevel = nl;
+		entry = st;
+		parlist = p;
 	}
 
 	public String toPrint(String s) {
-		String parlstr="";
-		for (Node par:parlist){parlstr+=par.toPrint(s+"  ");};
+		String parlstr = "";
+		for (Node par:parlist){
+			parlstr+=par.toPrint(s+"  ");
+		}
 		return s+"Call:" + id + " at nestinglevel " + nestingLevel +"\n" +
 		entry.toPrint(s+"  ") +  
 		parlstr;
 	}
 
 	public Node typeCheck() {	 
-		ArrowTypeNode t=null;
-		if (entry.getType() instanceof ArrowTypeNode) {
-			t=(ArrowTypeNode) entry.getType(); 
-		} else {
+		if (!(entry.getType() instanceof ArrowTypeNode)) {
 			System.out.println("Invocation of a non-function "+id);
 			System.exit(0);
 		}
+		
+		ArrowTypeNode t = (ArrowTypeNode) entry.getType(); 
 		ArrayList<Node> p = t.getParList();
-
-
+		
 		if ( !(p.size() == parlist.size()) ) {
 			System.out.println("Wrong number of parameters in the invocation of "+id);
 			System.exit(0);
 		} 
-		//controlla che i parametri della chiamata siano sottotipo della funzione che chiami
-		for (int i=0; i<parlist.size(); i++) {
+		//controlla che i parametri della chiamata siano sottotipo dei parametri della funzione che chiami
+		for (int i = 0; i<parlist.size(); i++) {
 			if ( !(FOOLlib.isSubtype( (parlist.get(i)).typeCheck(), p.get(i)) ) ) {
 				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
 				System.exit(0);
@@ -52,14 +52,18 @@ public class CallNode implements Node {
 
 	public String codeGeneration() {
 		String result; 
-		String parCode="";
-		for (int i=parlist.size()-1; i>=0; i--) {
-			parCode+=parlist.get(i).codeGeneration();
+		String parCode = "";
+		
+		//carichiamo i parametri sullo stack 
+		for (int i = parlist.size()-1; i >= 0; i--) {
+			parCode += parlist.get(i).codeGeneration();
 		}
 
-		String getAR="";
+		String getAR = "";
+		
+		//risaliamo la catena statica fino ad arrivare al nesting level che vogliamo
 		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++) {
-			getAR+="lw\n";      
+			getAR += "lw\n";      //lw carica sullo stack il contenuto della cella di memoria indicata in cima allo stack
 		}
 
 		if (entry.getIsMethod()) {
