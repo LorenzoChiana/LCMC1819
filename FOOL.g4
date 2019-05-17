@@ -41,7 +41,6 @@ prog  returns [Node ast]
     ) IN e=exp
     {
     	if (isOO){
-    		System.out.println("classList "+$c.classList);
     		$ast = new ProgLetInNode($c.classList,$d.astlist,$e.ast);
     	}else{
     		$ast = new ProgLetInNode($d.astlist,$e.ast);
