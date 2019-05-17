@@ -13,6 +13,7 @@ public class ExecuteVM {
     private int fp = MEMSIZE; 
     private int ra;           
     private int rv;
+	private int num_pop = 0;
     
     public ExecuteVM(int[] code) {
       this.code = code;
@@ -55,6 +56,8 @@ public class ExecuteVM {
             memory[address] = pop();    
             break;
           case SVMParser.LOADW : //
+        	  System.out.println("numero pop: "+num_pop++ );
+          	System.out.println("Sp: "+sp);
             push(memory[pop()]);
             break;
           case SVMParser.BRANCH : 

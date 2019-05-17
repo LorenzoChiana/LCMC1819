@@ -35,10 +35,6 @@ public class CallNode implements Node {
 		}
 		ArrayList<Node> p = t.getParList();
 
-
-		System.out.println("---------->" + p.size() + " parlist " + parlist.size());
-
-
 		if ( !(p.size() == parlist.size()) ) {
 			System.out.println("Wrong number of parameters in the invocation of "+id);
 			System.exit(0);
