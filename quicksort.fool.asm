@@ -22,139 +22,139 @@ lfp
  push function6
 lfp
  push function7
-push -1
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 5
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
-lhp 
-lhp
-push 1 
-add
-shp
-lhp
-sw
-lhp
-push 1 
-add
-shp
 push 2
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
-lhp 
-lhp
-push 1 
-add
-shp
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 3
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
-lhp 
-lhp
-push 1 
-add
-shp
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 4
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
-lhp 
-lhp
-push 1 
-add
-shp
-lhp
-sw
-lhp
-push 1 
-add
-shp
 push 1
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
-lhp 
-lhp
-push 1 
-add
-shp
-lhp
-sw
-lhp
-push 1 
-add
-shp
+push 4
+push 3
 push 2
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
+push 5
+push -1
 lhp 
-lhp
+sw 
+lhp 
 push 1 
-add
-shp
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
 lfp
 lfp
 push -11
@@ -216,35 +216,35 @@ js
 function2:
 cfp
 lra
-push 1
-lfp
-add
-lw
-lhp
-sw
-lhp
-push 1 
-add
-shp
 push 2
 lfp
 add
 lw
-lhp
-sw
-lhp
-push 1 
+push 1
+lfp
 add
-shp
-push 9998
 lw
-lhp
-sw
 lhp 
-lhp
+sw 
+lhp 
 push 1 
-add
-shp
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
 srv
 sra
 pop
@@ -355,6 +355,20 @@ push 1
 label7: 
 push 1
 beq label4
+lfp 
+push 1
+lfp
+add
+lw
+push 1
+lfp
+add
+lw
+lw 
+push 0
+add 
+lw 
+js 
 lfp
 push 2
 lfp
@@ -385,41 +399,27 @@ push -6
 add
 lw
 js
-lhp
-sw
-lhp
-push 1 
-add
-shp
-lfp 
-push 1
-lfp
-add
-lw
-push 1
-lfp
-add
-lw
-lw 
-push 0
-add 
-lw 
-js 
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
 lhp 
-lhp
+sw 
+lhp 
 push 1 
-add
-shp
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
 b label5
 label4: 
 push 2
@@ -564,6 +564,20 @@ lw
 js
 b label17
 label16: 
+lfp 
+push 1
+lfp
+add
+lw
+push 1
+lfp
+add
+lw
+lw 
+push 0
+add 
+lw 
+js 
 lfp
 push 3
 lfp
@@ -598,41 +612,27 @@ push -8
 add
 lw
 js
-lhp
-sw
-lhp
-push 1 
-add
-shp
-lfp 
-push 1
-lfp
-add
-lw
-push 1
-lfp
-add
-lw
-lw 
-push 0
-add 
-lw 
-js 
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
 lhp 
-lhp
+sw 
+lhp 
 push 1 
-add
-shp
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
 label17: 
 b label13
 label12: 
@@ -699,6 +699,10 @@ label27:
 push 1
 beq label24
 lfp
+push -2
+lfp
+add
+lw
 lfp
 lfp
 push 0
@@ -742,31 +746,27 @@ push -10
 add
 lw
 js
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push -2
-lfp
-add
-lw
-lhp
-sw
-lhp
-push 1 
-add
-shp
-push 9998
-lw
-lhp
-sw
 lhp 
-lhp
+sw 
+lhp 
 push 1 
-add
-shp
+add 
+shp 
+lhp 
+sw 
+lhp 
+push 1 
+add 
+shp 
+push 9998
+lw 
+lhp 
+sw 
+lhp 
+lhp 
+push 1 
+add 
+shp 
 lfp
 lfp
 push 1
