@@ -481,22 +481,22 @@ add
 lw 
 js 
 lfp
-push 2
+push 3
 add
 lw
 lfp
-push 1
+push 2
 add
 lw
 js
 push 1
 beq label12
 lfp
-push 2
+push 3
 lfp
 add
 lw
-push 1
+push 2
 lfp
 add
 lw
@@ -542,11 +542,11 @@ add
 lw 
 js 
 lfp
-push 2
+push 3
 lfp
 add
 lw
-push 1
+push 2
 lfp
 add
 lw
@@ -627,12 +627,12 @@ add
 lw
 lfp
 lw
-push 2
+push 3
 add
 lw
 lfp
 lw
-push 1
+push 2
 add
 lw
 js
@@ -660,12 +660,12 @@ add
 lw
 lfp
 lw
-push 2
+push 3
 add
 lw
 lfp
 lw
-push 1
+push 2
 add
 lw
 js
@@ -742,11 +742,11 @@ lfp
 add
 lw
 lfp
-push 2
+push 3
 lfp
 add
 lw
-push 1
+push 2
 lfp
 add
 lw
@@ -817,11 +817,11 @@ push 1
 add 
 shp 
 lfp
-push 2
+push 3
 lfp
 add
 lw
-push 1
+push 2
 lfp
 add
 lw

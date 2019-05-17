@@ -317,36 +317,34 @@ declist returns [ArrayList<Node> astlist]: {
 	            }
                 LPAR {
                 	ArrayList<Node> parTypes = new ArrayList<Node>();
-              	    int paroffset=1;
+              	    int paroffset=0;
                 } (fid=ID COLON fht=hotype {
                 	parTypes.add($fht.ast);
                   ParNode fpar = new ParNode($fid.text,$fht.ast); //creo nodo ParNode
                   f.addPar(fpar);                                 //lo attacco al FunNode con addPar
-                  
+                  if(fpar.getSymType() instanceof ArrowTypeNode){
+              		paroffset += 2;
+              	  } else {
+              		paroffset++;
+              	  }
                   if ( hmn.put($fid.text,new STentry(nestingLevel,$fht.ast,paroffset)) != null  ){ //aggiungo dich a hmn
                   	System.out.println("Parameter id "+$fid.text+" at line "+$fid.line+" already declared");
                    	System.exit(0);
-                  } else {
-                  	if(fpar.getSymType() instanceof ArrowTypeNode){
-              			paroffset += 2;
-              	  	} else{
-              			paroffset++;
-              	  	}
                   }
                 } (COMMA id=ID COLON hty=hotype
                 	{
                     parTypes.add($hty.ast);
                     ParNode par = new ParNode($id.text,$hty.ast);
                     f.addPar(par);
+                    
+                    if(par.getSymType() instanceof ArrowTypeNode){
+              			paroffset += 2;
+	              	} else{
+	              		paroffset++;
+	              	}
                     if ( hmn.put($id.text,new STentry(nestingLevel,$hty.ast,paroffset)) != null){
                     	System.out.println("Parameter id "+$id.text+" at line "+$id.line+" already declared");
                      	System.exit(0);
-                    } else {
-                    	if(par.getSymType() instanceof ArrowTypeNode){
-              				paroffset += 2;
-	              		} else{
-	              			paroffset++;
-	              		}
                     }
                   }
                 )* )? RPAR {

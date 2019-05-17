@@ -17,7 +17,6 @@ js
 print
 halt
 
-
 function0:
 cfp
 lra
@@ -25,11 +24,11 @@ lfp
 push 7
 push 5
 lfp
-push 1
+push 2
 add
 lw
 lfp
-push 0
+push 1
 add
 lw
 js
