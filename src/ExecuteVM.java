@@ -22,7 +22,6 @@ public class ExecuteVM {
     
     public void cpu() {
       while ( true ) {
-    	  System.out.println("ip: " +ip);
         int bytecode = code[ip++]; // fetch
         int v1,v2;
         int address;

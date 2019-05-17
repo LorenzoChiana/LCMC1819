@@ -1,4 +1,57 @@
 push 0
+lhp
+push method0
+lhp
+sw
+lhp
+push 1 
+add
+shp
+lhp
+push method0
+lhp
+sw
+lhp
+push 1 
+add
+shp
+push method1
+lhp
+sw
+lhp
+push 1 
+add
+shp
+lhp
+push method2
+lhp
+sw
+lhp
+push 1 
+add
+shp
+push method3
+lhp
+sw
+lhp
+push 1 
+add
+shp
+lhp
+push method2
+lhp
+sw
+lhp
+push 1 
+add
+shp
+push method4
+lhp
+sw
+lhp
+push 1 
+add
+shp
 push 40000
 lhp
 sw
@@ -60,7 +113,7 @@ lhp
 push 1 
 add
 shp
-lfp 
+lfp
 push -7
 lfp
 add
@@ -73,71 +126,11 @@ push -6
 lfp
 add
 lw
-lw 
+lw
 push 1
-add 
-lw 
-js 
-lhp 
-push method0
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-lhp 
-push method0
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push method1
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-lhp 
-push method2
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push method3
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-lhp 
-push method2
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push method4
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
-push method3
-lhp 
-sw 
-lhp 
-push 1 
-add 
-shp 
+add
+lw
+js
 push -8
 lfp
 add
@@ -151,7 +144,7 @@ push 1
 label11: 
 push 1
 beq label8
-lfp 
+lfp
 push -8
 lfp
 add
@@ -160,17 +153,18 @@ push -8
 lfp
 add
 lw
-lw 
+lw
 push 0
-add 
-lw 
-js 
+add
+lw
+js
 b label9
 label8: 
 push 0
 label9: 
 print
 halt
+
 
 method0:
 cfp
@@ -224,7 +218,7 @@ method3:
 cfp
 lra
 push 30000
-lfp 
+lfp
 push 1
 lfp
 add
@@ -233,12 +227,12 @@ push 1
 lfp
 add
 lw
-lw 
+lw
 push 0
-add 
-lw 
-js 
-lfp 
+add
+lw
+js
+lfp
 push 1
 lfp
 add
@@ -247,11 +241,11 @@ push 1
 lfp
 add
 lw
-lw 
+lw
 push 1
-add 
-lw 
-js 
+add
+lw
+js
 add
 bleq label2
 push 0
@@ -264,7 +258,7 @@ beq label0
 push -1
 b label1
 label0: 
-lfp 
+lfp
 push -1
 lfp
 lw
@@ -275,11 +269,11 @@ lfp
 lw
 add
 lw
-lw 
+lw
 push 0
-add 
-lw 
-js 
+add
+lw
+js
 lhp
 sw
 lhp
@@ -309,7 +303,7 @@ method4:
 cfp
 lra
 push 20000
-lfp 
+lfp
 push 1
 lfp
 add
@@ -318,11 +312,11 @@ push 1
 lfp
 add
 lw
-lw 
+lw
 push 0
-add 
-lw 
-js 
+add
+lw
+js
 bleq label6
 push 0
 b label7
@@ -334,7 +328,7 @@ beq label4
 push -1
 b label5
 label4: 
-lfp 
+lfp
 push -1
 lfp
 lw
@@ -345,18 +339,18 @@ lfp
 lw
 add
 lw
-lw 
+lw
 push 1
-add 
-lw 
-js 
+add
+lw
+js
 lhp
 sw
 lhp
 push 1 
 add
 shp
-lfp 
+lfp
 push -1
 lfp
 lw
@@ -367,11 +361,11 @@ lfp
 lw
 add
 lw
-lw 
+lw
 push 0
-add 
-lw 
-js 
+add
+lw
+js
 lhp
 sw
 lhp

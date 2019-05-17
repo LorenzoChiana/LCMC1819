@@ -539,9 +539,9 @@ arrow returns [Node ast]: {
 	}
 	LPAR (ht=hotype {
 		parTypes.add($ht.ast);
-	}  (COMMA ht=hotype)* {
+	}  (COMMA ht=hotype {
 		parTypes.add($ht.ast);
-	})? RPAR ARROW t=type {
+	})*)? RPAR ARROW t=type {
 		$ast = new ArrowTypeNode(parTypes, $t.ast);
 	};          
 		  
