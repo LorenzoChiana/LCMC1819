@@ -52,13 +52,14 @@ public class NewNode implements Node {
 		return new RefTypeNode(id);
 	}
 	
-	/*@Override
+		@Override
 	public String codeGeneration() {
 		String parCode="";
-		for (int i=arglist.size()-1; i>=0; i--) {
+
+		for (int i=0; i< arglist.size(); i++) {
 			parCode+=arglist.get(i).codeGeneration();
 		}
-
+		
 		String labelList = "";
 		for(int i = 0; i<arglist.size(); i++) {
 			labelList += "lhp \n"	//carico sullo stack l'indirizzo dello heap pointer				
@@ -68,45 +69,18 @@ public class NewNode implements Node {
 					+ "add \n"
 					+ "shp \n";		//salva la nuova cima dello heap (il nuovo heap pointer)
 		}
-
-		return parCode 
-				+"lhp \n"
+		
+		return parCode
 				+ labelList
-				+ (FOOLlib.MEMSIZE + entry.getOffset()) + "\n"	//recupera il dispatch pointer
+				+ "push " + (FOOLlib.MEMSIZE + entry.getOffset()) + "\n"	//recupera il dispatch pointer
+				+ "lw \n"		//carica sullo stack il contenuto di una cella di memoria di cui è indicato l'indirizzo sul top dello stack
 				+ "lhp \n"						
-				+ "sw \n"									//carica il dispatch pointer a indirizzo hp
-				+ "lhp \n"			//quello che rimane sullo stack (object pointer da ritornare)
-				+ "lhp \n" 									//incremento hp
+				+ "sw \n"		//carica il dispatch pointer a indirizzo hp
+				+ "lhp \n"		//quello che rimane sullo stack (object pointer da ritornare)
+				+ "lhp \n" 		//incremento hp
 				+ "push 1 \n" 
 				+ "add \n"
 				+ "shp \n";
-	}*/
-	@Override
-	public String codeGeneration() {
-		String storeCode="";
-		for(int i = arglist.size()-1;i>=0;i--) {
-			 storeCode+= 
-					 arglist.get(i).codeGeneration() 
-					 + "lhp\n"
-					 + "sw\n"
-				     + "lhp\n"
-					 + "push 1 \n"
-					 + "add\n"
-					 +"shp\n";
-		}
-		return  storeCode 
-				+ "push " + (FOOLlib.MEMSIZE + entry.getOffset()) + "\n"
-				+ "lw\n" // carico su stack il dispatch pointer
-				+ "lhp\n"
-				+ "sw\n" // scrivo il dispatch pointer sullo heap
-				
-				+ "lhp \n"
-				 + "lhp\n"
-				 + "push 1 \n"
-				 + "add\n"
-				 + "shp\n";
-				
-	}
-
+	} 
 }
 

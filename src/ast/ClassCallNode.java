@@ -21,7 +21,15 @@ public class ClassCallNode implements Node {
 		parlist=p;
 		this.entry = entry;
 	}
+	
+	public String getId1() {
+		return id1;
+	}
 
+	public void setId1(String id1) {
+		this.id1 = id1;
+	}
+	
 	public String toPrint(String s) {
 		String parlstr="";
 		for (Node par:parlist){parlstr+=par.toPrint(s+"  ");};

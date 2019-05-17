@@ -7,7 +7,7 @@ public class CallNode implements Node {
 
 	private String id;
 	private int nestingLevel;
-	private STentry entry;
+	private STentry entry;		//classe che stai richiamando
 	private ArrayList<Node> parlist = new ArrayList<Node>(); 
 
 	public CallNode (String i, STentry st, ArrayList<Node> p, int nl) {
@@ -34,6 +34,11 @@ public class CallNode implements Node {
 			System.exit(0);
 		}
 		ArrayList<Node> p = t.getParList();
+
+
+		System.out.println("---------->" + p.size() + " parlist " + parlist.size());
+
+
 		if ( !(p.size() == parlist.size()) ) {
 			System.out.println("Wrong number of parameters in the invocation of "+id);
 			System.exit(0);
@@ -66,10 +71,10 @@ public class CallNode implements Node {
 					parCode+ 			//allocazione valori parametri	
 
 					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-										//in cui è dichiarata la funzione (Access Link)					 
+					//in cui è dichiarata la funzione (Access Link)					 
 					"lfp\n"+ 			//carica il frame pointer
 					getAR+ 				//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-										//in cui è dichiarata la funzione (Access Link)			
+					//in cui è dichiarata la funzione (Access Link)			
 					"lw \n"+			//aggiungo 1 alla differenza di nesting level in modo da raggiungere la dispatch table
 					"push "+(entry.getOffset())+"\n"+
 					"add\n"+			//otteniamo l'indirizzo del metodo nella dispatch table
@@ -88,7 +93,7 @@ public class CallNode implements Node {
 
 					//usato per settare un nuovo access link
 					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-										//in cui è dichiarata la funzione (Access Link)	
+					//in cui è dichiarata la funzione (Access Link)	
 					"push "+entry.getOffset()+"\n"+		 				 
 					"add\n"+
 					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
@@ -98,7 +103,7 @@ public class CallNode implements Node {
 					//in cui è dichiarata la funzione (Access Link)	
 					"push "+(entry.getOffset()-1)+"\n"+			 				 
 					"add\n"+
-					
+
 					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
 					"js\n"; 			//effettua il salto
 		}
