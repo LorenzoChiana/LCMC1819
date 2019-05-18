@@ -5,22 +5,22 @@ public class FieldNode implements DecNode {
 	private String id;
 	private Node type;
 	private int offset;
-	
+
 	public FieldNode (String i, Node type, int offset) {
-		this.id=i;
+		this.id = i;
 		this.type = type;
 		this.offset = offset;
 	}
 
 	public FieldNode (String i, Node type) {
-		this.id=i;
+		this.id = i;
 		this.type = type;
 	}
 
 	public int getOffset() {
 		return offset;
 	}
-	
+
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
@@ -43,7 +43,7 @@ public class FieldNode implements DecNode {
 	public Node getSymType() {
 		return this.type;
 	}  
-	
+
 	public String getId() {
 		return id;
 	}

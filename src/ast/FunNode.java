@@ -1,5 +1,6 @@
 package ast;
 import java.util.ArrayList;
+import java.util.List;
 
 import lib.FOOLlib;
 
@@ -8,21 +9,21 @@ public class FunNode implements DecNode {
 	private String id;
 	private Node type; 		//tipo di ritorno della funzione
 	private Node symType;
-	private ArrayList<Node> parlist = new ArrayList<Node>(); // campo "parlist" che è lista di Node
-	private ArrayList<Node> declist = new ArrayList<Node>(); 
+	private List<Node> parlist = new ArrayList<Node>(); // campo "parlist" che è lista di Node
+	private List<Node> declist = new ArrayList<Node>(); 
 	private Node exp;
 
 	public FunNode (String i, Node t) {
-		id=i;
-		type=t;
+		this.id = i;
+		this.type = t;
 	}
 
 	public void addDec (ArrayList<Node> d) {
-		declist=d;
+		declist = d;
 	}  
 
 	public void addBody (Node b) {
-		exp=b;
+		exp = b;
 	}  
 
 	public void addPar (ParNode p) { //metodo "addPar" che aggiunge un nodo a campo "parlist"
@@ -30,10 +31,16 @@ public class FunNode implements DecNode {
 	}  
 
 	public String toPrint(String s) {
-		String parlstr="";
-		for (Node par:parlist){parlstr+=par.toPrint(s+"  ");};
-		String declstr="";
-		for (Node dec:declist){declstr+=dec.toPrint(s+"  ");};
+		String parlstr = "";
+		for (Node par:parlist){
+			parlstr += par.toPrint(s+"  ");
+		}
+
+		String declstr = "";
+		for (Node dec:declist){
+			declstr += dec.toPrint(s+"  ");
+		}
+
 		return s+"Fun:" + id +"\n"
 		+type.toPrint(s+"  ")
 		+parlstr
@@ -45,6 +52,7 @@ public class FunNode implements DecNode {
 		for (Node dec:declist){
 			dec.typeCheck();
 		}
+
 		if (! FOOLlib.isSubtype(exp.typeCheck(),type)) {
 			System.out.println("FunNode "  + this.id + " error: Incompatible value for variable");
 			System.exit(0);
@@ -58,7 +66,7 @@ public class FunNode implements DecNode {
 			declCode += dec.codeGeneration();
 		}
 
-		String popDecl="";
+		String popDecl = "";
 		for (Node dec:declist) {
 			if(((DecNode)dec).getSymType() instanceof ArrowTypeNode) {
 				popDecl += "pop\n";

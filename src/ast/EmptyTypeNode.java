@@ -2,16 +2,16 @@ package ast;
 
 public class EmptyTypeNode implements Node {
 
-	  public EmptyTypeNode () {
-	  }
-	  
-	  public String toPrint(String s) {
-		   return s+"EmptyType\n";  
-	  }
+	public EmptyTypeNode () {
+	}
 
-	  //non utilizzato
-	  public Node typeCheck() {return null;}
+	public String toPrint(String s) {
+		return s+"EmptyType\n";  
+	}
 
-	  //non utilizzato
-	  public String codeGeneration() {return "";}
+	//non utilizzato
+	public Node typeCheck() {return null;}
+
+	//non utilizzato
+	public String codeGeneration() {return "";}
 }

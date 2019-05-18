@@ -12,7 +12,7 @@ public class ClassNode implements DecNode {
 	private STentry superEntry;
 
 	public ClassNode (String i) {
-		id=i;
+		this.id=i;
 	}
 
 	@Override
@@ -43,8 +43,12 @@ public class ClassNode implements DecNode {
 	public String toPrint(String s) {
 		String fieldList = "";
 		String methodList = "";
-		for (Node field:fields){fieldList+=field.toPrint(s+"  ");}
-		for (Node method:methods){methodList+=method.toPrint(s+"  ");}
+		for (Node field:fields){
+			fieldList+=field.toPrint(s+"  ");
+		}
+		for (Node method:methods){
+			methodList+=method.toPrint(s+"  ");
+		}
 
 		return s+"ClassNode: "+id
 				+"\n" + fieldList + methodList; 
@@ -94,7 +98,7 @@ public class ClassNode implements DecNode {
 
 	public String codeGeneration() {
 		ArrayList<String> dt;
-		if (superEntry!=null) {
+		if (superEntry != null) {
 			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-superEntry.getOffset()-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
 		}else {
 			dt = new ArrayList<String>();
@@ -122,7 +126,5 @@ public class ClassNode implements DecNode {
 		return "lhp \n" +
 		labelList;
 	}
-
-
 
 }  

@@ -2,6 +2,7 @@ package lib;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import ast.ArrowTypeNode;
 import ast.BoolTypeNode;
@@ -14,7 +15,7 @@ public class FOOLlib {
 	public final static int MEMSIZE = 10000; 
 
 	//definisce la gerarchia dei tipi riferimento (costruita durante il parsing)
-	private static HashMap<String, String> superType = new HashMap<>();
+	private static Map<String, String> superType = new HashMap<>();
 	private static ArrayList<ArrayList<String>> dispatchTables = new ArrayList<>();
 
 	//valuta se il tipo "a" e' <= al tipo "b"
@@ -35,9 +36,6 @@ public class FOOLlib {
 				}
 				return true;
 			}
-			//return true;
-			/*}else if ((a instanceof EmptyTypeNode && !(b instanceof RefTypeNode || b instanceof EmptyTypeNode))) {	
-			return false;*/
 		}else 
 			/*Controllo che in superType esista una coppia con chiave a (sottotipo)
 			 * se esiste controllo che il super tipo di a sia uguale a b, se non lo e'
@@ -129,7 +127,7 @@ public class FOOLlib {
 				ArrayList<Node> parA = nodeA.getParList();
 				ArrayList<Node> parB = nodeB.getParList();
 				ArrayList<Node> parlist = new ArrayList<>();
-				
+
 				for (int i=0; i<parA.size(); i++) { //itero i parametri
 					if ((isSubtype(parA.get(i),parB.get(i)))) { //Se non sono uno sottotipo dell'altro restituisco null
 						parlist.add(parA.get(i));

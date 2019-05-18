@@ -1,5 +1,6 @@
 package ast;
 import java.util.ArrayList;
+import java.util.List;
 
 import lib.FOOLlib;
 
@@ -8,13 +9,13 @@ public class CallNode implements Node {
 	private String id;
 	private int nestingLevel;
 	private STentry entry;		//classe che stai richiamando
-	private ArrayList<Node> parlist = new ArrayList<Node>(); 
+	private List<Node> parlist = new ArrayList<Node>(); 
 
 	public CallNode (String i, STentry st, ArrayList<Node> p, int nl) {
-		id = i;
-		nestingLevel = nl;
-		entry = st;
-		parlist = p;
+		this.id = i;
+		this.nestingLevel = nl;
+		this.entry = st;
+		this.parlist = p;
 	}
 
 	public String toPrint(String s) {
@@ -32,10 +33,10 @@ public class CallNode implements Node {
 			System.out.println("Invocation of a non-function "+id);
 			System.exit(0);
 		}
-		
+
 		ArrowTypeNode t = (ArrowTypeNode) entry.getType(); 
-		ArrayList<Node> p = t.getParList();
-		
+		List<Node> p = t.getParList();
+
 		if ( !(p.size() == parlist.size()) ) {
 			System.out.println("Wrong number of parameters in the invocation of "+id);
 			System.exit(0);
@@ -53,14 +54,14 @@ public class CallNode implements Node {
 	public String codeGeneration() {
 		String result; 
 		String parCode = "";
-		
+
 		//carichiamo i parametri sullo stack 
 		for (int i = parlist.size()-1; i >= 0; i--) {
 			parCode += parlist.get(i).codeGeneration();
 		}
 
 		String getAR = "";
-		
+
 		//risaliamo la catena statica fino ad arrivare al nesting level che vogliamo
 		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++) {
 			getAR += "lw\n";      //lw carica sullo stack il contenuto della cella di memoria indicata in cima allo stack

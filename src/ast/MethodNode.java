@@ -15,7 +15,7 @@ public class MethodNode implements DecNode {
 	private int offset;
 
 	public MethodNode (String i, Node type) {
-		id=i;
+		this.id = i;
 		this.type = type;
 	}
 
@@ -31,12 +31,12 @@ public class MethodNode implements DecNode {
 	public int getOffset() {
 		return offset;
 	}
-	
+
 	//mettiamo l'offset della virtual table
 	public void setOffset(int offset) {
 		this.offset = offset;
 	}
-	
+
 	public String getId() {
 		return id;
 	} 
@@ -66,10 +66,16 @@ public class MethodNode implements DecNode {
 	}
 
 	public String toPrint(String s) {
-		String parlstr="";
-		for (Node par:parlist){parlstr+=par.toPrint(s+"  ");};
-		String declstr="";
-		for (Node dec:declist){declstr+=dec.toPrint(s+"  ");};
+		String parlstr = "";
+		for (Node par:parlist){
+			parlstr += par.toPrint(s+"  ");
+		}
+
+		String declstr = "";
+		for (Node dec:declist){
+			declstr += dec.toPrint(s+"  ");
+		}
+
 		return s+"MethodNode:" + id +"\n"
 		+symType.toPrint(s+"  ")
 		+ "offset: "+offset
@@ -80,9 +86,10 @@ public class MethodNode implements DecNode {
 
 	public Node typeCheck() {	 
 		for (Node dec:declist){
-		dec.typeCheck();
+			dec.typeCheck();
 		}
-		if (! FOOLlib.isSubtype(exp.typeCheck(),type)) {
+
+		if (!FOOLlib.isSubtype(exp.typeCheck(),type)) {
 			System.out.println("MethodNode " + this.id + " error: Incompatible value for variable");
 			System.exit(0);
 		}
@@ -98,7 +105,7 @@ public class MethodNode implements DecNode {
 		}
 
 		String popDecl="";
-		for (Node dec:declist) {
+		for (Node dec: declist) {
 			if(((DecNode)dec).getSymType() instanceof ArrowTypeNode) {
 				popDecl += "pop\n";
 				popDecl += "pop\n";
@@ -108,7 +115,7 @@ public class MethodNode implements DecNode {
 		}
 
 		String popParl = "";
-		for (Node par:parlist) {
+		for (Node par: parlist) {
 			if(((DecNode)par).getSymType() instanceof ArrowTypeNode) {
 				popParl += "pop\n";
 				popParl += "pop\n";

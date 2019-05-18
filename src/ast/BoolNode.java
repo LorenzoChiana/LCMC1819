@@ -4,7 +4,7 @@ public class BoolNode implements Node {
 	private boolean val;
 
 	public BoolNode (boolean n) {
-		val = n;
+		this.val = n;
 	}
 
 	public String toPrint(String s) {

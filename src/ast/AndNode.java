@@ -7,8 +7,8 @@ public class AndNode implements Node {
 	private Node right;
 
 	public AndNode (Node l, Node r) {
-		left = l;
-		right = r;
+		this.left = l;
+		this.right = r;
 	}
 
 	public String toPrint(String s) {

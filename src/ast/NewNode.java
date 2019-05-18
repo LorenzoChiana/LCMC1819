@@ -17,8 +17,8 @@ public class NewNode implements Node {
 
 	public String toPrint(String s) {
 		String list = "";
-		for (Node arg:arglist) {
-			list+=arg.toPrint(s+"  ");
+		for (Node arg: arglist) {
+			list += arg.toPrint(s+"  ");
 		}
 		return s+"New: "+id+"\n"+list;
 	}
@@ -32,18 +32,16 @@ public class NewNode implements Node {
 
 	public Node typeCheck() {
 		if (!(entry.getType() instanceof ClassTypeNode)) {
-			System.out.println("Invocation of a non-class "+id);
+			System.out.println("Invocation of a non-class " + id);
 			System.exit(0);
 		}
 		ArrayList<Node> fieldsList = ((ClassTypeNode) entry.getType()).getFields();
-		if ( !(fieldsList.size() == arglist.size()) ) {
+		if (!(fieldsList.size() == arglist.size())) {
 			System.out.println("Wrong number of parameters in the invocation of "+id);
 			System.exit(0);
 		} 
 		//controlla che i parametri della chiamata siano sottotipo della funzione che chiami
 		for (int i=0; i<arglist.size(); i++) {
-//			System.out.print("SUB "+id+" -----> 1: "+ (arglist.get(i)).typeCheck()+" 2: "+((FieldNode)fieldsList.get(i)).getSymType());
-//			System.out.println(" --- isSub? "+FOOLlib.isSubtype((arglist.get(i)).typeCheck(), ((FieldNode)fieldsList.get(i)).getSymType()));
 			if ( !(FOOLlib.isSubtype((arglist.get(i)).typeCheck(), ((FieldNode)fieldsList.get(i)).getSymType()))) {
 				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
 				System.exit(0);
@@ -51,15 +49,15 @@ public class NewNode implements Node {
 		}
 		return new RefTypeNode(id);
 	}
-	
-		@Override
+
+	@Override
 	public String codeGeneration() {
-		String parCode="";
+		String parCode = "";
 
 		for (int i=0; i< arglist.size(); i++) {
-			parCode+=arglist.get(i).codeGeneration();
+			parCode += arglist.get(i).codeGeneration();
 		}
-		
+
 		String parStack2Heap = "";
 		for(int i = 0; i<arglist.size(); i++) {
 			parStack2Heap += "lhp \n"	//carico sullo stack l'indirizzo dello heap pointer				
@@ -69,7 +67,7 @@ public class NewNode implements Node {
 					+ "add \n"
 					+ "shp \n";		//salva la nuova cima dello heap (il nuovo heap pointer)
 		}
-		
+
 		return parCode
 				+ parStack2Heap
 				+ "push " + (FOOLlib.MEMSIZE + entry.getOffset()) + "\n"	//recupera il dispatch pointer

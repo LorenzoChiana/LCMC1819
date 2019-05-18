@@ -8,8 +8,8 @@ public class GreaterEqualNode implements Node {
 	private Node right;
 
 	public GreaterEqualNode(Node l, Node r) {
-		left = l;
-		right = r;
+		this.left = l;
+		this.right = r;
 	}
 
 	public String toPrint(String s) {
@@ -32,6 +32,7 @@ public class GreaterEqualNode implements Node {
 	public String codeGeneration() {
 		String l1 = FOOLlib.freshLabel();
 		String l2 = FOOLlib.freshLabel();
+
 		return right.codeGeneration() 
 				+ left.codeGeneration() 
 				+ "bleq " + l1 + "\n" 

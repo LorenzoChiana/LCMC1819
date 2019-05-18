@@ -9,9 +9,9 @@ public class IdNode implements Node {
 	private STentry entry;
 
 	public IdNode (String i, STentry st, int nl) {
-		id=i;
-		nestingLevel=nl;
-		entry=st;
+		this.id = i;
+		this.nestingLevel = nl;
+		this.entry = st;
 	}
 
 	public String toPrint(String s) {
@@ -20,10 +20,6 @@ public class IdNode implements Node {
 	}
 
 	public Node typeCheck() {
-		/*if (entry.getType() instanceof ArrowTypeNode) {
-			System.out.println("Wrong usage of function identifier");
-			System.exit(0);
-		} */
 		if ((entry.getType() instanceof ClassTypeNode) || (entry.getIsMethod())) {
 			System.out.println("Wrong usage of function identifier");
 			System.exit(0);
@@ -40,16 +36,16 @@ public class IdNode implements Node {
 	}
 
 	private String getAddress(int offset) {
-		String getAR="";
-		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++) {
-			getAR+="lw\n";
+		String getAR = "";
+		for (int i=0; i<nestingLevel-entry.getNestinglevel(); i++) {
+			getAR += "lw\n";
 		}
-		
-		return "push "+offset+"\n"+			 
-			"lfp\n"+getAR+ //risalgo la catena statica per ottenere l'indirizzo dell'AR 
-			//in cui � dichiarata la variabile			 
-			"add\n"+
-			"lw\n"; //prende il valore all'indirizzo specificato e lo poppa sullo stack
+
+		return "push " + offset + "\n"			 
+		+ "lfp\n"
+		+ getAR //risalgo la catena statica per ottenere l'indirizzo dell'AR in cui e' dichiarata la variabile			 
+		+ "add\n"
+		+ "lw\n"; //prende il valore all'indirizzo specificato e lo poppa sullo stack
 	}
 
 }  

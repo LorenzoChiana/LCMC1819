@@ -5,8 +5,8 @@ public class ParNode implements DecNode {
 	private Node type;
 
 	public ParNode (String i, Node t) {
-		id=i;
-		type=t;
+		this.id = i;
+		this.type = t;
 	}
 
 	public String toPrint(String s) {
@@ -23,7 +23,7 @@ public class ParNode implements DecNode {
 	public Node getSymType() {
 		return this.type;
 	}
-	
+
 	public String getId() {
 		return this.id;
 	}

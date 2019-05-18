@@ -9,9 +9,9 @@ public class VarNode implements DecNode {
 	private Node exp;
 
 	public VarNode (String i, Node t, Node v) {
-		id=i;
-		type=t;
-		exp=v;
+		this.id = i;
+		this.type = t;
+		this.exp = v;
 	}
 
 	public String toPrint(String s) {
@@ -21,7 +21,7 @@ public class VarNode implements DecNode {
 	}
 
 	public Node typeCheck() {
-		if (! FOOLlib.isSubtype(exp.typeCheck(),type)) {
+		if (!FOOLlib.isSubtype(exp.typeCheck(),type)) {
 			System.out.println("Incompatible value for variable: "+id);
 			System.exit(0);
 		}

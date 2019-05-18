@@ -5,8 +5,8 @@ public class LessEqualNode implements Node {
 	private Node right;
 
 	public LessEqualNode (Node l, Node r) {
-		left=l;
-		right=r;
+		this.left = l;
+		this.right = r;
 	}
 
 	public String toPrint(String s) {
@@ -15,9 +15,9 @@ public class LessEqualNode implements Node {
 	}
 
 	public Node typeCheck() {
-		Node l= left.typeCheck();  
-		Node r= right.typeCheck();  
-		if ( !(FOOLlib.isSubtype(l, r) || FOOLlib.isSubtype(r, l)) ) {
+		Node l = left.typeCheck();  
+		Node r = right.typeCheck();  
+		if (!(FOOLlib.isSubtype(l, r) || FOOLlib.isSubtype(r, l))) {
 			System.out.println("Incompatible types in less equal");
 			System.exit(0);	
 		}  
@@ -27,7 +27,7 @@ public class LessEqualNode implements Node {
 	/*
 	 * Se è vero salto a l1 se è falso continuo
 	 * */
-	
+
 	public String codeGeneration() {
 		String l1= FOOLlib.freshLabel();
 		String l2= FOOLlib.freshLabel();

@@ -4,7 +4,7 @@ public class RefTypeNode implements Node {
 	String classId;
 
 	public RefTypeNode (String id) {
-		classId = id;
+		this.classId = id;
 	}
 	public String getClassId() {
 		return classId;
