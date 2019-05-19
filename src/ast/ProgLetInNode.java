@@ -25,16 +25,16 @@ public class ProgLetInNode implements Node {
 		//class List
 		String cstr = "";
 		for (Node c: classlist){
-			cstr += c.toPrint(s+"  ");
+			cstr += c.toPrint(s + "  ");
 		}
 
 		//dec List
 		String declstr = "";
 		for (Node dec: declist){
-			declstr += dec.toPrint(s+"  ");
+			declstr += dec.toPrint(s + "  ");
 		}
 
-		return s+"ProgLetIn\n" + cstr + declstr + exp.toPrint(s+"  ");
+		return s + "ProgLetIn\n" + cstr + declstr + exp.toPrint(s + "  ");
 
 	}
 
@@ -42,7 +42,7 @@ public class ProgLetInNode implements Node {
 		for (Node decC: classlist){
 			decC.typeCheck();
 		}
-		
+
 		for (Node dec: declist){
 			dec.typeCheck();
 		}
@@ -56,16 +56,17 @@ public class ProgLetInNode implements Node {
 		for (Node decC: classlist) {
 			classCode += decC.codeGeneration();
 		}
+
 		for (Node dec: declist) {
 			declCode += dec.codeGeneration();
 		}
-		
+
 		return  "push 0\n"
-				+ classCode
-				+ declCode
-				+ exp.codeGeneration()
-				+ "halt\n"
-				+ FOOLlib.getCode();
+			+ classCode
+			+ declCode
+			+ exp.codeGeneration()
+			+ "halt\n"
+			+ FOOLlib.getCode();
 	}
 
 }  

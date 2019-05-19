@@ -14,9 +14,13 @@ public class RefTypeNode implements Node {
 	}
 
 	//non utilizzato
-	public Node typeCheck() {return null;}
+	public Node typeCheck() {
+		return null;
+	}
 
 	//non utilizzato
-	public String codeGeneration() {return "";}
+	public String codeGeneration() {
+		return "";
+	}
 
 }

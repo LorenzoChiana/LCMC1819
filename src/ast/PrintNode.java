@@ -8,7 +8,7 @@ public class PrintNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"Print\n" + exp.toPrint(s+"  ") ;
+		return s + "Print\n" + exp.toPrint(s + "  ") ;
 	}
 
 	public Node typeCheck() {
@@ -16,7 +16,7 @@ public class PrintNode implements Node {
 	}
 
 	public String codeGeneration() {
-		return exp.codeGeneration()+
+		return exp.codeGeneration() +
 				"print\n";
 	}
 

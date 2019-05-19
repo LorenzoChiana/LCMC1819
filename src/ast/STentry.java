@@ -37,7 +37,7 @@ public class STentry {
 	}
 
 	public void addType(Node t) {
-		type=t;
+		type = t;
 	}
 
 	public Node getType() {
@@ -65,10 +65,10 @@ public class STentry {
 	}
 
 	public String toPrint(String s) {
-		return s+"STentry: nestlev " + Integer.toString(nl) +"\n"+
-				s+"STentry: type\n " +
-				type.toPrint(s+"  ") +
-				s+"STentry: offset " + offset + "\n";    
+		return s + "STentry: nestlev " + Integer.toString(nl) + "\n" +
+				s + "STentry: type\n " +
+				type.toPrint(s + "  ") +
+				s + "STentry: offset " + offset + "\n";    
 	}
 
 }  

@@ -10,14 +10,18 @@ public class ParNode implements DecNode {
 	}
 
 	public String toPrint(String s) {
-		return s+"Par:" + id +"\n"
-				+type.toPrint(s+"  ") ; 
+		return s + "Par:" + id + "\n"
+				+ type.toPrint(s + "  ") ; 
 	}
 
 	//non utilizzato
-	public Node typeCheck() {return null;}
+	public Node typeCheck() {
+		return null;
+	}
 
-	public String codeGeneration() {return "";}
+	public String codeGeneration() {
+		return "";
+	}
 
 	@Override
 	public Node getSymType() {

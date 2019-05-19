@@ -15,14 +15,14 @@ public class VarNode implements DecNode {
 	}
 
 	public String toPrint(String s) {
-		return s+"Var:" + id +"\n"
-				+type.toPrint(s+"  ")  
-				+exp.toPrint(s+"  ") ; 
+		return s + "Var:" + id + "\n"
+				+ type.toPrint(s + "  ")  
+				+ exp.toPrint(s + "  ") ; 
 	}
 
 	public Node typeCheck() {
 		if (!FOOLlib.isSubtype(exp.typeCheck(),type)) {
-			System.out.println("Incompatible value for variable: "+id);
+			System.out.println("Incompatible value for variable: " + id);
 			System.exit(0);
 		}
 		return null;
