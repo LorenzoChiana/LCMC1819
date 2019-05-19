@@ -18,10 +18,11 @@ public class NewNode implements Node {
 	public String toPrint(String s) {
 		String list = "";
 		for (Node arg: arglist) {
-			list += arg.toPrint(s+"  ");
+			list += arg.toPrint(s + "  ");
 		}
-		return s+"New: "+id+"\n"+list;
+		return s + "New: " + id + "\n" + list;
 	}
+	
 	public String getId() {
 		return id;
 	}
@@ -37,13 +38,13 @@ public class NewNode implements Node {
 		}
 		ArrayList<Node> fieldsList = ((ClassTypeNode) entry.getType()).getFields();
 		if (!(fieldsList.size() == arglist.size())) {
-			System.out.println("Wrong number of parameters in the invocation of "+id);
+			System.out.println("Wrong number of parameters in the invocation of " + id);
 			System.exit(0);
 		} 
 		//controlla che i parametri della chiamata siano sottotipo della funzione che chiami
-		for (int i=0; i<arglist.size(); i++) {
-			if ( !(FOOLlib.isSubtype((arglist.get(i)).typeCheck(), ((FieldNode)fieldsList.get(i)).getSymType()))) {
-				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
+		for (int i = 0; i < arglist.size(); i++) {
+			if (!(FOOLlib.isSubtype((arglist.get(i)).typeCheck(), ((FieldNode)fieldsList.get(i)).getSymType()))) {
+				System.out.println("Wrong type for " + (i+1) + "-th parameter in the invocation of " + id);
 				System.exit(0);
 			} 
 		}
@@ -54,12 +55,12 @@ public class NewNode implements Node {
 	public String codeGeneration() {
 		String parCode = "";
 
-		for (int i=0; i< arglist.size(); i++) {
+		for (int i=0; i < arglist.size(); i++) {
 			parCode += arglist.get(i).codeGeneration();
 		}
 
 		String parStack2Heap = "";
-		for(int i = 0; i<arglist.size(); i++) {
+		for (int i = 0; i < arglist.size(); i++) {
 			parStack2Heap += "lhp \n"	//carico sullo stack l'indirizzo dello heap pointer				
 					+ "sw \n" 		//salvo all'indirizzo di hp quello che c'� nel top dello stack
 					+ "lhp \n" 		//incremento hp

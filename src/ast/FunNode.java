@@ -1,11 +1,9 @@
 package ast;
 import java.util.ArrayList;
 import java.util.List;
-
 import lib.FOOLlib;
 
 public class FunNode implements DecNode {
-
 	private String id;
 	private Node type; 		//tipo di ritorno della funzione
 	private Node symType;
@@ -13,48 +11,48 @@ public class FunNode implements DecNode {
 	private List<Node> declist = new ArrayList<Node>(); 
 	private Node exp;
 
-	public FunNode (String i, Node t) {
+	public FunNode(String i, Node t) {
 		this.id = i;
 		this.type = t;
 	}
 
-	public void addDec (ArrayList<Node> d) {
+	public void addDec(ArrayList<Node> d) {
 		declist = d;
 	}  
 
-	public void addBody (Node b) {
+	public void addBody(Node b) {
 		exp = b;
 	}  
 
-	public void addPar (ParNode p) { //metodo "addPar" che aggiunge un nodo a campo "parlist"
+	public void addPar(ParNode p) { //metodo "addPar" che aggiunge un nodo a campo "parlist"
 		parlist.add(p);  
 	}  
 
 	public String toPrint(String s) {
+
 		String parlstr = "";
-		for (Node par:parlist){
-			parlstr += par.toPrint(s+"  ");
+		for (Node par: parlist){
+			parlstr += par.toPrint(s + "  ");
 		}
 
 		String declstr = "";
 		for (Node dec:declist){
-			declstr += dec.toPrint(s+"  ");
+			declstr += dec.toPrint(s + "  ");
 		}
 
-		return s+"Fun:" + id +"\n"
-		+type.toPrint(s+"  ")
-		+parlstr
-		+declstr
-		+exp.toPrint(s+"  ") ; 
+		return s + "Fun:" + id + "\n"
+		+ type.toPrint(s+"  ")
+		+ parlstr
+		+ declstr
+		+ exp.toPrint(s + "  "); 
 	}
 
 	public Node typeCheck() {
-		for (Node dec:declist){
+		for (Node dec: declist){
 			dec.typeCheck();
 		}
-
-		if (! FOOLlib.isSubtype(exp.typeCheck(),type)) {
-			System.out.println("FunNode "  + this.id + " error: Incompatible value for variable");
+		if (!FOOLlib.isSubtype(exp.typeCheck(), type)) {
+			System.out.println("FunNode " + this.id + " error: Incompatible value for variable");
 			System.exit(0);
 		}
 		return null;
@@ -62,12 +60,12 @@ public class FunNode implements DecNode {
 
 	public String codeGeneration() {
 		String declCode = "";
-		for (Node dec:declist) {
+		for (Node dec: declist) {
 			declCode += dec.codeGeneration();
 		}
 
 		String popDecl = "";
-		for (Node dec:declist) {
+		for (Node dec: declist) {
 			if(((DecNode)dec).getSymType() instanceof ArrowTypeNode) {
 				popDecl += "pop\n";
 				popDecl += "pop\n";
@@ -77,7 +75,7 @@ public class FunNode implements DecNode {
 		}
 
 		String popParl = "";
-		for (Node par:parlist) {
+		for (Node par: parlist) {
 			if(((DecNode)par).getSymType() instanceof ArrowTypeNode) {
 				popParl += "pop\n";
 				popParl += "pop\n";
@@ -115,5 +113,4 @@ public class FunNode implements DecNode {
 	public void setSymType(Node symType) {
 		this.symType = symType;
 	}
-
 }  

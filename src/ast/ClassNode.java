@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import lib.FOOLlib;
 
 public class ClassNode implements DecNode {
-
 	private String id;
 	private Node symType;
 	private ArrayList<Node> fields = new ArrayList<Node>(); 
@@ -12,7 +11,7 @@ public class ClassNode implements DecNode {
 	private STentry superEntry;
 
 	public ClassNode (String i) {
-		this.id=i;
+		this.id = i;
 	}
 
 	@Override
@@ -24,11 +23,11 @@ public class ClassNode implements DecNode {
 		this.symType = symType;
 	}
 
-	public void addField (ArrayList<Node> f) {
-		fields=f;
+	public void addField(ArrayList<Node> f) {
+		fields = f;
 	}  
 
-	public void addMethod (MethodNode p) { 
+	public void addMethod(MethodNode p) { 
 		methods.add(p); 
 	} 
 
@@ -43,19 +42,17 @@ public class ClassNode implements DecNode {
 	public String toPrint(String s) {
 		String fieldList = "";
 		String methodList = "";
-		for (Node field:fields){
-			fieldList+=field.toPrint(s+"  ");
+		for (Node field: fields){
+			fieldList += field.toPrint(s + "  ");
 		}
-		for (Node method:methods){
-			methodList+=method.toPrint(s+"  ");
+		for (Node method: methods){
+			methodList += method.toPrint(s + "  ");
 		}
-
-		return s+"ClassNode: "+id
-				+"\n" + fieldList + methodList; 
+		return s + "ClassNode: " + id
+				+ "\n" + fieldList + methodList; 
 	}
 
 	public Node typeCheck() {		
-
 		for (Node m: methods){
 			m.typeCheck();
 		}
@@ -102,10 +99,9 @@ public class ClassNode implements DecNode {
 			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-superEntry.getOffset()-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
 		}else {
 			dt = new ArrayList<String>();
-
 		}
 
-		FOOLlib.addDispatchTable(dt);		//per ereditariet� copiare dispatch table della classe da cui si eredita (contenuto)
+		FOOLlib.addDispatchTable(dt);		//per ereditarieta' copiare dispatch table della classe da cui si eredita (contenuto)
 
 		for(Node m: methods) {
 			m.codeGeneration();
@@ -122,9 +118,7 @@ public class ClassNode implements DecNode {
 					+ "add \n"
 					+ "shp \n";					//salva la nuova cima dello heap
 		}
-
 		return "lhp \n" +
 		labelList;
 	}
-
 }  

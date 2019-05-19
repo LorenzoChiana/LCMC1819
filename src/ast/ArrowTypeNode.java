@@ -2,38 +2,41 @@ package ast;
 import java.util.ArrayList;
 
 public class ArrowTypeNode implements Node {
-
 	private ArrayList<Node> parlist;
 	private Node ret;
 
-	public ArrowTypeNode (ArrayList<Node> p, Node r) {
+	public ArrowTypeNode(ArrayList<Node> p, Node r) {
 		this.parlist = p;
 		this.ret = r;
 	}
 
-	public Node getRet () { 
+	public Node getRet() { 
 		return ret;
 	}
 
-	public ArrayList<Node> getParList () { 
+	public ArrayList<Node> getParList() { 
 		return parlist;
 	}
 
 	public int getParListLength() {
 		return parlist.size();
 	}
+
 	public String toPrint(String s) {
 		String parlstr = "";
 		for (Node par: parlist){
-			parlstr += par.toPrint(s+"  ");
+			parlstr += par.toPrint(s + "  ");
 		}
-		return s+"ArrowTypeNode\n" + parlstr + ret.toPrint(s+"  ->") ; 
+		return s + "ArrowTypeNode\n" + parlstr + ret.toPrint(s + "  ->") ; 
 	}
 
 	//non utilizzato
-	public Node typeCheck() {return null;}
+	public Node typeCheck() {
+		return null;
+	}
 
 	//non utilizzato
-	public String codeGeneration() {return "";}
-
+	public String codeGeneration() {
+		return "";
+	}
 }  

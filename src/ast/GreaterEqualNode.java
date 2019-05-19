@@ -3,7 +3,6 @@ package ast;
 import lib.FOOLlib;
 
 public class GreaterEqualNode implements Node {
-
 	private Node left;
 	private Node right;
 
@@ -42,5 +41,4 @@ public class GreaterEqualNode implements Node {
 				+ "push 1\n" 
 				+ l2 + ": \n";
 	}
-
 }

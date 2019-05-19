@@ -3,7 +3,6 @@ package ast;
 import lib.FOOLlib;
 
 public class IfNode implements Node {
-
 	private Node cond;
 	private Node th;
 	private Node el;
@@ -15,9 +14,9 @@ public class IfNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"If\n" + cond.toPrint(s+"  ") 
-		+ th.toPrint(s+"  ")   
-		+ el.toPrint(s+"  ") ; 
+		return s + "If\n" + cond.toPrint(s + "  ") 
+		+ th.toPrint(s + "  ")   
+		+ el.toPrint(s + "  "); 
 	}
 
 	public Node typeCheck() {
@@ -32,11 +31,13 @@ public class IfNode implements Node {
 		if (FOOLlib.isSubtype(t, e)) {
 			return e;
 		}
+
 		if (FOOLlib.isSubtype(e, t)) {
 			return t;
 		}
 
 		Node n = FOOLlib.lowestCommonAncestor(t, e);
+
 		if (n == null) {
 			System.out.println("Incompatible types in then-else branches");
 			System.exit(0);
@@ -47,14 +48,13 @@ public class IfNode implements Node {
 	public String codeGeneration() {
 		String l1 = FOOLlib.freshLabel();
 		String l2 = FOOLlib.freshLabel();
-		return cond.codeGeneration()+
-				"push 1\n"+		     
-				"beq "+l1+"\n"+
-				el.codeGeneration()+
-				"b "+l2+"\n"+
-				l1+": \n"+
-				th.codeGeneration()+
-				l2+": \n";
+		return cond.codeGeneration() +
+				"push 1\n" +		     
+				"beq " + l1 + "\n" +
+				el.codeGeneration() +
+				"b " + l2 + "\n" +
+				l1 + ": \n" +
+				th.codeGeneration() +
+				l2 + ": \n";
 	}
-
 }  

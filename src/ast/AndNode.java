@@ -12,8 +12,8 @@ public class AndNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"And\n" + left.toPrint(s+"  ")   
-		+ right.toPrint(s+"  ") ; 
+		return s + "And\n" + left.toPrint(s + "  ")   
+		+ right.toPrint(s + "  "); 
 	}
 
 	public Node typeCheck() {
@@ -31,21 +31,20 @@ public class AndNode implements Node {
 		String l2 = FOOLlib.freshLabel();
 		String l3 = FOOLlib.freshLabel();
 		return left.codeGeneration() + 
-				"push 1\n"+ 
-				"beq "+l1+"\n"+
-				"push 0\n"+
-				"b "+l2+"\n"+
-				l1+": \n"+
+				"push 1\n" + 
+				"beq " + l1 + "\n" +
+				"push 0\n" +
+				"b " + l2 + "\n" +
+				l1 + ": \n" +
 
 				right.codeGeneration() +
-				"push 1\n"+ 
-				"beq "+l3+"\n"+
-				"push 0\n"+
-				"b "+l2+"\n"+
-				l3+": \n"+
-				"push 1\n"+
+				"push 1\n" + 
+				"beq " + l3 + "\n" +
+				"push 0\n" +
+				"b " + l2 + "\n" +
+				l3 + ": \n" +
+				"push 1\n" +
 
-				l2+": \n";
+				l2 + ": \n";
 	}
-
 }

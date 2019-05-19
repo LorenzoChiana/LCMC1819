@@ -6,12 +6,16 @@ public class EmptyTypeNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"EmptyType\n";  
+		return s + "EmptyType\n";  
 	}
 
 	//non utilizzato
-	public Node typeCheck() {return null;}
+	public Node typeCheck() {
+		return null;
+	}
 
 	//non utilizzato
-	public String codeGeneration() {return "";}
+	public String codeGeneration() {
+		return "";
+	}
 }

@@ -1,14 +1,15 @@
 package ast;
+
 public class IntNode implements Node {
 
 	private Integer val;
 
 	public IntNode (Integer n) {
-		this.val=n;
+		this.val = n;
 	}
 
 	public String toPrint(String s) {
-		return s+"Int:" + Integer.toString(val) +"\n";  
+		return s + "Int:" + Integer.toString(val) + "\n";  
 	}
 
 	public Node typeCheck() {
@@ -16,7 +17,7 @@ public class IntNode implements Node {
 	}
 
 	public String codeGeneration() {
-		return "push "+val+"\n";
+		return "push " + val + "\n";
 	}
 
 }  

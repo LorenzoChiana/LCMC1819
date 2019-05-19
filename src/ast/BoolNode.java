@@ -1,6 +1,6 @@
 package ast;
-public class BoolNode implements Node {
 
+public class BoolNode implements Node {
 	private boolean val;
 
 	public BoolNode (boolean n) {
@@ -9,10 +9,10 @@ public class BoolNode implements Node {
 
 	public String toPrint(String s) {
 		if (val) {
-			return s+"Bool:true\n";
+			return s + "Bool:true\n";
 		}
 		else {
-			return s+"Bool:false\n";  
+			return s + "Bool:false\n";  
 		}
 	}
 
@@ -21,7 +21,6 @@ public class BoolNode implements Node {
 	}
 
 	public String codeGeneration() {
-		return "push "+(val?1:0)+"\n";
+		return "push " + (val?1:0) + "\n";
 	}
-
 }  

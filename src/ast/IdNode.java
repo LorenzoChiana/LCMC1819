@@ -3,7 +3,6 @@ package ast;
  * Classe utilizzata per cecare le dichiarazione di cose dichiarate in uno scope esterno
  * */
 public class IdNode implements Node {
-
 	private String id;
 	private int nestingLevel;
 	private STentry entry;
@@ -15,8 +14,8 @@ public class IdNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"Id:" + id + " at nestinglevel "+ nestingLevel + "\n" + 
-				entry.toPrint(s+"  ") ;  
+		return s + "Id:" + id + " at nestinglevel " + nestingLevel + "\n" + 
+				entry.toPrint(s + "  ");  
 	}
 
 	public Node typeCheck() {
@@ -37,7 +36,7 @@ public class IdNode implements Node {
 
 	private String getAddress(int offset) {
 		String getAR = "";
-		for (int i=0; i<nestingLevel-entry.getNestinglevel(); i++) {
+		for (int i = 0; i < nestingLevel-entry.getNestinglevel(); i++) {
 			getAR += "lw\n";
 		}
 
@@ -47,5 +46,4 @@ public class IdNode implements Node {
 		+ "add\n"
 		+ "lw\n"; //prende il valore all'indirizzo specificato e lo poppa sullo stack
 	}
-
 }  

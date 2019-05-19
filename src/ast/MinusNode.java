@@ -3,7 +3,6 @@ package ast;
 import lib.*;
 
 public class MinusNode implements Node {
-
 	private Node left;
 	private Node right;
 
@@ -13,8 +12,8 @@ public class MinusNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"Minus\n" + left.toPrint(s+"  ")  
-		+ right.toPrint(s+"  ") ; 
+		return s + "Minus\n" + left.toPrint(s + "  ")  
+		+ right.toPrint(s + "  "); 
 	}
 
 	public Node typeCheck() {
@@ -27,7 +26,7 @@ public class MinusNode implements Node {
 	}
 
 	public String codeGeneration() {
-		return left.codeGeneration()+right.codeGeneration()+"sub\n";
+		return left.codeGeneration() + right.codeGeneration() + "sub\n";
 	}
 
 }  

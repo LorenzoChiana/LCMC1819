@@ -3,7 +3,6 @@ package ast;
 import lib.*;
 
 public class MultNode implements Node {
-
 	private Node left;
 	private Node right;
 
@@ -13,8 +12,8 @@ public class MultNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"Mult\n" + left.toPrint(s+"  ")  
-		+ right.toPrint(s+"  ") ; 
+		return s + "Mult\n" + left.toPrint(s + "  ")  
+		+ right.toPrint(s + "  ") ; 
 	}
 
 	public Node typeCheck() {
@@ -27,7 +26,7 @@ public class MultNode implements Node {
 	}
 
 	public String codeGeneration() {
-		return left.codeGeneration()+right.codeGeneration()+"mult\n";
+		return left.codeGeneration() + right.codeGeneration() + "mult\n";
 	}
 
 }  

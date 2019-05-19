@@ -1,7 +1,6 @@
 package ast;
 
 public class FieldNode implements DecNode {
-
 	private String id;
 	private Node type;
 	private int offset;
@@ -26,8 +25,8 @@ public class FieldNode implements DecNode {
 	}
 
 	public String toPrint(String s) {
-		return s+"Field:" + id +"\n"
-				+type.toPrint(s+"  ") ; 
+		return s + "Field:" + id + "\n"
+				+ type.toPrint(s + "  "); 
 	}
 
 	public Node typeCheck() {	 
@@ -37,7 +36,6 @@ public class FieldNode implements DecNode {
 	public String codeGeneration() {
 		return "";
 	}
-
 
 	@Override
 	public Node getSymType() {
@@ -52,5 +50,4 @@ public class FieldNode implements DecNode {
 	public void setId(String id) {
 		this.id = id;
 	}
-
 }  

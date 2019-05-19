@@ -1,10 +1,8 @@
 package ast;
 import java.util.ArrayList;
-
 import lib.FOOLlib;
 
 public class MethodNode implements DecNode {
-
 	private String id;
 	private Node type; 		//tipo di ritorno del metodo
 	private Node symType;

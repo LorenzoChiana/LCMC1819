@@ -1,4 +1,5 @@
 package ast;
+
 public class BoolTypeNode implements Node {
 
 	public BoolTypeNode () {
@@ -9,9 +10,12 @@ public class BoolTypeNode implements Node {
 	}
 
 	//non utilizzato
-	public Node typeCheck() {return null;}
+	public Node typeCheck() {
+		return null;
+	}
 
 	//non utilizzato
-	public String codeGeneration() {return "";}
-
-}  
+	public String codeGeneration() {
+		return "";
+	}
+}

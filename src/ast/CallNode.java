@@ -1,11 +1,10 @@
 package ast;
+
 import java.util.ArrayList;
 import java.util.List;
-
 import lib.FOOLlib;
 
 public class CallNode implements Node {
-
 	private String id;
 	private int nestingLevel;
 	private STentry entry;		//classe che stai richiamando
@@ -20,31 +19,31 @@ public class CallNode implements Node {
 
 	public String toPrint(String s) {
 		String parlstr = "";
-		for (Node par:parlist){
-			parlstr+=par.toPrint(s+"  ");
+		for (Node par: parlist){
+			parlstr += par.toPrint(s + "  ");
 		}
-		return s+"Call:" + id + " at nestinglevel " + nestingLevel +"\n" +
-		entry.toPrint(s+"  ") +  
+		return s + "Call:" + id + " at nestinglevel " + nestingLevel + "\n" +
+		entry.toPrint(s + "  ") +  
 		parlstr;
 	}
 
 	public Node typeCheck() {	 
 		if (!(entry.getType() instanceof ArrowTypeNode)) {
-			System.out.println("Invocation of a non-function "+id);
+			System.out.println("Invocation of a non-function " + id);
 			System.exit(0);
 		}
 
 		ArrowTypeNode t = (ArrowTypeNode) entry.getType(); 
 		List<Node> p = t.getParList();
 
-		if ( !(p.size() == parlist.size()) ) {
-			System.out.println("Wrong number of parameters in the invocation of "+id);
+		if (!(p.size() == parlist.size())) {
+			System.out.println("Wrong number of parameters in the invocation of " + id);
 			System.exit(0);
 		} 
 		//controlla che i parametri della chiamata siano sottotipo dei parametri della funzione che chiami
-		for (int i = 0; i<parlist.size(); i++) {
-			if ( !(FOOLlib.isSubtype( (parlist.get(i)).typeCheck(), p.get(i)) ) ) {
-				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id);
+		for (int i = 0; i < parlist.size(); i++) {
+			if (!(FOOLlib.isSubtype( (parlist.get(i)).typeCheck(), p.get(i)))) {
+				System.out.println("Wrong type for " + (i+1) + "-th parameter in the invocation of " + id);
 				System.exit(0);
 			} 
 		}
@@ -63,29 +62,29 @@ public class CallNode implements Node {
 		String getAR = "";
 
 		//risaliamo la catena statica fino ad arrivare al nesting level che vogliamo
-		for (int i=0; i<nestingLevel-entry.getNestinglevel();i++) {
+		for (int i = 0; i < nestingLevel-entry.getNestinglevel(); i++) {
 			getAR += "lw\n";      //lw carica sullo stack il contenuto della cella di memoria indicata in cima allo stack
 		}
 
 		if (entry.getIsMethod()) {
 			//Object Oriented
-			result = "lfp\n"+ 			//Control Link - salvo il frame pointer precedente (della funzione che mi ha chiamato) che ci serve poi per tornare al punto in cui eravamo 
-					parCode+ 			//allocazione valori parametri	
+			result = "lfp\n" + 			//Control Link - salvo il frame pointer precedente (della funzione che mi ha chiamato) che ci serve poi per tornare al punto in cui eravamo 
+					parCode + 			//allocazione valori parametri	
 
-					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+					"lfp\n" + getAR + 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
 					//in cui è dichiarata la funzione (Access Link)					 
-					"lfp\n"+ 			//carica il frame pointer
-					getAR+ 				//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+					"lfp\n" + 			//carica il frame pointer
+					getAR + 				//risalgo la catena statica per ottenere l'indirizzo dell'AR 
 					//in cui è dichiarata la funzione (Access Link)			
-					"lw \n"+			//aggiungo 1 alla differenza di nesting level in modo da raggiungere la dispatch table
-					"push "+(entry.getOffset())+"\n"+
-					"add\n"+			//otteniamo l'indirizzo del metodo nella dispatch table
-					"lw\n"+ 			//carica sullo stack l'etichetta del metodo trovato nella dispatch table
+					"lw \n" +			//aggiungo 1 alla differenza di nesting level in modo da raggiungere la dispatch table
+					"push " + (entry.getOffset()) + "\n" +
+					"add\n" +			//otteniamo l'indirizzo del metodo nella dispatch table
+					"lw\n" + 			//carica sullo stack l'etichetta del metodo trovato nella dispatch table
 					"js\n"; 			//effettua il salto
 		} else {
 			//Higher order
-			result = "lfp\n"+ 			//Control Link
-					parCode+ 			//allocazione valori parametri	
+			result = "lfp\n" + 			//Control Link
+					parCode + 			//allocazione valori parametri	
 
 					/*
 					 * nel caso di higher order 
@@ -94,22 +93,21 @@ public class CallNode implements Node {
 					 */
 
 					//usato per settare un nuovo access link
-					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+					"lfp\n" + getAR + 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
 					//in cui è dichiarata la funzione (Access Link)	
-					"push "+entry.getOffset()+"\n"+		 				 
-					"add\n"+
-					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
+					"push " + entry.getOffset() + "\n" +		 				 
+					"add\n" +
+					"lw\n" + 			//carica sullo stack l'indirizzo della funzione
 
 					//usato per saltare al codice della funzione
-					"lfp\n"+getAR+ 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
+					"lfp\n" + getAR + 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
 					//in cui è dichiarata la funzione (Access Link)	
-					"push "+(entry.getOffset()-1)+"\n"+			 				 
-					"add\n"+
+					"push " + (entry.getOffset()-1) + "\n" +			 				 
+					"add\n" +
 
-					"lw\n"+ 			//carica sullo stack l'indirizzo della funzione
+					"lw\n" + 			//carica sullo stack l'indirizzo della funzione
 					"js\n"; 			//effettua il salto
 		}
-
 		return result;
 	}  
 }  

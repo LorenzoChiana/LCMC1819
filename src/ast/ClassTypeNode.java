@@ -34,6 +34,7 @@ public class ClassTypeNode implements Node {
 	public void overrideField(int offset, Node method) {
 		allFields.set(offset, method);
 	}
+
 	public ArrayList<Node> getFields() {
 		return new ArrayList<>(allFields);
 	}
@@ -42,24 +43,25 @@ public class ClassTypeNode implements Node {
 		return new ArrayList<>(allMethods);
 	}
 
-
 	public String toPrint(String s) {
 		String fieldList = "";
 		String methodList = "";
-		for (Node field:allFields){
-			fieldList += field.toPrint(s+"  ");
+		for (Node field: allFields){
+			fieldList += field.toPrint(s + "  ");
 		}
-		for (Node method:allMethods){
-			methodList += method.toPrint(s+"  ");
+		for (Node method: allMethods){
+			methodList += method.toPrint(s + "  ");
 		}
-
-		return s+"ClassTypeNode\n" + fieldList + methodList; 
+		return s + "ClassTypeNode\n" + fieldList + methodList; 
 	}
 
 	//non utilizzato
-	public Node typeCheck() {return null;}
+	public Node typeCheck() {
+		return null;
+	}
 
 	//non utilizzato
-	public String codeGeneration() {return "";}
-
+	public String codeGeneration() {
+		return "";
+	}
 }

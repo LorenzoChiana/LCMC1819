@@ -6,7 +6,7 @@ public class EmptyNode implements Node {
 	}
 
 	public String toPrint(String s) {
-		return s+"Empty: null " + "\n";  
+		return s + "Empty: null " + "\n";  
 	}
 
 	public Node typeCheck() {
@@ -14,6 +14,6 @@ public class EmptyNode implements Node {
 	}
 
 	public String codeGeneration() {
-		return "push -1"+"\n";
+		return "push -1" + "\n";
 	}
 }

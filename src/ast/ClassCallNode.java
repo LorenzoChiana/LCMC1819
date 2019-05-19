@@ -1,11 +1,9 @@
 package ast;
 
 import java.util.ArrayList;
-
 import lib.FOOLlib;
 
 public class ClassCallNode implements Node {
-
 	private String id1;	//classe
 	private String id2;	//metodo
 	private int nestingLevel;
@@ -32,31 +30,31 @@ public class ClassCallNode implements Node {
 
 	public String toPrint(String s) {
 		String parlstr = "";
-		for (Node par:parlist){
-			parlstr+=par.toPrint(s+"  ");
+		for (Node par: parlist){
+			parlstr += par.toPrint(s + "  ");
 		}
-		return s+"Call:" + id2 + " at nestinglevel " + nestingLevel +"\n" +
-		entry.toPrint(s+"  ") +  
+		return s + "Call:" + id2 + " at nestinglevel " + nestingLevel + "\n" +
+		entry.toPrint(s + "  ") +  
 		parlstr;
 	}
 
 	public Node typeCheck() {		
 		if (!(methodEntry.getType() instanceof ArrowTypeNode)) {
-			System.out.println("Invocation of a non-function "+id2);
+			System.out.println("Invocation of a non-function " + id2);
 			System.exit(0);	 
 		}
 
-		ArrowTypeNode t=(ArrowTypeNode) methodEntry.getType();
+		ArrowTypeNode t = (ArrowTypeNode) methodEntry.getType();
 		ArrayList<Node> p = t.getParList();
 
 		if (!(p.size() == parlist.size())) {
-			System.out.println("Wrong number of parameters in the invocation of "+id2);
+			System.out.println("Wrong number of parameters in the invocation of " + id2);
 			System.exit(0);
 		} 
 		//controlla che i parametri della chiamata siano sottotipo della funzione che chiami
-		for (int i=0; i<parlist.size(); i++) {
+		for (int i = 0; i < parlist.size(); i++) {
 			if (!(FOOLlib.isSubtype((parlist.get(i)).typeCheck(), p.get(i)))) {
-				System.out.println("Wrong type for "+(i+1)+"-th parameter in the invocation of "+id2);
+				System.out.println("Wrong type for " + (i+1) + "-th parameter in the invocation of " + id2);
 				System.exit(0);
 			} 
 		}
@@ -65,20 +63,20 @@ public class ClassCallNode implements Node {
 
 	private String getAddress(int offset) {
 		String getAR = "";
-		for (int i=0; i<nestingLevel-entry.getNestinglevel(); i++) {
-			getAR+="lw\n";
+		for (int i = 0; i < nestingLevel-entry.getNestinglevel(); i++) {
+			getAR += "lw\n";
 		}
-		return "push "+offset+"\n"			 
-		+ "lfp\n"+getAR		//risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata l'oggetto
+		return "push " + offset + "\n"			 
+		+ "lfp\n" + getAR		//risalgo la catena statica per ottenere l'indirizzo dell'AR in cui è dichiarata l'oggetto
 		+ "add\n"
 		+ "lw\n"; 			//prende il valore all'indirizzo specificato e lo poppa sullo stack
 	}
 
 	public String codeGeneration() {
 		String objectPointer = getAddress(entry.getOffset());
-
 		String parCode = "";
-		for (int i=parlist.size()-1; i>=0; i--) {
+
+		for (int i = parlist.size()-1; i >= 0; i--) {
 			parCode += parlist.get(i).codeGeneration();
 		}
 
@@ -91,6 +89,5 @@ public class ClassCallNode implements Node {
 				+ "add \n"					//stiamo puntando al metodo chiamato
 				+ "lw \n"
 				+ "js \n";
-	}  
-
+	}
 }
