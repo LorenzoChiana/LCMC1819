@@ -29,14 +29,14 @@ public class FOOLlib {
 			} else {
 				//i tipi di ritorno devono essere sottotipi rispetto ai parametri
 				int dimA = nodeA.getParListLength();
-				for(int i = 0; i< dimA; i++) {
+				for(int i = 0; i < dimA; i++) {
 					if(!isSubtype(nodeB.getParList().get(i), nodeA.getParList().get(i))) {
 						return false;
 					}
 				}
 				return true;
 			}
-		}else 
+		} else 
 			/*Controllo che in superType esista una coppia con chiave a (sottotipo)
 			 * se esiste controllo che il super tipo di a sia uguale a b, se non lo e'
 			 * chiamo ricorsivamente (ora il sotto tipo sara'� il super tipo di a e il super tipo rimane b
@@ -87,28 +87,28 @@ public class FOOLlib {
 		// se uno tra "a" e "b" è EmptyTypeNode torna l'altro;
 		if (a instanceof EmptyTypeNode && b instanceof RefTypeNode) {
 			return b;
-		}else if (b instanceof EmptyTypeNode && a instanceof RefTypeNode) {
+		} else if (b instanceof EmptyTypeNode && a instanceof RefTypeNode) {
 			return a;
 		}else if (a instanceof RefTypeNode && b instanceof RefTypeNode) {
 			/* all'inizio considera la classe di "a" e risale, poi, le sue superclassi controllando, ogni volta, se "b" 
 			 * sia sottotipo della classe considerata:
 			 * torna un RefTypeNode a tale classe qualora il controllo abbia, prima o poi, successo, null altrimenti*/
-
+			
 			RefTypeNode refB = (RefTypeNode) b; 
 			RefTypeNode refA = (RefTypeNode) a; 
 
 			String type = refA.getClassId();
 			RefTypeNode c = new RefTypeNode(type);
-			if(isSubtype(refB,c)) {//controllo che b sia sottotipo della classe considerata
+			if(isSubtype(refB, c)) {//controllo che b sia sottotipo della classe considerata
 				return c;
 			} 
 
 			while (superType.containsKey(type)) { //risalgo la catena di superclassi
 				c = new RefTypeNode(superType.get(type));
-				if(isSubtype(refB,c)) {//controllo che b sia sottotipo della classe considerata
+				if(isSubtype(refB, c)) {//controllo che b sia sottotipo della classe considerata
 					return c;
 				} else{
-					type= superType.get(type);
+					type = superType.get(type);
 				}
 			}
 			return null;
@@ -128,17 +128,17 @@ public class FOOLlib {
 				ArrayList<Node> parB = nodeB.getParList();
 				ArrayList<Node> parlist = new ArrayList<>();
 
-				for (int i=0; i<parA.size(); i++) { //itero i parametri
-					if ((isSubtype(parA.get(i),parB.get(i)))) { //Se non sono uno sottotipo dell'altro restituisco null
+				for (int i = 0; i < parA.size(); i++) { //itero i parametri
+					if ((isSubtype(parA.get(i), parB.get(i)))) { //Se non sono uno sottotipo dell'altro restituisco null
 						parlist.add(parA.get(i));
-					}else if(isSubtype(parB.get(i),parA.get(i))){
+					} else if (isSubtype(parB.get(i), parA.get(i))){
 						parlist.add(parB.get(i));
-					}else {
+					} else {
 						return null;
 					}
 				}
-				Node ret =lowestCommonAncestor (nodeA.getRet(),nodeB.getRet());
-				if (ret!=null) { //controlla lowest common ancestor dei tipi di ritorno
+				Node ret = lowestCommonAncestor (nodeA.getRet(),nodeB.getRet());
+				if (ret != null) { //controlla lowest common ancestor dei tipi di ritorno
 					return new ArrowTypeNode(parlist, ret); 
 				}
 			}
@@ -146,24 +146,24 @@ public class FOOLlib {
 		}
 		return null;
 	}
-	private static int labCount=0; //nome etichette (univoche)
-	private static int funlabCount=0; 
-
-	private static String funCode="" ; 
+	
+	private static int labCount = 0; //nome etichette (univoche)
+	private static int funlabCount = 0; 
+	private static String funCode = ""; 
 
 	public static void addDispatchTable(ArrayList<String> dt) {
 		dispatchTables.add(dt);
 	}
 
 	public static void addSuperType(String sup, String sub) {
-		superType.put(sub,sup);
+		superType.put(sub, sup);
 	}
 	public static ArrayList<String> getDispatchTable(int i){
 		return dispatchTables.get(i);
 	}
 
 	public static void putCode(String c) { 
-		funCode+="\n"+c; //aggiunge una linea vuota di separazione prima di funzione
+		funCode += "\n" + c; //aggiunge una linea vuota di separazione prima di funzione
 	} 
 
 	public static String getCode() { 
@@ -171,10 +171,10 @@ public class FOOLlib {
 	} 
 
 	public static String freshLabel() { 
-		return "label"+(labCount++);
+		return "label" + (labCount++);
 	} 
 
 	public static String freshFunLabel() { 
-		return "function"+(funlabCount++);
+		return "function" + (funlabCount++);
 	} 	
 }
