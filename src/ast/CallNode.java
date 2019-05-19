@@ -61,47 +61,49 @@ public class CallNode implements Node {
 
 		String getAR = "";
 
-		//risaliamo la catena statica fino ad arrivare al nesting level che vogliamo
-		for (int i = 0; i < nestingLevel-entry.getNestinglevel(); i++) {
-			getAR += "lw\n";      //lw carica sullo stack il contenuto della cella di memoria indicata in cima allo stack
-		}
+		
 
 		if (entry.getIsMethod()) {
 			//Object Oriented
+			
+			for (int i = 0; i < nestingLevel-entry.getNestinglevel()+1; i++) {
+				getAR += "lw\n";     
+			}
 			result = "lfp\n" + 			//Control Link - salvo il frame pointer precedente (della funzione che mi ha chiamato) che ci serve poi per tornare al punto in cui eravamo 
 					parCode + 			//allocazione valori parametri	
 
 					"lfp\n" + getAR + 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui è dichiarata la funzione (Access Link)					 
-					"lfp\n" + 			//carica il frame pointer
-					getAR + 				//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui è dichiarata la funzione (Access Link)			
-					"lw \n" +			//aggiungo 1 alla differenza di nesting level in modo da raggiungere la dispatch table
+					//in cui ï¿½ dichiarata la funzione (Access Link)			
 					"push " + (entry.getOffset()) + "\n" +
 					"add\n" +			//otteniamo l'indirizzo del metodo nella dispatch table
 					"lw\n" + 			//carica sullo stack l'etichetta del metodo trovato nella dispatch table
 					"js\n"; 			//effettua il salto
 		} else {
 			//Higher order
+			//risaliamo la catena statica fino ad arrivare al nesting level che vogliamo
+			for (int i = 0; i < nestingLevel-entry.getNestinglevel(); i++) {
+				getAR += "lw\n";      
+			}
+			
 			result = "lfp\n" + 			//Control Link
 					parCode + 			//allocazione valori parametri	
 
 					/*
 					 * nel caso di higher order 
-					 * nella prima parte dell'offset c'è la dichiarazione della funzione 
-					 * e nella seconda c'è l'indirizzo
+					 * nella prima parte dell'offset c'ï¿½ la dichiarazione della funzione 
+					 * e nella seconda c'ï¿½ l'indirizzo
 					 */
 
 					//usato per settare un nuovo access link
 					"lfp\n" + getAR + 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui è dichiarata la funzione (Access Link)	
+					//in cui ï¿½ dichiarata la funzione (Access Link)	
 					"push " + entry.getOffset() + "\n" +		 				 
 					"add\n" +
 					"lw\n" + 			//carica sullo stack l'indirizzo della funzione
 
 					//usato per saltare al codice della funzione
 					"lfp\n" + getAR + 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui è dichiarata la funzione (Access Link)	
+					//in cui ï¿½ dichiarata la funzione (Access Link)	
 					"push " + (entry.getOffset()-1) + "\n" +			 				 
 					"add\n" +
 
