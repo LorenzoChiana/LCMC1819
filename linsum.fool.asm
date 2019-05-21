@@ -45,18 +45,18 @@ js
 function1:
 cfp
 lra
-push 1
 lfp
+push 1
 add
 lw
+lfp
 push 2
-lfp
 add
 lw
 add
+lfp
+lw
 push 1
-lfp
-lw
 add
 lw
 mult
@@ -76,12 +76,12 @@ lra
 lfp
  push function1
 lfp
-push -2
 lfp
+push -2
 add
 lw
-push -3
 lfp
+push -3
 add
 lw
 lfp

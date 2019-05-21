@@ -51,7 +51,6 @@ public class CallNode implements Node {
 	}
 
 	public String codeGeneration() {
-		String result; 
 		String parCode = "";
 
 		//carichiamo i parametri sullo stack 
@@ -64,34 +63,31 @@ public class CallNode implements Node {
 		
 
 		if (entry.getIsMethod()) {
-			//Object Oriented
+			//Object Oriented (Quando chiamo un metodo all'interno di una classe)
 			
 			for (int i = 0; i < nestingLevel-entry.getNestinglevel()+1; i++) {
 				getAR += "lw\n";     
 			}
-			result = "lfp\n" + 			//Control Link - salvo il frame pointer precedente (della funzione che mi ha chiamato) che ci serve poi per tornare al punto in cui eravamo 
+			return "lfp\n" + 			//Control Link - salvo il frame pointer precedente (della funzione che mi ha chiamato) che ci serve poi per tornare al punto in cui eravamo 
 					parCode + 			//allocazione valori parametri	
-
-					"lfp\n" + getAR + 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui � dichiarata la funzione (Access Link)			
-					"push " + (entry.getOffset()) + "\n" +
-					"add\n" +			//otteniamo l'indirizzo del metodo nella dispatch table
+					"lfp\n" + getAR + 		//risalgo la catena statica (+1 nel nestingLevel per arrivare alla dispatch table)		
+					"push " + (entry.getOffset()) + "\n" + //sommo offset per arrivare al metodo nella dispatch table
+					"add\n" +		
 					"lw\n" + 			//carica sullo stack l'etichetta del metodo trovato nella dispatch table
 					"js\n"; 			//effettua il salto
 		} else {
 			//Higher order
-			//risaliamo la catena statica fino ad arrivare al nesting level che vogliamo
+			//risaliamo la catena statica
 			for (int i = 0; i < nestingLevel-entry.getNestinglevel(); i++) {
 				getAR += "lw\n";      
 			}
-			
-			result = "lfp\n" + 			//Control Link
+			return "lfp\n" + 			//Control Link
 					parCode + 			//allocazione valori parametri	
 
 					/*
 					 * nel caso di higher order 
-					 * nella prima parte dell'offset c'� la dichiarazione della funzione 
-					 * e nella seconda c'� l'indirizzo
+					 * nella prima parte dell'offset c'e' AR dichiarazione della funzione 
+					 * e nella seconda c'e' l'indirizzo
 					 */
 
 					//usato per settare un nuovo access link
@@ -99,17 +95,15 @@ public class CallNode implements Node {
 					//in cui � dichiarata la funzione (Access Link)	
 					"push " + entry.getOffset() + "\n" +		 				 
 					"add\n" +
-					"lw\n" + 			//carica sullo stack l'indirizzo della funzione
+					"lw\n" + 			//carica sullo stack il nuovo access link
 
 					//usato per saltare al codice della funzione
-					"lfp\n" + getAR + 		//risalgo la catena statica per ottenere l'indirizzo dell'AR 
-					//in cui � dichiarata la funzione (Access Link)	
+					"lfp\n" + getAR + 		//risalgo la catena statica 
 					"push " + (entry.getOffset()-1) + "\n" +			 				 
 					"add\n" +
 
 					"lw\n" + 			//carica sullo stack l'indirizzo della funzione
 					"js\n"; 			//effettua il salto
 		}
-		return result;
 	}  
 }  

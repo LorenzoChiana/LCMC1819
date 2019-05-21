@@ -62,24 +62,24 @@ public class NewNode implements Node {
 		String parStack2Heap = "";
 		for (int i = 0; i < arglist.size(); i++) {
 			parStack2Heap += "lhp \n"	//carico sullo stack l'indirizzo dello heap pointer				
-					+ "sw \n" 		//salvo all'indirizzo di hp quello che c'ï¿½ nel top dello stack
+					+ "sw \n" 		//per ogni parametro lo salvo nello heap
 					+ "lhp \n" 		//incremento hp
 					+ "push 1 \n" 
 					+ "add \n"
 					+ "shp \n";		//salva la nuova cima dello heap (il nuovo heap pointer)
 		}
 
-		return parCode
-				+ parStack2Heap
+		return parCode			//carico sullo stack i parametri
+				+ parStack2Heap //per ogni parametro lo salvo nello heap
 				+ "push " + (FOOLlib.MEMSIZE + entry.getOffset()) + "\n"	//recupera il dispatch pointer
-				+ "lw \n"		//carica sullo stack il contenuto di una cella di memoria di cui è indicato l'indirizzo sul top dello stack
+				+ "lw \n"		//carica sullo stack il dispatch pointer
 				+ "lhp \n"						
 				+ "sw \n"		//carica il dispatch pointer a indirizzo hp
-				+ "lhp \n"		//quello che rimane sullo stack (object pointer da ritornare)
+				+ "lhp \n"		//carico l'hp che rimane sullo stack (object pointer da ritornare)
 				+ "lhp \n" 		//incremento hp
 				+ "push 1 \n" 
 				+ "add \n"
-				+ "shp \n";
+				+ "shp \n";		//salvo il nuovo hp
 	} 
 }
 

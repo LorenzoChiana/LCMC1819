@@ -161,16 +161,16 @@ add
 shp 
 lfp
 lfp
+lfp
 push -13
-lfp
 add
 lw
+lfp
 push -14
-lfp
 add
 lw
-push -15
 lfp
+push -15
 add
 lw
 lfp
@@ -196,9 +196,9 @@ halt
 function0:
 cfp
 lra
-push -1
 lfp
 lw
+push -1
 add
 lw
 srv
@@ -212,9 +212,9 @@ js
 function1:
 cfp
 lra
-push -2
 lfp
 lw
+push -2
 add
 lw
 srv
@@ -228,12 +228,12 @@ js
 function2:
 cfp
 lra
-push 2
 lfp
+push 2
 add
 lw
-push 1
 lfp
+push 1
 add
 lw
 lhp 
@@ -272,8 +272,8 @@ cfp
 lra
 lfp
  push function2
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -354,8 +354,8 @@ js
 function4:
 cfp
 lra
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -382,8 +382,8 @@ add
 lw 
 js 
 lfp
-push 2
 lfp
+push 2
 add
 lw
 lfp 
@@ -434,8 +434,8 @@ add
 shp 
 b label5
 label4: 
-push 2
 lfp
+push 2
 add
 lw
 label5: 
@@ -452,8 +452,8 @@ js
 function5:
 cfp
 lra
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -492,12 +492,12 @@ js
 push 1
 beq label12
 lfp
-push 3
 lfp
+push 3
 add
 lw
-push 2
 lfp
+push 2
 add
 lw
 lfp 
@@ -542,12 +542,12 @@ add
 lw 
 js 
 lfp
-push 3
 lfp
+push 3
 add
 lw
-push 2
 lfp
+push 2
 add
 lw
 lfp 
@@ -616,13 +616,13 @@ function6:
 cfp
 lra
 lfp
-push -2
 lfp
 lw
+push -2
 add
 lw
-push 1
 lfp
+push 1
 add
 lw
 lfp
@@ -649,13 +649,13 @@ function7:
 cfp
 lra
 lfp
-push -2
 lfp
 lw
+push -2
 add
 lw
-push 1
 lfp
+push 1
 add
 lw
 lfp
@@ -688,8 +688,8 @@ js
 function8:
 cfp
 lra
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -723,8 +723,8 @@ lfp
  push function6
 lfp
  push function7
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -737,26 +737,26 @@ label23:
 push 1
 beq label20
 lfp
-push -2
 lfp
+push -2
 add
 lw
+lfp
 lfp
 push 3
-lfp
 add
 lw
+lfp
 push 2
-lfp
 add
 lw
+lfp
 lfp
 push -5
-lfp
 add
 lw
-push -6
 lfp
+push -6
 add
 lw
 lfp 
@@ -817,21 +817,21 @@ push 1
 add 
 shp 
 lfp
+lfp
 push 3
-lfp
 add
 lw
+lfp
 push 2
-lfp
 add
 lw
+lfp
 lfp
 push -3
-lfp
 add
 lw
-push -4
 lfp
+push -4
 add
 lw
 lfp 
@@ -904,12 +904,12 @@ js
 function9:
 cfp
 lra
-push 1
 lfp
+push 1
 add
 lw
-push 2
 lfp
+push 2
 add
 lw
 bleq label24
@@ -931,12 +931,12 @@ js
 function10:
 cfp
 lra
-push 2
 lfp
+push 2
 add
 lw
-push 1
 lfp
+push 1
 add
 lw
 bleq label26

@@ -39,12 +39,12 @@ public class ProgLetInNode implements Node {
 	}
 
 	public Node typeCheck() {
-		for (Node decC: classlist){
-			decC.typeCheck();
+		for (Node c: classlist){
+			c.typeCheck();
 		}
 
-		for (Node dec: declist){
-			dec.typeCheck();
+		for (Node d: declist){
+			d.typeCheck();
 		}
 		return exp.typeCheck();
 	}
@@ -53,12 +53,12 @@ public class ProgLetInNode implements Node {
 		String classCode = "";
 		String declCode = "";
 
-		for (Node decC: classlist) {
-			classCode += decC.codeGeneration();
+		for (Node c: classlist) {
+			classCode += c.codeGeneration();
 		}
 
-		for (Node dec: declist) {
-			declCode += dec.codeGeneration();
+		for (Node d: declist) {
+			declCode += d.codeGeneration();
 		}
 
 		return  "push 0\n"

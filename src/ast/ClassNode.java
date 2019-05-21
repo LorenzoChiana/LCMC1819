@@ -95,29 +95,36 @@ public class ClassNode implements DecNode {
 
 	public String codeGeneration() {
 		ArrayList<String> dt;
-		if (superEntry != null) {
+		
+		//Se la classe eredita recupero la dispatch table con indice -offset-2 se no la creo nuova
+		if (superEntry != null){
 			dt = new ArrayList<String>(FOOLlib.getDispatchTable(-superEntry.getOffset()-2)); //dispatchTable della classe da cui eredito(posizionen -offset-2)
-		}else {
+		} else {
 			dt = new ArrayList<String>();
 		}
 
-		FOOLlib.addDispatchTable(dt);		//per ereditarieta' copiare dispatch table della classe da cui si eredita (contenuto)
+		FOOLlib.addDispatchTable(dt);		//la aggiungo alla lista di dispatch tables
 
+		/*Scorro tutti i metodi, faccio la loro codeGeneration e li aggiungo 
+		 * nella dispatch table (in posizione offset aggiungo la label).*/
 		for(Node m: methods) {
 			m.codeGeneration();
 			dt.add(((MethodNode) m).getOffset(), ((MethodNode) m).getLabel());
 		}
 
 		String labelList = "";
+		//Scorro i metodi messi nella dispatch table e per ognuno:
+		
 		for(String s: dt) {
-			labelList += "push " + s + "\n" 	//carico le label sullo heap
-					+ "lhp \n"					
-					+ "sw \n" 
+			labelList += "push " + s + "\n" 	//Carico la label sullo heap
+					+ "lhp \n"					//carico sullo stack l'hp
+					+ "sw \n" 					//carico nella memoria la label all’indirizzo dell’heap pointer
 					+ "lhp \n" 					//incremento hp
 					+ "push 1 \n" 
 					+ "add \n"
 					+ "shp \n";					//salva la nuova cima dello heap
 		}
+		
 		return "lhp \n" +
 		labelList;
 	}

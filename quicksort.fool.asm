@@ -157,8 +157,8 @@ add
 shp 
 lfp
 lfp
-push -11
 lfp
+push -11
 add
 lw
 lfp
@@ -184,9 +184,9 @@ halt
 function0:
 cfp
 lra
-push -1
 lfp
 lw
+push -1
 add
 lw
 srv
@@ -200,9 +200,9 @@ js
 function1:
 cfp
 lra
-push -2
 lfp
 lw
+push -2
 add
 lw
 srv
@@ -216,12 +216,12 @@ js
 function2:
 cfp
 lra
-push 2
 lfp
+push 2
 add
 lw
-push 1
 lfp
+push 1
 add
 lw
 lhp 
@@ -260,8 +260,8 @@ cfp
 lra
 lfp
  push function2
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -342,8 +342,8 @@ js
 function4:
 cfp
 lra
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -370,8 +370,8 @@ add
 lw 
 js 
 lfp
-push 2
 lfp
+push 2
 add
 lw
 lfp 
@@ -422,8 +422,8 @@ add
 shp 
 b label5
 label4: 
-push 2
 lfp
+push 2
 add
 lw
 label5: 
@@ -440,15 +440,15 @@ js
 function5:
 cfp
 lra
-push 3
 lfp
 lw
+push 3
 add
 lw
 push 1
 beq label8
-push 1
 lfp
+push 1
 add
 lw
 push 1
@@ -460,8 +460,8 @@ push 0
 label11: 
 b label9
 label8: 
-push 1
 lfp
+push 1
 add
 lw
 label9: 
@@ -479,8 +479,8 @@ cfp
 lra
 lfp
  push function5
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -507,8 +507,8 @@ push 0
 add 
 lw 
 js 
-push 2
 lfp
+push 2
 add
 lw
 bleq label18
@@ -529,12 +529,12 @@ js
 push 1
 beq label16
 lfp
-push 3
 lfp
+push 3
 add
 lw
-push 2
 lfp
+push 2
 add
 lw
 lfp 
@@ -579,12 +579,12 @@ add
 lw 
 js 
 lfp
-push 3
 lfp
+push 3
 add
 lw
-push 2
 lfp
+push 2
 add
 lw
 lfp 
@@ -654,8 +654,8 @@ js
 function7:
 cfp
 lra
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -685,8 +685,8 @@ b label21
 label20: 
 push 0
 label21: 
-push 1
 lfp
+push 1
 add
 lw
 push -1
@@ -699,15 +699,15 @@ label27:
 push 1
 beq label24
 lfp
-push -2
 lfp
+push -2
 add
 lw
 lfp
 lfp
 push 0
-push -2
 lfp
+push -2
 add
 lw
 lfp 
@@ -770,8 +770,8 @@ shp
 lfp
 lfp
 push 1
-push -2
 lfp
+push -2
 add
 lw
 lfp 

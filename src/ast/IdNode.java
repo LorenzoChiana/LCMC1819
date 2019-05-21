@@ -40,9 +40,9 @@ public class IdNode implements Node {
 			getAR += "lw\n";
 		}
 
-		return "push " + offset + "\n"			 
-		+ "lfp\n"
-		+ getAR //risalgo la catena statica per ottenere l'indirizzo dell'AR in cui e' dichiarata la variabile			 
+		return  "lfp\n"	//carico il frame pointer
+		+ getAR //risalgo la catena statica 	
+		+ "push " + offset + "\n" //sommo l'offset
 		+ "add\n"
 		+ "lw\n"; //prende il valore all'indirizzo specificato e lo poppa sullo stack
 	}

@@ -123,18 +123,18 @@ public class MethodNode implements DecNode {
 		}
 
 		FOOLlib.putCode(
-				label + ":\n" + 
+				label + ":\n" + 	//nuova label che corrisponderà alla label del metodo nella dispatch table
 						"cfp\n" + //setta $fp a $sp (fp = frame pointer; sp = stack pointer) 
 						"lra\n" + //inserisce return address
-						declCode + // inserisce le dichiarazioni locali
+						declCode + //carica sullo stack le dichiarazioni locali al metodo
 						exp.codeGeneration() + 
-						"srv\n" + //pop del return value
+						"srv\n" + //pop, salva la cima dello stack in rv(return value)
 						popDecl + //pop delle dichiarazioni
 						"sra\n" + //pop del return address
-						"pop\n" + //pop di AL
+						"pop\n" + //pop di Access Link
 						popParl + //pop dei parametri
-						"sfp\n" + //setto $fp al valore del CL
-						"lrv\n" + //risultato della funione sullo stack
+						"sfp\n" + //setto $fp al valore del Control Link
+						"lrv\n" + //salva risultato della funione sullo stack
 						"lra\n" + "js\n" //salta a $ra
 				);
 

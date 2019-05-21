@@ -121,8 +121,8 @@ push 1
 add 
 shp 
 lfp 
-push -7
 lfp
+push -7
 add
 lw
 push -6
@@ -138,8 +138,8 @@ push 1
 add 
 lw 
 js 
-push -8
 lfp
+push -8
 add
 lw
 push -1
@@ -175,9 +175,9 @@ halt
 function0:
 cfp
 lra
-push -1
 lfp
 lw
+push -1
 add
 lw
 srv
@@ -191,9 +191,9 @@ js
 function1:
 cfp
 lra
-push -2
 lfp
 lw
+push -2
 add
 lw
 srv
@@ -207,9 +207,9 @@ js
 function2:
 cfp
 lra
-push -1
 lfp
 lw
+push -1
 add
 lw
 srv
