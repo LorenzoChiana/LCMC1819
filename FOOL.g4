@@ -467,10 +467,12 @@ value returns [Node ast]:
 		$ast= new EmptyNode();
 	}  
 	| NEW id=ID {
+		//Se non esiste la classe id lancio errore
 		if(!classTable.containsKey($id.text)) {
 	    	System.out.println("Id "+$id.text+" at line "+$id.line+" is not a class");
             System.exit(0);
 	    }
+	    //le classi sono a nestingLevel 0 della symbol table
 	    STentry entry = symTable.get(0).get($id.text);
 		} LPAR {
 	   		ArrayList<Node> arglist = new ArrayList<Node>();
@@ -482,9 +484,7 @@ value returns [Node ast]:
 	   	 	arglist.add($a1.ast);
 	   	 }
 	   	 )* )? RPAR {
-	   	 	/*System.out.println("INIZIO ------>");
-	   	 	arglist.forEach(System.out::println);
-	   	 	System.out.println("ID: "+$id.text+"\nEntry: "+entry+"\n<----- FINEEEE");*/
+	   	 	//creo il new node
 	   	 	$ast = new NewNode($id.text,entry,arglist);
 	   	 }        
 	    | IF x=exp THEN CLPAR y=exp CRPAR ELSE CLPAR z=exp CRPAR {
@@ -517,9 +517,11 @@ value returns [Node ast]:
 	   	 		arglist.add($a.ast);
 	   	 	} )*
 	   	 )? RPAR {
+	   	 	//id() è una chiamata a una funzione o a un metodo dentro una classe
 	   	 	$ast= new CallNode($id1.text,entry,arglist,nestingLevel);
 	   	 }
 	         | DOT id2=ID {
+	         	//richiamo metodo da fuori la classe -> idClasse.idMetodo();
 	         	//Controllo che sia un classNode
 	         	if(!(entry.getType() instanceof RefTypeNode)){
 	         		System.out.println("Id "+$id1.text+" at line "+$id1.line+" is not a class");
@@ -533,6 +535,7 @@ value returns [Node ast]:
 	         	//Recupero la virtual table della classe
 	         	HashMap<String,STentry> virtualTable = classTable.get(((RefTypeNode)entry.getType()).getClassId());
 	         	
+	         	//controllo che nella virtual table sia dichiarato il metodo
 	         	if(!virtualTable.containsKey($id2.text)){
 	         		System.out.println("Method "+$id2.text+" at line "+$id2.line+" not declared");
 	         		System.exit(0);
@@ -546,7 +549,7 @@ value returns [Node ast]:
 	         LPAR (a=exp {arglistMethod.add($a.ast);}
 	         (COMMA a1=exp{arglistMethod.add($a1.ast);})* )? RPAR {
 	         	//Creo il ClassCallNode 
-	         	$ast= new ClassCallNode ($id1.text, $id2.text, methodEntry, entry, arglistMethod, nestingLevel); // Da  controllare più avanti se c'è tutto
+	         	$ast= new ClassCallNode ($id1.text, $id2.text, methodEntry, entry, arglistMethod, nestingLevel); 
 	         }
 	         )?
 	         	   
